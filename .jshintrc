@@ -15,5 +15,5 @@
 	"trailing": true,
 	"undef": true,
 	"unused": true,
-	"predef": ["Template", "Session", "Meteor"]
+	"predef": ["Template", "Session", "Meteor", "HTTP"]
 }

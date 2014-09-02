@@ -31,8 +31,10 @@ if (Meteor.isClient) {
 				}
 			}
 
-			alert('Song list add ' + songurl);
-			Songs.insert({name: songurl});
+			// alert('Song list add ' + songurl);
+
+			//call server
+			Meteor.call('getNctMp3', songurl);
 		}
 	});
 
@@ -46,18 +48,64 @@ if (Meteor.isClient) {
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
 	Meteor.startup(function() {
-		if (Songs.find().count() === 0) {
-			var names = [
-				'Ada Lovelace',
-				'Grace Hopper',
-				'Marie Curie',
-				'Carl Friedrich Gauss',
-				'Nikola Tesla',
-				'Claude Shannon'
-			];
-			for (var i = 0; i < names.length; i++) {
-				Songs.insert({name: names[i]});
+		//empty
+
+	});
+
+	Meteor.methods({
+		removeAllSongs: function() {
+			return Songs.remove({});
+		},
+
+		getNctMp3: function(songurl) {
+			var res;
+			var songInfo = parseNctUrl(songurl);
+			console.log(songInfo.name, ' - ', songInfo.id);
+
+			try {
+				res = HTTP.get('http://www.nhaccuatui.com/download/song/' + songInfo.id);
+				// console.log('Response:', res);
+				res = res.data; // ignore headers and status code
+			} catch (err) {
+				console.error('Get NCT stream Error', err);
+			}
+			// sample response:
+			// {
+			//   "error_message": "Success",
+			//   "data": {
+			//     "stream_url": "http://download.f9.stream.nixcdn.com/ed5b78e45f4a38095c13836b58fd2037/5405e6df/NhacCuaTui869/GatDiNuocMat-NooPhuocThinhTonnyViet-3328664_hq.mp3",
+			//     "is_charge": "false"
+			//   },
+			//   "error_code": 0,
+			//   "STATUS_READ_MODE": true
+			// }
+
+			console.log(res);
+			if (res && res.data && res.data.stream_url) {
+				console.log('Adding new Song');
+				Songs.insert({
+					id: songInfo.id,
+					name: songInfo.name,
+					stream_url: res.data.stream_url
+				});
 			}
 		}
 	});
+}
+
+// Utility / Private functions
+var nctRegExp = /\/([^\/]+)\.([^.]+)\.html/;
+
+function parseNctUrl(songurl) {
+	var parsed = String(songurl).match(nctRegExp);
+
+	return {
+		name: toTitleCase(parsed[1]).split('-').join(' '),
+		id: String(parsed[2])
+	};
+}
+
+function toTitleCase(s) {
+	s = String(s).toLowerCase();
+	return s.replace( /\b[a-z]/g, function(f) { return f.toUpperCase(); } );
 }
