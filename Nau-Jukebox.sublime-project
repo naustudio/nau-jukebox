@@ -1,0 +1,18 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"folder_exclude_patterns":
+            [
+                ".grunt",
+                ".idea",
+                ".sass-cache",
+                ".sonar",
+                "node_modules",
+                ".meteor"
+            ],
+			"path": "."
+		}
+	]
+}

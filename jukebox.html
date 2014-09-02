@@ -1,0 +1,33 @@
+<head>
+	<title>Nau Jukebox</title>
+</head>
+
+<body>
+	<main class="main">
+		{{> songlist}}
+	</main>
+</body>
+
+<template name="songlist">
+	<section class="song-list">
+		{{#each songs}}
+			{{> song}}
+		{{/each}}
+	</section>
+	<hr>
+	<form action="#" id="add-song-form">
+		<div class="form-group">
+			<label for="songurl">Song URL:</label>
+			<input type="url" id="songurl" name="songurl" class="form-control">
+		</div>
+		<input type="submit" class="btn btn-primary">
+	</form>
+
+</template><!-- /songlist -->
+
+<template name="song">
+	<div class="song {{selected}}">
+		<span class="name">{{name}}</span>
+	</div>
+</template><!-- /song -->
+
