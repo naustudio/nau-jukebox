@@ -6,18 +6,20 @@
 Songs = new Meteor.Collection('songs');
 
 if (Meteor.isClient) {
+	var player; //the MediaElement instance
+
 	Template.songlist.songs = function() {
-		return Songs.find({}, {sort: {name: 1}});
+		return Songs.find({}, {sort: {time_added: 1}});
 	};
 
-	// Template.songlist.selected_name = function() {
-	// 	var player = Songs.findOne(Session.get('selected_player'));
-	// 	return player && player.name;
-	// };
+	Template.songlist.selected_name = function() {
+		var player = Songs.findOne(Session.get('selected_player'));
+		return player && player.name;
+	};
 
-	// Template.player.selected = function() {
-	// 	return Session.equals('selected_player', this._id) ? 'selected' : '';
-	// };
+	Template.song.selected = function() {
+		return Session.equals('selected_song', this._id) ? 'selected' : '';
+	};
 
 	Template.songlist.events({
 		'submit #add-song-form': function(event) {
@@ -38,11 +40,36 @@ if (Meteor.isClient) {
 		}
 	});
 
-	// Template.player.events({
-	// 	'click': function() {
-	// 		Session.set('selected_player', this._id);
-	// 	}
-	// });
+	Template.song.events({
+		'click': function() {
+			Session.set('selected_song', this._id);
+			// console.log('to play:', this.stream_url);
+			player.pause();
+			player.media.src = this.stream_url;
+			player.play();
+		},
+		'click .remove-btn': function() {
+			Songs.remove(this._id);
+			if (Session.equals('selected_song', this._id)) {
+				//selected song playing
+				player.pause();
+				player.media.src = '';
+			}
+		}
+	});
+	/*global MediaElementPlayer*/
+	Meteor.startup(function() {
+		// init the media player
+		player = new MediaElementPlayer('#audio-player', {
+			success: function(mediaElement) {
+				// audio ended
+				mediaElement.addEventListener('ended', function() {
+					console.log('Audio ended');
+				});
+			}
+		});
+
+	});
 }
 
 // On server startup, create some players if the database is empty.
@@ -86,13 +113,14 @@ if (Meteor.isServer) {
 				Songs.insert({
 					id: songInfo.id,
 					name: songInfo.name,
-					stream_url: res.data.stream_url
+					stream_url: res.data.stream_url,
+					time_added: Date.now()
 				});
 			}
 		}
 	});
 }
-
+// ============================================================================
 // Utility / Private functions
 var nctRegExp = /\/([^\/]+)\.([^.]+)\.html/;
 

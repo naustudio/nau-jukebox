@@ -5,8 +5,15 @@
 <body>
 	<main class="main">
 		{{> songlist}}
+		{{> player}}
 	</main>
 </body>
+
+<template name="player">
+	<div class="player-panel">
+		<audio id="audio-player" src="song.mp3"></audio>
+	</div>
+</template><!-- /player -->
 
 <template name="songlist">
 	<section class="song-list">
@@ -28,8 +35,9 @@
 </template><!-- /songlist -->
 
 <template name="song">
-	<div class="song {{selected}}">
+	<div class="song-row {{selected}}">
 		<span class="name">{{name}}</span>
+		<i class="glyphicon glyphicon-remove remove-btn"></i>
 	</div>
 </template><!-- /song -->
 
