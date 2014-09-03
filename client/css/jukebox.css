@@ -13,6 +13,7 @@ body {
 
 .song-row {
 	cursor: pointer;
+	position: relative;
 }
 
 .song-row:hover {
@@ -24,7 +25,8 @@ body {
 }
 
 	.song-row .remove-btn {
-		float: right;
+		position: absolute;
+		right: 0;
 		line-height: 22px;
 		width: 22px;
 		text-align: center;
@@ -32,6 +34,11 @@ body {
 
 	.song-row .remove-btn:hover {
 		color: red;
+	}
+
+	.song-row .song-name {
+		display: inline-block;
+		width: 100%;
 	}
 
 .mejs-container {

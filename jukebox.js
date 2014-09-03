@@ -1,20 +1,17 @@
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
 
-/*global Songs:true*/
+/*global Songs:true, AppStates:true, Future:true*/
 
 Songs = new Meteor.Collection('songs');
+AppStates = new Meteor.Collection('appstates');
 
 if (Meteor.isClient) {
+	var SELECTED_SONG_SELECTOR;
 	var player; //the MediaElement instance
 
 	Template.songlist.songs = function() {
 		return Songs.find({}, {sort: {time_added: 1}});
-	};
-
-	Template.songlist.selected_name = function() {
-		var player = Songs.findOne(Session.get('selected_player'));
-		return player && player.name;
 	};
 
 	Template.song.selected = function() {
@@ -36,25 +33,33 @@ if (Meteor.isClient) {
 			// alert('Song list add ' + songurl);
 
 			//call server
-			Meteor.call('getNctMp3', songurl);
+			Meteor.call('getNctMp3', songurl, function(error, result) {
+				console.log('getNctMp3 callback:', result);
+				if (!result) {
+					alert('Cannot add the song at:\n' + songurl);
+					this.$('#songurl').val('');
+				}
+			});
 		}
 	});
 
 	Template.song.events({
-		'click': function() {
-			Session.set('selected_song', this._id);
-			// console.log('to play:', this.stream_url);
+		'click .song-name': function() {
+			console.log('to play:', this.stream_url, SELECTED_SONG_SELECTOR);
+			AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selected_song', value: this._id});
+
 			player.pause();
 			player.media.src = this.stream_url;
 			player.play();
 		},
-		'click .remove-btn': function() {
+		'click .remove-btn': function(e) {
 			Songs.remove(this._id);
 			if (Session.equals('selected_song', this._id)) {
 				//selected song playing
 				player.pause();
 				player.media.src = '';
 			}
+			e.stopPropagation();
 		}
 	});
 	/*global MediaElementPlayer*/
@@ -69,14 +74,46 @@ if (Meteor.isClient) {
 			}
 		});
 
+		var selectedSongState = AppStates.findOne({key: 'selected_song'});
+		SELECTED_SONG_SELECTOR = selectedSongState._id;
+		console.log('SELECTED_SONG_SELECTOR:', SELECTED_SONG_SELECTOR);
+
+		if (selectedSongState.value) {
+			Session.set('selected_song', selectedSongState.value);
+		}
+
+		var query = AppStates.find();
+		query.observeChanges({
+			changed: function(id, fields) {
+				if (id === SELECTED_SONG_SELECTOR) {
+					console.log('changed:', fields);
+					Session.set('selected_song', fields.value);
+				}
+			}
+		});
+	});
+
+	// client side methods
+	Meteor.methods({
+		//empty
 	});
 }
 
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
-	Meteor.startup(function() {
-		//empty
+	/*global Npm*/
+	Future = Npm.require('fibers/future');
 
+	Meteor.startup(function() {
+
+		if (AppStates.find().count() === 0) {
+			//first time running
+			AppStates.insert({
+				key: 'selected_song',
+				value: ''
+			});
+			console.log('Insert selected_song key');
+		}
 	});
 
 	Meteor.methods({
@@ -88,6 +125,9 @@ if (Meteor.isServer) {
 			var res;
 			var songInfo = parseNctUrl(songurl);
 			console.log(songInfo.name, ' - ', songInfo.id);
+
+			// Set up a future
+			var fut = new Future();
 
 			try {
 				res = HTTP.get('http://www.nhaccuatui.com/download/song/' + songInfo.id);
@@ -116,7 +156,14 @@ if (Meteor.isServer) {
 					stream_url: res.data.stream_url,
 					time_added: Date.now()
 				});
+
+				// Return the results
+				fut['return'](true);
+			} else {
+				fut['return'](false);
 			}
+
+			return fut.wait();
 		}
 	});
 }
