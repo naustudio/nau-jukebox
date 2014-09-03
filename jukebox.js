@@ -74,28 +74,27 @@ if (Meteor.isClient) {
 			}
 		});
 
-		var selectedSongState = AppStates.findOne({key: 'selected_song'});
-		SELECTED_SONG_SELECTOR = selectedSongState._id;
-		console.log('SELECTED_SONG_SELECTOR:', SELECTED_SONG_SELECTOR);
-
-		if (selectedSongState.value) {
-			Session.set('selected_song', selectedSongState.value);
-		}
-
-		var query = AppStates.find();
-		query.observeChanges({
-			changed: function(id, fields) {
-				if (id === SELECTED_SONG_SELECTOR) {
-					console.log('changed:', fields);
-					Session.set('selected_song', fields.value);
-				}
-			}
-		});
 	});
 
-	// client side methods
-	Meteor.methods({
-		//empty
+	AppStates.find().observeChanges({
+		added: function(/*id, fields*/) {
+			// console.log('AppSate added:', fields);
+
+			var selectedSongState = AppStates.findOne({key: 'selected_song'});
+			SELECTED_SONG_SELECTOR = selectedSongState._id;
+			console.log('SELECTED_SONG_SELECTOR:', SELECTED_SONG_SELECTOR);
+
+			if (selectedSongState.value) {
+				Session.set('selected_song', selectedSongState.value);
+			}
+		},
+
+		changed: function(id, fields) {
+			if (id === SELECTED_SONG_SELECTOR) {
+				console.log('changed:', fields);
+				Session.set('selected_song', fields.value);
+			}
+		}
 	});
 }
 
