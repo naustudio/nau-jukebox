@@ -129,30 +129,41 @@ if (Meteor.isServer) {
 			var fut = new Future();
 
 			try {
-				res = HTTP.get('http://www.nhaccuatui.com/download/song/' + songInfo.id);
+				// old way
+				// res = HTTP.get('http://www.nhaccuatui.com/download/song/' + songInfo.id);
+
+				res = HTTP.post('http://getlinkmusic.appspot.com/getlinkjson', {
+					params: {
+						tb_link: songurl
+					}
+				});
+
 				// console.log('Response:', res);
-				res = res.data; // ignore headers and status code
+				res = JSON.parse(res.content); // ignore headers and status code
 			} catch (err) {
 				console.error('Get NCT stream Error', err);
 			}
 			// sample response:
 			// {
-			//   "error_message": "Success",
-			//   "data": {
-			//     "stream_url": "http://download.f9.stream.nixcdn.com/ed5b78e45f4a38095c13836b58fd2037/5405e6df/NhacCuaTui869/GatDiNuocMat-NooPhuocThinhTonnyViet-3328664_hq.mp3",
-			//     "is_charge": "false"
-			//   },
-			//   "error_code": 0,
-			//   "STATUS_READ_MODE": true
+			//   "data": [
+			//     {
+			//       "creator": "Maroon 5",
+			//       "lyric": "http://lrc.nct.nixcdn.com/2014/08/19/f/0/c/0/1408465315444.lrc",
+			//       "location": "http://aredir.nixcdn.com/3c9ac28f32f504cba923fe8e0086f94e/5406968d/Unv_Audio20/Maps-Maroon5-3298999.mp3",
+			//       "title": "Maps"
+			//     }
+			//   ]
 			// }
 
+			res = res.data[0];
 			console.log(res);
-			if (res && res.data && res.data.stream_url) {
+			if (res && res.location) {
 				console.log('Adding new Song');
 				Songs.insert({
 					id: songInfo.id,
-					name: songInfo.name,
-					stream_url: res.data.stream_url,
+					name: res.title,
+					creator: res.creator,
+					stream_url: res.location,
 					time_added: Date.now()
 				});
 
