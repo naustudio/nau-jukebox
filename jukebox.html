@@ -29,14 +29,14 @@
 			<label for="songurl">Song URL:</label>
 			<input type="url" id="songurl" name="songurl" class="form-control" placeholder="http://www.nhaccuatui.com/bai-hat/song-name.code.html" required>
 		</div>
-		<input type="submit" class="btn btn-primary">
+		<input type="submit" class="btn btn-primary"> <span class="loading {{loading_hidden}}">Getting media link...</span>
 	</form>
 
 </template><!-- /songlist -->
 
 <template name="song">
 	<div class="song-row {{selected}}">
-		<span class="song-name">{{name}}</span>
+		<span class="song-name">{{name}} - {{creator}}</span>
 		<i class="glyphicon glyphicon-remove remove-btn"></i>
 	</div>
 </template><!-- /song -->

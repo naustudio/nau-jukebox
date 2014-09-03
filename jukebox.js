@@ -6,12 +6,19 @@
 Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
 
+
 if (Meteor.isClient) {
+	Session.setDefault('url_fetching', false);
+
 	var SELECTED_SONG_SELECTOR;
 	var player; //the MediaElement instance
 
 	Template.songlist.songs = function() {
 		return Songs.find({}, {sort: {time_added: 1}});
+	};
+
+	Template.songlist.loading_hidden = function() {
+		return Session.get('url_fetching') ? '' : 'hidden';
 	};
 
 	Template.song.selected = function() {
@@ -20,16 +27,22 @@ if (Meteor.isClient) {
 
 	Template.songlist.events({
 		'submit #add-song-form': function(event) {
+
+			if (Session.equals('url_fetching', true)) {
+				return;
+			}
+
 			event.preventDefault();
 			var submitData = $(event.currentTarget).serializeArray();
 			var songurl;
+
+			Session.set('url_fetching', true);
 
 			for (var i = 0; i < submitData.length; i++) {
 				if (submitData[i].name === 'songurl') {
 					songurl = submitData[i].value;
 				}
 			}
-
 			// alert('Song list add ' + songurl);
 
 			//call server
@@ -39,6 +52,8 @@ if (Meteor.isClient) {
 					alert('Cannot add the song at:\n' + songurl);
 					this.$('#songurl').val('');
 				}
+
+				Session.set('url_fetching', false);
 			});
 		}
 	});
@@ -138,7 +153,7 @@ if (Meteor.isServer) {
 					}
 				});
 
-				// console.log('Response:', res);
+				console.log('Response:', res);
 				res = JSON.parse(res.content); // ignore headers and status code
 			} catch (err) {
 				console.error('Get NCT stream Error', err);

@@ -41,6 +41,10 @@ body {
 		width: 100%;
 	}
 
+.loading {
+	vertical-align: middle;
+}
+
 .mejs-container {
 	margin: 0.6em auto;
 }
