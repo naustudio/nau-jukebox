@@ -9,21 +9,21 @@ Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
 
 if (Meteor.isClient) {
-	Session.setDefault('url_fetching', false);
+	Session.setDefault('urlFetching', false);
 
 	var SELECTED_SONG_SELECTOR;
 	var player; //the MediaElement instance
 
 	Template.songlist.songs = function() {
-		return Songs.find({}, {sort: {time_added: 1}});
+		return Songs.find({}, {sort: {timeAdded: 1}});
 	};
 
-	Template.songlist.loading_hidden = function() {
-		return Session.get('url_fetching') ? '' : 'hidden';
+	Template.songlist.loadingHidden = function() {
+		return Session.get('urlFetching') ? '' : 'hidden';
 	};
 
 	Template.song.selected = function() {
-		return Session.equals('selected_song', this._id) ? 'selected' : '';
+		return Session.equals('selectedSong', this._id) ? 'selected' : '';
 	};
 
 	Template.songlist.events({
@@ -33,7 +33,7 @@ if (Meteor.isClient) {
 
 		'submit #add-song-form': function(event) {
 
-			if (Session.equals('url_fetching', true)) {
+			if (Session.equals('urlFetching', true)) {
 				return;
 			}
 
@@ -41,7 +41,7 @@ if (Meteor.isClient) {
 			var submitData = $(event.currentTarget).serializeArray();
 			var songurl;
 
-			Session.set('url_fetching', true);
+			Session.set('urlFetching', true);
 
 			for (var i = 0; i < submitData.length; i++) {
 				if (submitData[i].name === 'songurl') {
@@ -58,7 +58,7 @@ if (Meteor.isClient) {
 					this.$('#songurl').val('');
 				}
 
-				Session.set('url_fetching', false);
+				Session.set('urlFetching', false);
 			});
 		}
 	});
@@ -66,7 +66,7 @@ if (Meteor.isClient) {
 	Template.song.events({
 		'click .song-name': function() {
 			console.log('to play:', this.streamURL, SELECTED_SONG_SELECTOR);
-			AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selected_song', value: this._id});
+			AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selectedSong', value: this._id});
 
 			player.pause();
 			player.media.src = this.streamURL;
@@ -74,7 +74,7 @@ if (Meteor.isClient) {
 		},
 		'click .remove-btn': function(e) {
 			Songs.remove(this._id);
-			if (Session.equals('selected_song', this._id)) {
+			if (Session.equals('selectedSong', this._id)) {
 				//selected song playing
 				player.pause();
 				player.media.src = '';
@@ -100,19 +100,19 @@ if (Meteor.isClient) {
 		added: function(/*id, fields*/) {
 			// console.log('AppSate added:', fields);
 
-			var selectedSongState = AppStates.findOne({key: 'selected_song'});
+			var selectedSongState = AppStates.findOne({key: 'selectedSong'});
 			SELECTED_SONG_SELECTOR = selectedSongState._id;
 			console.log('SELECTED_SONG_SELECTOR:', SELECTED_SONG_SELECTOR);
 
 			if (selectedSongState.value) {
-				Session.set('selected_song', selectedSongState.value);
+				Session.set('selectedSong', selectedSongState.value);
 			}
 		},
 
 		changed: function(id, fields) {
 			if (id === SELECTED_SONG_SELECTOR) {
 				console.log('changed:', fields);
-				Session.set('selected_song', fields.value);
+				Session.set('selectedSong', fields.value);
 			}
 		}
 	});
@@ -127,10 +127,10 @@ if (Meteor.isServer) {
 		if (AppStates.find().count() === 0) {
 			//first time running
 			AppStates.insert({
-				key: 'selected_song',
+				key: 'selectedSong',
 				value: ''
 			});
-			console.log('Insert selected_song key');
+			console.log('Insert selectedSong key');
 		}
 	});
 
@@ -146,8 +146,10 @@ if (Meteor.isServer) {
 			var fut = new Future();
 
 			if (String(songurl).contains('nhaccuatui')) {
-				songInfo = getNctSongInfo(songurl);
-			} // else, unsupported link
+				songInfo = getSongInfoNct(songurl);
+			} else if (String(songurl).contains('mp3.zing')) {
+				songInfo = getSongInfoNct(songurl);
+			}
 
 			if (songInfo) {
 				fut['return'](Songs.insert(songInfo));

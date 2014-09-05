@@ -1,7 +1,7 @@
 /**
  * NCT URL parser module
  */
-/*global getNctSongInfo:true*/
+/*global getSongInfoNct:true*/
 
 // Utility / Private functions
 var nctRegExp = /\/([^\/]+)\.([^.]+)\.html/;
@@ -36,7 +36,7 @@ function toTitleCase(s) {
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-getNctSongInfo = function(songurl) {
+getSongInfoNct = function(songurl) {
 	var res;
 	var songInfo = parseNctURL(songurl);
 	console.log(songInfo.name, ' - ', songInfo.id);
@@ -77,10 +77,11 @@ getNctSongInfo = function(songurl) {
 
 		return {
 			id: songInfo.id,
+			timeAdded: Date.now(),
 			name: res.title,
 			artist: res.creator,
 			streamURL: res.location,
-			timeAdded: Date.now()
+			originalURL: songurl
 		};
 	} else {
 		return null;
