@@ -1,11 +1,12 @@
+/**
+ * Main module
+ */
+/*global Songs:true, AppStates:true*/
+
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
-
-/*global Songs:true, AppStates:true, Future:true*/
-
 Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
-
 
 if (Meteor.isClient) {
 	Session.setDefault('url_fetching', false);
@@ -26,6 +27,10 @@ if (Meteor.isClient) {
 	};
 
 	Template.songlist.events({
+		'click #songurl': function(event) {
+			event.currentTarget.select();
+		},
+
 		'submit #add-song-form': function(event) {
 
 			if (Session.equals('url_fetching', true)) {
@@ -46,8 +51,8 @@ if (Meteor.isClient) {
 			// alert('Song list add ' + songurl);
 
 			//call server
-			Meteor.call('getNctMp3', songurl, function(error, result) {
-				console.log('getNctMp3 callback:', result);
+			Meteor.call('getSongInfo', songurl, function(error, result) {
+				console.log('getSongInfo callback:', result);
 				if (!result) {
 					alert('Cannot add the song at:\n' + songurl);
 					this.$('#songurl').val('');
@@ -60,11 +65,11 @@ if (Meteor.isClient) {
 
 	Template.song.events({
 		'click .song-name': function() {
-			console.log('to play:', this.stream_url, SELECTED_SONG_SELECTOR);
+			console.log('to play:', this.streamURL, SELECTED_SONG_SELECTOR);
 			AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selected_song', value: this._id});
 
 			player.pause();
-			player.media.src = this.stream_url;
+			player.media.src = this.streamURL;
 			player.play();
 		},
 		'click .remove-btn': function(e) {
@@ -113,13 +118,12 @@ if (Meteor.isClient) {
 	});
 }
 
-// On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
-	/*global Npm*/
-	Future = Npm.require('fibers/future');
+	var Future = Npm.require('fibers/future');
 
 	Meteor.startup(function() {
 
+		// On server startup, create initial appstates if the database is empty.
 		if (AppStates.find().count() === 0) {
 			//first time running
 			AppStates.insert({
@@ -135,57 +139,20 @@ if (Meteor.isServer) {
 			return Songs.remove({});
 		},
 
-		getNctMp3: function(songurl) {
-			var res;
-			var songInfo = parseNctUrl(songurl);
-			console.log(songInfo.name, ' - ', songInfo.id);
-
-			// Set up a future
+		/*global getNctSongInfo*/
+		getSongInfo: function(songurl) {
+			// Set up a future for async callback sending to clients
+			var songInfo;
 			var fut = new Future();
 
-			try {
-				// old way
-				// res = HTTP.get('http://www.nhaccuatui.com/download/song/' + songInfo.id);
+			if (String(songurl).contains('nhaccuatui')) {
+				songInfo = getNctSongInfo(songurl);
+			} // else, unsupported link
 
-				res = HTTP.post('http://getlinkmusic.appspot.com/getlinkjson', {
-					params: {
-						tb_link: songurl
-					}
-				});
-
-				console.log('Response:', res);
-				res = JSON.parse(res.content); // ignore headers and status code
-			} catch (err) {
-				console.error('Get NCT stream Error', err);
-			}
-			// sample response:
-			// {
-			//   "data": [
-			//     {
-			//       "creator": "Maroon 5",
-			//       "lyric": "http://lrc.nct.nixcdn.com/2014/08/19/f/0/c/0/1408465315444.lrc",
-			//       "location": "http://aredir.nixcdn.com/3c9ac28f32f504cba923fe8e0086f94e/5406968d/Unv_Audio20/Maps-Maroon5-3298999.mp3",
-			//       "title": "Maps"
-			//     }
-			//   ]
-			// }
-
-			res = res.data[0];
-			console.log(res);
-			if (res && res.location) {
-				console.log('Adding new Song');
-				Songs.insert({
-					id: songInfo.id,
-					name: res.title,
-					creator: res.creator,
-					stream_url: res.location,
-					time_added: Date.now()
-				});
-
-				// Return the results
-				fut['return'](true);
+			if (songInfo) {
+				fut['return'](Songs.insert(songInfo));
 			} else {
-				fut['return'](false);
+				fut['return'](null);
 			}
 
 			return fut.wait();
@@ -193,19 +160,12 @@ if (Meteor.isServer) {
 	});
 }
 // ============================================================================
-// Utility / Private functions
-var nctRegExp = /\/([^\/]+)\.([^.]+)\.html/;
 
-function parseNctUrl(songurl) {
-	var parsed = String(songurl).match(nctRegExp);
-
-	return {
-		name: toTitleCase(parsed[1]).split('-').join(' '),
-		id: String(parsed[2])
-	};
-}
-
-function toTitleCase(s) {
-	s = String(s).toLowerCase();
-	return s.replace( /\b[a-z]/g, function(f) { return f.toUpperCase(); } );
+/**
+ * String.prototype.contains polyfill
+ */
+if ( !String.prototype.contains ) {
+    String.prototype.contains = function() {
+        return String.prototype.indexOf.apply( this, arguments ) !== -1;
+    };
 }
