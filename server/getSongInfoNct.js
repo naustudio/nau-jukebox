@@ -76,12 +76,11 @@ getSongInfoNct = function(songurl) {
 		console.log('Adding new Song');
 
 		return {
-			id: songInfo.id,
 			timeAdded: Date.now(),
+			originalURL: songurl,
 			name: res.title,
 			artist: res.creator,
-			streamURL: res.location,
-			originalURL: songurl
+			streamURL: res.location
 		};
 	} else {
 		return null;

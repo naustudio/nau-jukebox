@@ -132,6 +132,7 @@ if (Meteor.isServer) {
 			});
 			console.log('Insert selectedSong key');
 		}
+
 	});
 
 	Meteor.methods({
@@ -139,16 +140,18 @@ if (Meteor.isServer) {
 			return Songs.remove({});
 		},
 
-		/*global getNctSongInfo*/
+		/*global getSongInfoNct, getSongInfoZing*/
 		getSongInfo: function(songurl) {
 			// Set up a future for async callback sending to clients
 			var songInfo;
 			var fut = new Future();
 
 			if (String(songurl).contains('nhaccuatui')) {
+				console.log('Getting NCT song info');
 				songInfo = getSongInfoNct(songurl);
 			} else if (String(songurl).contains('mp3.zing')) {
-				songInfo = getSongInfoNct(songurl);
+				console.log('Getting Zing song info');
+				songInfo = getSongInfoZing(songurl);
 			}
 
 			if (songInfo) {
