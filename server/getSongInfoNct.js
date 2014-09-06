@@ -51,7 +51,7 @@ getSongInfoNct = function(songurl) {
 			}
 		});
 
-		//TODO: get mp3.zing info using http://mp3-zing.kenh76.vn/`
+		//TODO: Use the getSongInfoZing approach to parse the URL internally and not rely on 3rd party service
 
 		console.log('Response:', res);
 		res = JSON.parse(res.content); // ignore headers and status code
@@ -78,6 +78,7 @@ getSongInfoNct = function(songurl) {
 		return {
 			timeAdded: Date.now(),
 			originalURL: songurl,
+			origin: 'NCT',
 			name: res.title,
 			artist: res.creator,
 			streamURL: res.location

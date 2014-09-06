@@ -26,6 +26,19 @@ if (Meteor.isClient) {
 		return Session.equals('selectedSong', this._id) ? 'selected' : '';
 	};
 
+	Template.song.originBadgeColor = function() {
+		var color = 'black';
+		switch (this.origin) {
+			case 'NCT':
+				color = 'nct';
+				break;
+			case 'Zing':
+				color = 'zing';
+				break;
+		}
+		return color;
+	};
+
 	Template.songlist.events({
 		'click #songurl': function(event) {
 			event.currentTarget.select();

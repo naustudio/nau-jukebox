@@ -72,6 +72,7 @@ getSongInfoZing = function(songurl) {
 		return {
 			timeAdded: Date.now(),
 			originalURL: songurl,
+			origin: 'Zing',
 			name: json.data.item[0].title[0],
 			artist: json.data.item[0].performer[0],
 			streamURL: json.data.item[0].source[0]

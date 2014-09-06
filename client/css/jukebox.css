@@ -27,8 +27,8 @@ body {
 	.song-row .remove-btn {
 		position: absolute;
 		right: 0;
-		line-height: 22px;
-		width: 22px;
+		line-height: 28px;
+		width: 28px;
 		text-align: center;
 	}
 
@@ -40,6 +40,33 @@ body {
 		display: inline-block;
 		width: 100%;
 	}
+
+.origin-badge {
+	display: inline-block;
+	width: 3em;
+	text-align: center;
+	font-weight: normal;
+	background: black;
+	color: white;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+	margin-right: 0.5em;
+}
+
+.nct {
+	background: #3070ad;
+	color: #ffffff;
+}
+
+.zing {
+	background: #348cc8; /* Old browsers */
+	background: -moz-linear-gradient(left,  #348cc8 0%, #50912a 33%, #d9672b 66%, #d03168 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#348cc8), color-stop(33%,#50912a), color-stop(66%,#d9672b), color-stop(100%,#d03168)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  #348cc8 0%,#50912a 33%,#d9672b 66%,#d03168 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  #348cc8 0%,#50912a 33%,#d9672b 66%,#d03168 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  #348cc8 0%,#50912a 33%,#d9672b 66%,#d03168 100%); /* IE10+ */
+	background: linear-gradient(to right,  #348cc8 0%,#50912a 33%,#d9672b 66%,#d03168 100%); /* W3C */
+	color: #ffffff;
+}
 
 .loading {
 	vertical-align: middle;
