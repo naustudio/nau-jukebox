@@ -78,12 +78,7 @@ if (Meteor.isClient) {
 
 	Template.song.events({
 		'click .song-name': function() {
-			console.log('to play:', this.streamURL, SELECTED_SONG_SELECTOR);
-			AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selectedSong', value: this._id});
-
-			player.pause();
-			player.media.src = this.streamURL;
-			player.play();
+			playSong(this);
 		},
 		'click .remove-btn': function(e) {
 			Songs.remove(this._id);
@@ -95,18 +90,32 @@ if (Meteor.isClient) {
 			e.stopPropagation();
 		}
 	});
+
+	Template.player.events({
+		// event dispatched from the audio element
+		'ended #audio-player': function() {
+			console.log('Audio ended for:', player.song.name);
+			var nextSong = Songs.findOne({timeAdded: {$gt: player.song.timeAdded}});
+
+			if (nextSong) {
+				//delay some time so that calling play on the next song can work
+				setTimeout(function() {
+					playSong(nextSong);
+				}, 60);
+			} else {
+				console.log('No more song to play');
+			}
+		}
+	});
+
 	/*global MediaElementPlayer*/
 	Meteor.startup(function() {
 		// init the media player
-		player = new MediaElementPlayer('#audio-player', {
-			success: function(mediaElement) {
-				// audio ended
-				mediaElement.addEventListener('ended', function() {
-					console.log('Audio ended');
-				});
-			}
-		});
-
+		player = new MediaElementPlayer('#audio-player');
+		var selected = Songs.findOne(Session.get('selectedSong'));
+		if (selected) {
+			selectSong(selected);
+		}
 	});
 
 	AppStates.find().observeChanges({
@@ -119,16 +128,44 @@ if (Meteor.isClient) {
 
 			if (selectedSongState.value) {
 				Session.set('selectedSong', selectedSongState.value);
+				selectSong(Songs.findOne(selectedSongState.value));
 			}
 		},
 
 		changed: function(id, fields) {
 			if (id === SELECTED_SONG_SELECTOR) {
-				console.log('changed:', fields);
+				console.log('Selected song changed:', fields);
 				Session.set('selectedSong', fields.value);
+				selectSong(Songs.findOne(fields.value));
 			}
 		}
 	});
+
+	/**
+	 * Keep the media player have a selected song ready to play
+	 * @param  {[type]} song [description]
+	 * @return {[type]}      [description]
+	 */
+	function selectSong(song) {
+		if (player) {
+			player.pause();
+			player.media.src = song.streamURL;
+			player.song = song;
+		}
+	}
+
+	/**
+	 * Actually play the song
+	 * @param  {[type]} song [description]
+	 * @return {[type]}      [description]
+	 */
+	function playSong(song) {
+		console.log('to play:', song.name);
+
+		AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selectedSong', value: song._id});
+		selectSong(song);
+		player.play();
+	}
 }
 
 if (Meteor.isServer) {
