@@ -28,10 +28,11 @@ getSongInfoZing = function(songurl) {
 	// run the html against regexp to get XML URL
 	xmlURLResults = xmlURLReg.exec(linkRes);
 
-	console.log('xmlURLResults:', xmlURLResults[0]);
 	if (xmlURLResults) {
 		xmlURL = xmlURLResults[0];
+		console.log('xmlURLResults:', xmlURLResults[0]);
 	} else {
+		console.log('xmlURL parse failed');
 		return null;
 	}
 
@@ -66,17 +67,26 @@ getSongInfoZing = function(songurl) {
 
 	// Fourth Step: normalize the JSON object to a song record
 
-	if (json && json.data) {
-		console.log('Adding new Song');
+	if (json && json.data && json.data.item[0]) {
+		console.log('Checking the XML data');
+		var jsonItem = json.data.item[0];
 
-		return {
-			timeAdded: Date.now(),
-			originalURL: songurl,
-			origin: 'Zing',
-			name: json.data.item[0].title[0],
-			artist: json.data.item[0].performer[0],
-			streamURL: json.data.item[0].source[0]
-		};
+		//Not so soon, some Zing URL are blocked due to copyright issue
+		if (jsonItem.source[0] && String(jsonItem.errorcode[0]) === '0') {
+			console.log('URL is valid. Adding new song.');
+			return {
+				timeAdded: Date.now(),
+				originalURL: songurl,
+				origin: 'Zing',
+				name: jsonItem.title[0],
+				artist: jsonItem.performer[0],
+				streamURL: jsonItem.source[0]
+			};
+		} else {
+			//TODO: find out away to throw custom error
+			return null;
+		}
+
 	} else {
 		return null;
 	}
