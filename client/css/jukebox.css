@@ -2,17 +2,30 @@ body {
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-weight: 200;
 	font-size: 16px;
-	margin: 50px 0;
 	padding: 0;
 }
 
+.header {
+	width: 800px;
+	margin: 0 auto;
+}
+
+	.header h1 {
+		display: inline-block;
+		margin: 0.5em 0;
+	}
+
+	.header .show-all-chk {
+		float: right;
+		margin: 1.6em 0;
+	}
+
 .main {
-	width: 600px;
+	width: 800px;
 	margin: 0 auto;
 }
 
 .song-row {
-	cursor: pointer;
 	position: relative;
 }
 
@@ -24,22 +37,55 @@ body {
 	background: #88aaff;
 }
 
+	.song-row:hover .remove-btn {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
 	.song-row .remove-btn {
 		position: absolute;
 		right: 0;
 		line-height: 28px;
 		width: 28px;
 		text-align: center;
+		opacity: 0;
+		pointer-events: none;
+		cursor: pointer;
+		-webkit-transition: opacity 0.3s ease-in;
+		-o-transition: opacity 0.3s ease-in;
+		transition: opacity 0.3s ease-in;
 	}
 
 	.song-row .remove-btn:hover {
 		color: red;
 	}
 
-	.song-row .song-name {
-		display: inline-block;
-		width: 100%;
+	.song-row .song-item {
+		display: block;
+		position: relative;
+		margin-right: 28px; /*for close button*/
+		padding-right: 80px; /*for date label*/
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		color: black;
+		text-decoration: none;
 	}
+
+.song-name {
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.add-date {
+	position: absolute;
+	right: 0;
+	color: #888;
+	font-size: 0.8em;
+	line-height: 28px;
+	width: 80px;
+	text-align: right;
+}
 
 .origin-badge {
 	display: inline-block;

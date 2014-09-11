@@ -10,12 +10,19 @@ AppStates = new Meteor.Collection('appstates');
 
 if (Meteor.isClient) {
 	Session.setDefault('urlFetching', false);
+	Session.setDefault('showAll', false);
 
 	var SELECTED_SONG_SELECTOR;
 	var player; //the MediaElement instance
 
 	Template.songlist.songs = function() {
-		return Songs.find({}, {sort: {timeAdded: 1}});
+		if (Session.get('showAll')) {
+			return Songs.find({}, {sort: {timeAdded: 1}});
+		} else {
+			var today = new Date();
+			today.setHours(0, 0, 0, 0); //reset to start of day
+			return Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+		}
 	};
 
 	Template.songlist.loadingHidden = function() {
@@ -24,6 +31,18 @@ if (Meteor.isClient) {
 
 	Template.song.selected = function() {
 		return Session.equals('selectedSong', this._id) ? 'selected' : '';
+	};
+
+	Template.song.addDate = function() {
+		var date = new Date(this.timeAdded);
+		var y = date.getFullYear();
+		var m = date.getMonth() + 1;
+		var d = date.getDate();
+
+		if (m < 10) { m = '0' + m};
+		if (d < 10) { d = '0' + d};
+
+		return y + '-' + m + '-' + d;
 	};
 
 	Template.song.originBadgeColor = function() {
@@ -77,7 +96,7 @@ if (Meteor.isClient) {
 	});
 
 	Template.song.events({
-		'click .song-name': function() {
+		'click .song-item': function() {
 			playSong(this);
 		},
 		'click .remove-btn': function(e) {
@@ -104,6 +123,17 @@ if (Meteor.isClient) {
 				}, 60);
 			} else {
 				console.log('No more song to play');
+			}
+		}
+	});
+
+	Template.body.events({
+		'change #show-all-chk': function(event) {
+			var checkbox = event.currentTarget;
+			if (checkbox.checked) {
+				Session.set('showAll', true);
+			} else {
+				Session.set('showAll', false);
 			}
 		}
 	});
@@ -151,6 +181,7 @@ if (Meteor.isClient) {
 			player.pause();
 			player.media.src = song.streamURL;
 			player.song = song;
+			document.title = 'NJ :: ' + song.name;
 		}
 	}
 

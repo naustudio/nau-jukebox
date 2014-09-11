@@ -9,8 +9,8 @@
                 ".idea",
                 ".sass-cache",
                 ".sonar",
-                "node_modules",
-                ".meteor"
+                "node_modules"
+                //".meteor"
             ],
 			"path": "."
 		}

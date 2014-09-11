@@ -3,6 +3,13 @@
 </head>
 
 <body>
+	<header class="header">
+		<h1>Nâu Jukebox</h1>
+		<label class="show-all-chk">
+			<input type="checkbox" id="show-all-chk">
+			Show all items
+		</label>
+	</header>
 	<main class="main">
 		{{> songlist}}
 		{{> player}}
@@ -36,7 +43,11 @@
 
 <template name="song">
 	<div class="song-row {{selected}}">
-		<span class="song-name"><mark class="origin-badge {{originBadgeColor}}">{{origin}}</mark>{{name}} - {{artist}}</span>
+		<a class="song-item" title="{{name}} - {{artist}}" href="#{{name}}">
+			<mark class="origin-badge {{originBadgeColor}}">{{origin}}</mark>
+			<span class="song-name">{{name}} - {{artist}}</span>
+			<time class="add-date">{{addDate}}</time>
+		</a>
 		<i class="glyphicon glyphicon-remove remove-btn"></i>
 	</div>
 </template><!-- /song -->
