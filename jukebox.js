@@ -120,7 +120,7 @@ if (Meteor.isClient) {
 				//delay some time so that calling play on the next song can work
 				setTimeout(function() {
 					playSong(nextSong);
-				}, 60);
+				}, 500);
 			} else {
 				console.log('No more song to play');
 			}
