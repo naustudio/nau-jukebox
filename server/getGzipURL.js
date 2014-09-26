@@ -8,7 +8,7 @@ var zlib = Npm.require('zlib');
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-getGzipURL = Meteor._wrapAsync(function(url, callback) {
+getGzipURL = Meteor.wrapAsync(function(url, callback) {
 	// Learn this synchronous wrapper technique in http package source
 	var reqOptions = {
 		url: url,

@@ -1,8 +1,7 @@
 /**
  * Zing MP3 URL parser module
  */
-/*global getSongInfoZing:true, getGzipURL*/
-
+/*global getSongInfoZing:true, getGzipURL, xml2js*/
 var xmlURLReg = /http:\/\/mp3.zing.vn\/xml\/song-xml\/(\w+)/;
 
 /**
@@ -41,7 +40,6 @@ getSongInfoZing = function(songurl) {
 	var xmlRes, json;
 
 	// Note: Manually install the node package in server folder
-	var xml2js = Npm.require('xml2js');
 	var parser = new xml2js.Parser({
 		trim: true
 	});

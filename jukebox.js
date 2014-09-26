@@ -39,8 +39,8 @@ if (Meteor.isClient) {
 		var m = date.getMonth() + 1;
 		var d = date.getDate();
 
-		if (m < 10) { m = '0' + m};
-		if (d < 10) { d = '0' + d};
+		if (m < 10) { m = '0' + m; }
+		if (d < 10) { d = '0' + d; }
 
 		return y + '-' + m + '-' + d;
 	};
@@ -176,7 +176,7 @@ if (Meteor.isClient) {
 	 * @param  {[type]} song [description]
 	 * @return {[type]}      [description]
 	 */
-	function selectSong(song) {
+	function selectSong(song) { /* jshint ignore:line */
 		if (player) {
 			player.pause();
 			player.media.src = song.streamURL;
@@ -190,7 +190,7 @@ if (Meteor.isClient) {
 	 * @param  {[type]} song [description]
 	 * @return {[type]}      [description]
 	 */
-	function playSong(song) {
+	function playSong(song) { /* jshint ignore:line */
 		console.log('to play:', song.name);
 
 		AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selectedSong', value: song._id});
@@ -251,7 +251,7 @@ if (Meteor.isServer) {
  * String.prototype.contains polyfill
  */
 if ( !String.prototype.contains ) {
-    String.prototype.contains = function() {
-        return String.prototype.indexOf.apply( this, arguments ) !== -1;
-    };
+	String.prototype.contains = function() {
+		return String.prototype.indexOf.apply( this, arguments ) !== -1;
+	};
 }
