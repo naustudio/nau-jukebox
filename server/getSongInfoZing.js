@@ -80,13 +80,23 @@ getSongInfoZing = function(songurl) {
 				artist: jsonItem.performer[0],
 				streamURL: jsonItem.source[0]
 			};
+		} else if (jsonItem.errormessage[0]) {
+			console.log('Error received: ' + jsonItem.errormessage[0]);
+			return {
+				error: jsonItem.errormessage[0]
+			};
 		} else {
-			//TODO: find out away to throw custom error
-			return null;
+			console.log('Unknown errors');
+			return {
+				error: 'Errors unknown.'
+			};
 		}
 
 	} else {
-		return null;
+		console.log('Can\'t parse link');
+		return {
+			error: 'Can\'t parse and get song info from link'
+		};
 	}
 };
 

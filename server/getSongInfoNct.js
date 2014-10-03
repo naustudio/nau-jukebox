@@ -84,6 +84,8 @@ getSongInfoNct = function(songurl) {
 			streamURL: res.location
 		};
 	} else {
-		return null;
+		return {
+			error: 'Can\'t parse and get song info from link'
+		};
 	}
 };

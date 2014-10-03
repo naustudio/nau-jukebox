@@ -85,8 +85,8 @@ if (Meteor.isClient) {
 			//call server
 			Meteor.call('getSongInfo', songurl, function(error, result) {
 				console.log('getSongInfo callback:', result);
-				if (!result) {
-					alert('Cannot add the song at:\n' + songurl);
+				if (error) {
+					alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
 					this.$('#songurl').val('');
 				}
 
@@ -235,9 +235,11 @@ if (Meteor.isServer) {
 				songInfo = getSongInfoZing(songurl);
 			}
 
-			if (songInfo) {
+			if (songInfo.streamURL) {
 				fut['return'](Songs.insert(songInfo));
 			} else {
+				//songInfo is error object
+				throw new Meteor.Error(403, songInfo.error);
 				fut['return'](null);
 			}
 
