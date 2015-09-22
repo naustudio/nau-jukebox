@@ -17,7 +17,10 @@ if (Meteor.isClient) {
 
 	Template.songlist.songs = function() {
 		if (Session.get('showAll')) {
-			return Songs.find({}, {sort: {timeAdded: 1}});
+			// only show from 7 days past
+			var last7Days = moment().add('days', -7).toDate();
+			last7Days.setHours(0, 0, 0, 0);
+			return Songs.find({timeAdded: {$gt: last7Days.getTime()}}, {sort: {timeAdded: 1}});
 		} else {
 			var today = new Date();
 			today.setHours(0, 0, 0, 0); //reset to start of day
