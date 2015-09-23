@@ -93,6 +93,9 @@ if (Meteor.isClient) {
 					this.$('#songurl').val('');
 				}
 
+				// clear input field after inserting has done
+				$(event.currentTarget).find('[name="songurl"]').val('');
+
 				Session.set('urlFetching', false);
 			});
 		}
