@@ -113,6 +113,22 @@ if (Meteor.isClient) {
 				player.media.src = '';
 			}
 			e.stopPropagation();
+		},
+		'click .rebook-btn': function(e) {
+			// add current url into input field
+			$('[name="songurl"]').val(this.originalURL);
+			// turn on flag of fetching data
+			Session.set('urlFetching', true);
+			//call server
+			Meteor.call('getSongInfo', this.originalURL, function(error, result) {
+				if (error) {
+					alert('Cannot add the song at:\n' + this.originalURL + '\nReason: ' + error.reason);
+				}
+				$('[name="songurl"]').val('');
+				// turn off flag of fetching data
+				Session.set('urlFetching', false);
+			});
+			e.stopPropagation();
 		}
 	});
 
@@ -197,7 +213,7 @@ if (Meteor.isClient) {
 	 * @return {[type]}      [description]
 	 */
 	function playSong(song) { /* jshint ignore:line */
-		console.log('to play:', song.name);
+		console.log('to play:', song);
 
 		AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selectedSong', value: song._id});
 		selectSong(song);
