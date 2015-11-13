@@ -17,7 +17,10 @@ if (Meteor.isClient) {
 
 	Template.songlist.songs = function() {
 		if (Session.get('showAll')) {
-			return Songs.find({}, {sort: {timeAdded: 1}});
+			// only show from 7 days past
+			var last7Days = moment().add('days', -7).toDate();
+			last7Days.setHours(0, 0, 0, 0);
+			return Songs.find({timeAdded: {$gt: last7Days.getTime()}}, {sort: {timeAdded: 1}});
 		} else {
 			var today = new Date();
 			today.setHours(0, 0, 0, 0); //reset to start of day
@@ -90,6 +93,9 @@ if (Meteor.isClient) {
 					this.$('#songurl').val('');
 				}
 
+				// clear input field after inserting has done
+				$(event.currentTarget).find('[name="songurl"]').val('');
+
 				Session.set('urlFetching', false);
 			});
 		}
@@ -106,6 +112,22 @@ if (Meteor.isClient) {
 				player.pause();
 				player.media.src = '';
 			}
+			e.stopPropagation();
+		},
+		'click .rebook-btn': function(e) {
+			// add current url into input field
+			$('[name="songurl"]').val(this.originalURL);
+			// turn on flag of fetching data
+			Session.set('urlFetching', true);
+			//call server
+			Meteor.call('getSongInfo', this.originalURL, function(error, result) {
+				if (error) {
+					alert('Cannot add the song at:\n' + this.originalURL + '\nReason: ' + error.reason);
+				}
+				$('[name="songurl"]').val('');
+				// turn off flag of fetching data
+				Session.set('urlFetching', false);
+			});
 			e.stopPropagation();
 		}
 	});
@@ -191,7 +213,7 @@ if (Meteor.isClient) {
 	 * @return {[type]}      [description]
 	 */
 	function playSong(song) { /* jshint ignore:line */
-		console.log('to play:', song.name);
+		console.log('to play:', song);
 
 		AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selectedSong', value: song._id});
 		selectSong(song);

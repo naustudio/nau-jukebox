@@ -7,7 +7,7 @@
 		<h1>Nâu Jukebox</h1>
 		<label class="show-all-chk">
 			<input type="checkbox" id="show-all-chk">
-			Show all items
+			Past 7 days
 		</label>
 	</header>
 	<main class="main">
@@ -32,11 +32,16 @@
 	</section>
 	<hr>
 	<form action="#" id="add-song-form">
-		<div class="form-group">
-			<label for="songurl">Song URL:</label>
-			<input type="url" id="songurl" name="songurl" class="form-control" placeholder="http://www.nhaccuatui.com/bai-hat/song-name.code.html (NCT, Zing)" required>
+		<label for="songurl">Song URL:</label>
+		<div class="input-group">
+			<input type="url" id="songurl" name="songurl" class="form-control" aria-label="..."
+				placeholder="http://www.nhaccuatui.com/bai-hat/song-name.code.html (NCT, Zing)" required />
+			<div class="input-group-btn">
+				<input type="submit" class="btn btn-primary">
+			</div>
 		</div>
-		<input type="submit" class="btn btn-primary"> <span class="loading {{loadingHidden}}">Getting media link...</span>
+
+		<span class="loading {{loadingHidden}}">Getting media link...</span>
 	</form>
 
 </template><!-- /songlist -->
@@ -48,7 +53,7 @@
 			<span class="song-name">{{name}} - {{artist}}</span>
 			<time class="add-date">{{addDate}}</time>
 		</a>
-		<i class="glyphicon glyphicon-remove remove-btn"></i>
+		<i class="glyphicon glyphicon-repeat rebook-btn"></i>
 	</div>
 </template><!-- /song -->
 

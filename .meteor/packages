@@ -9,4 +9,5 @@ insecure
 mizzao:bootstrap-3
 http
 vjau:xml2js
+momentjs:moment
 
