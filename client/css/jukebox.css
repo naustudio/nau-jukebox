@@ -46,6 +46,8 @@ body {
 
 .song-row .remove-btn,
 .song-row .rebook-btn {
+	color: grey;
+	text-decoration: none;
 	position: absolute;
 	right: 0;
 	line-height: 28px;
@@ -57,6 +59,10 @@ body {
 	-webkit-transition: opacity 0.3s ease-in;
 	-o-transition: opacity 0.3s ease-in;
 	transition: opacity 0.3s ease-in;
+}
+
+.song-row .remove-btn {
+	right: -28px;
 }
 
 .song-row .remove-btn:hover {
