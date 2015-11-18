@@ -2,17 +2,22 @@
 	"folders":
 	[
 		{
-			"follow_symlinks": true,
 			"folder_exclude_patterns":
-            [
-                ".grunt",
-                ".idea",
-                ".sass-cache",
-                ".sonar",
-                "node_modules"
-                //".meteor"
-            ],
+			[
+				".grunt",
+				".idea",
+				".sass-cache",
+				".sonar",
+				"node_modules"
+			],
+			"follow_symlinks": true,
 			"path": "."
 		}
-	]
+	],
+	"settings":
+	{
+		"FuzzyFilePath":
+		{
+		}
+	}
 }

@@ -35,7 +35,11 @@ getGzipURL = Meteor.wrapAsync(function(url, callback) {
 			var encoding = res.headers['content-encoding'];
 			if (encoding && encoding.contains('gzip')) {
 				zlib.gunzip(body, function(err, dezipped) {
-					response.content = dezipped.toString('utf-8');
+					try {
+						response.content = dezipped.toString('utf-8');
+					} catch ( err ) {
+						callback(err, response);
+					}
 					// console.log('response.content', response.content);
 					callback(error, response);
 				});
