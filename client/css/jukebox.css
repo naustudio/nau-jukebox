@@ -38,6 +38,19 @@ body {
 	background: #88aaff;
 }
 
+.song-row.playing::before {
+	content: '';
+    position: absolute;
+    width: 0;
+	height: 0;
+	border-top: 5px solid transparent;
+	border-left: 10px solid green;
+	border-bottom: 5px solid transparent;
+    left: -20px;
+    top: 50%;
+    margin-top: -5px;
+}
+
 .song-row:hover .remove-btn,
 .song-row:hover .rebook-btn {
 	opacity: 1;

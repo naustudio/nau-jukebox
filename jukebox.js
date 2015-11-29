@@ -12,7 +12,6 @@ if (Meteor.isClient) {
 	Session.setDefault('urlFetching', false);
 	Session.setDefault('showAll', false);
 
-	var SELECTED_SONG_SELECTOR;
 	var player; //the MediaElement instance
 
 	Template.songlist.songs = function() {
@@ -34,6 +33,15 @@ if (Meteor.isClient) {
 
 	Template.song.selected = function() {
 		return Session.equals('selectedSong', this._id) ? 'selected' : '';
+	};
+
+	Template.song.playing = function() {
+		var playingSongs = AppStates.findOne({key: 'playingSongs'});
+		if (playingSongs && Array.isArray(playingSongs.songs)) {
+			return (playingSongs.songs.indexOf(this._id) !== -1) ? 'playing' : '';
+		} else {
+			return '';
+		}
 	};
 
 	Template.song.addDate = function() {
@@ -111,6 +119,7 @@ if (Meteor.isClient) {
 				//selected song playing
 				player.pause();
 				player.media.src = '';
+				AppStates.updatePlayingSongs('', this._id);
 			}
 			e.stopPropagation();
 		},
@@ -133,6 +142,14 @@ if (Meteor.isClient) {
 	});
 
 	Template.player.events({
+		'playing #audio-player': function() {
+			AppStates.updatePlayingSongs(Session.get('selectedSong'));
+		},
+
+		'pause #audio-player': function() {
+			// remove from playing songs list
+			AppStates.updatePlayingSongs('', Session.get('selectedSong'));
+		},
 		// event dispatched from the audio element
 		'ended #audio-player': function() {
 			console.log('Audio ended for:', player.song.name);
@@ -170,29 +187,6 @@ if (Meteor.isClient) {
 		}
 	});
 
-	AppStates.find().observeChanges({
-		added: function(/*id, fields*/) {
-			// console.log('AppSate added:', fields);
-
-			var selectedSongState = AppStates.findOne({key: 'selectedSong'});
-			SELECTED_SONG_SELECTOR = selectedSongState._id;
-			console.log('SELECTED_SONG_SELECTOR:', SELECTED_SONG_SELECTOR);
-
-			if (selectedSongState.value) {
-				Session.set('selectedSong', selectedSongState.value);
-				selectSong(Songs.findOne(selectedSongState.value));
-			}
-		},
-
-		changed: function(id, fields) {
-			if (id === SELECTED_SONG_SELECTOR) {
-				console.log('Selected song changed:', fields);
-				Session.set('selectedSong', fields.value);
-				selectSong(Songs.findOne(fields.value));
-			}
-		}
-	});
-
 	/**
 	 * Keep the media player have a selected song ready to play
 	 * @param  {[type]} song [description]
@@ -215,7 +209,10 @@ if (Meteor.isClient) {
 	function playSong(song) { /* jshint ignore:line */
 		console.log('to play:', song);
 
-		AppStates.update(SELECTED_SONG_SELECTOR, {key: 'selectedSong', value: song._id});
+		var prevId = Session.get('selectedSong');
+		Session.set('selectedSong', song._id);
+
+		AppStates.updatePlayingSongs(song._id, prevId);
 		selectSong(song);
 		player.play();
 	}
@@ -227,21 +224,22 @@ if (Meteor.isServer) {
 	Meteor.startup(function() {
 
 		// On server startup, create initial appstates if the database is empty.
-		if (AppStates.find().count() === 0) {
+		if (AppStates.find({key: 'playingSongs'}).count() === 0) {
 			//first time running
 			AppStates.insert({
-				key: 'selectedSong',
-				value: ''
+				key: 'playingSongs',
+				songs: []
 			});
-			console.log('Insert selectedSong key');
+			console.log('Insert AppStates.playingSongs key');
 		}
 
 	});
 
 	Meteor.methods({
-		removeAllSongs: function() {
-			return Songs.remove({});
-		},
+		// this method is dangerous, disable for now
+		// removeAllSongs: function() {
+		// 	return Songs.remove({});
+		// },
 
 		/*global getSongInfoNct, getSongInfoZing*/
 		getSongInfo: function(songurl) {
@@ -279,3 +277,37 @@ if ( !String.prototype.contains ) {
 		return String.prototype.indexOf.apply( this, arguments ) !== -1;
 	};
 }
+
+/**
+ * AppStates helper: update playing songs, from any clients
+ *
+ * NOTE: this is an extremely naive solution to show playing state of songs
+ * Any clients will override the playing state and there are high chance
+ * playing states are not cleaned up properly
+ *
+ * This is temporary solution, until I manage to upgrade this app
+ * to Meteor 1.2+ and integrate a more sophisticated users managing
+ *
+ * @param  {String} played  next play song ID
+ * @param  {String} stopped previously played, and now stopped song ID
+ */
+AppStates.updatePlayingSongs = function(played, stopped) {
+	var playingSongs = AppStates.findOne({key: 'playingSongs'});
+	var songs = playingSongs.songs;
+	if (!Array.isArray(songs)) {
+		songs = playingSongs.songs = [];
+	}
+
+	var removedIdx = songs.indexOf(stopped);
+
+	if (removedIdx !== -1) {
+		songs.splice(removedIdx, 1);
+	}
+
+	if (songs.indexOf(played) === -1) {
+		songs.push(played);
+	}
+
+	// update the exact document in AppStates collection with new songs array
+	AppStates.update(playingSongs._id, {key: 'playingSongs', songs: songs});
+};

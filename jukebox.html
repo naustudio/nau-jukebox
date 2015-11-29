@@ -48,7 +48,7 @@
 </template><!-- /songlist -->
 
 <template name="song">
-	<div class="song-row {{selected}}">
+	<div class="song-row {{selected}} {{playing}}">
 		<a class="origin-badge {{originBadgeColor}}" href="{{originalURL}}" target="_blank" title="Open original URL in new tab">{{origin}}</a>
 		<a class="song-item" title="{{name}} - {{artist}}" href="#{{name}}">
 			<span class="song-name">{{name}} - {{artist}}</span>
