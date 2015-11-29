@@ -55,6 +55,7 @@ getSongInfoNct = function(songurl) {
 
 		console.log('Response:', res);
 		res = JSON.parse(res.content); // ignore headers and status code
+		res = res.data[0];
 	} catch (err) {
 		console.error('Get NCT stream Error', err);
 	}
@@ -70,7 +71,6 @@ getSongInfoNct = function(songurl) {
 	//   ]
 	// }
 
-	res = res.data[0];
 	console.log(res);
 	if (res && res.location) {
 		console.log('Adding new Song');
