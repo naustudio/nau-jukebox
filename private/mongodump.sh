@@ -23,4 +23,5 @@ echo $username
 echo $password
 echo $db_name
 
-mongodump -h $host --port 27017 --username $username --password $password -d $db_name --excludeCollection=system.users
+# mongodump -h $host --port 27017 --username $username --password $password -d $db_name --excludeCollection=system.users
+mongodump -h $host --port 27017 --username $username --password $password -d $db_name
