@@ -14,60 +14,64 @@ if (Meteor.isClient) {
 
 	var player; //the MediaElement instance
 
-	Template.songlist.songs = function() {
-		if (Session.get('showAll')) {
-			// only show from 7 days past
-			var last7Days = moment().add('days', -7).toDate();
-			last7Days.setHours(0, 0, 0, 0);
-			return Songs.find({timeAdded: {$gt: last7Days.getTime()}}, {sort: {timeAdded: 1}});
-		} else {
-			var today = new Date();
-			today.setHours(0, 0, 0, 0); //reset to start of day
-			return Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+	Template.songlist.helpers({
+		songs: function() {
+			if (Session.get('showAll')) {
+				// only show from 7 days past
+				var last7Days = moment().add('days', -7).toDate();
+				last7Days.setHours(0, 0, 0, 0);
+				return Songs.find({timeAdded: {$gt: last7Days.getTime()}}, {sort: {timeAdded: 1}});
+			} else {
+				var today = new Date();
+				today.setHours(0, 0, 0, 0); //reset to start of day
+				return Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+			}
+		},
+
+		loadingHidden: function() {
+			return Session.get('urlFetching') ? '' : 'hidden';
 		}
-	};
+	});
 
-	Template.songlist.loadingHidden = function() {
-		return Session.get('urlFetching') ? '' : 'hidden';
-	};
+	Template.song.helpers({
+		selected: function() {
+			return Session.equals('selectedSong', this._id) ? 'selected' : '';
+		},
 
-	Template.song.selected = function() {
-		return Session.equals('selectedSong', this._id) ? 'selected' : '';
-	};
+		playing: function() {
+			var playingSongs = AppStates.findOne({key: 'playingSongs'});
+			if (playingSongs && Array.isArray(playingSongs.songs)) {
+				return (playingSongs.songs.indexOf(this._id) !== -1) ? 'playing' : '';
+			} else {
+				return '';
+			}
+		},
 
-	Template.song.playing = function() {
-		var playingSongs = AppStates.findOne({key: 'playingSongs'});
-		if (playingSongs && Array.isArray(playingSongs.songs)) {
-			return (playingSongs.songs.indexOf(this._id) !== -1) ? 'playing' : '';
-		} else {
-			return '';
+		addDate: function() {
+			var date = new Date(this.timeAdded);
+			var y = date.getFullYear();
+			var m = date.getMonth() + 1;
+			var d = date.getDate();
+
+			if (m < 10) { m = '0' + m; }
+			if (d < 10) { d = '0' + d; }
+
+			return y + '-' + m + '-' + d;
+		},
+
+		originBadgeColor: function() {
+			var color = 'black';
+			switch (this.origin) {
+				case 'NCT':
+					color = 'nct';
+					break;
+				case 'Zing':
+					color = 'zing';
+					break;
+			}
+			return color;
 		}
-	};
-
-	Template.song.addDate = function() {
-		var date = new Date(this.timeAdded);
-		var y = date.getFullYear();
-		var m = date.getMonth() + 1;
-		var d = date.getDate();
-
-		if (m < 10) { m = '0' + m; }
-		if (d < 10) { d = '0' + d; }
-
-		return y + '-' + m + '-' + d;
-	};
-
-	Template.song.originBadgeColor = function() {
-		var color = 'black';
-		switch (this.origin) {
-			case 'NCT':
-				color = 'nct';
-				break;
-			case 'Zing':
-				color = 'zing';
-				break;
-		}
-		return color;
-	};
+	});
 
 	Template.songlist.events({
 		'click #songurl': function(event) {
