@@ -1,6 +1,4 @@
-/*global getGzipURL:true*/
-var request = Npm.require('request');
-var zlib = Npm.require('zlib');
+/*global getGzipURL:true, HTTP:true*/
 
 /**
  * getGzipURL
@@ -14,44 +12,17 @@ getGzipURL = Meteor.wrapAsync(function(url, callback) {
 		url: url,
 		method: 'GET',
 		encoding: null,
-		jar: false,
-		gzip: true
+		npmRequestOptions: {
+			gzip: true
+		}
+
 		// timeout: options.timeout,
 		// body: content,
 		// followRedirect: options.followRedirects,
 		// headers: headers
 	};
 
-	request(reqOptions, function(error, res, body) {
-		var response = null;
-
-		/*jshint eqeqeq:false*/
-		if (!error && res.statusCode == 200) {
-			response = {};
-			response.statusCode = res.statusCode;
-			response.content = body;
-			response.headers = res.headers;
-			// If res is gzip, unzip first
-			var encoding = res.headers['content-encoding'];
-			if (encoding && encoding.contains('gzip')) {
-				zlib.gunzip(body, function(err, dezipped) {
-					try {
-						response.content = dezipped.toString('utf-8');
-					} catch ( err ) {
-						callback(err, response);
-					}
-					// console.log('response.content', response.content);
-					callback(error, response);
-				});
-			} else {
-				// Response is not gzipped
-				callback(error, response);
-			}
-		}
-
-		if (res.statusCode >= 400) {
-			// error = makeErrorByStatus(response.statusCode, response.content);
-			callback(new Error('failed[' + res.statusCode + ']'), response);
-		}
+	HTTP.get(url, reqOptions, function(error, result) {
+		callback(error, result);
 	});
 });
