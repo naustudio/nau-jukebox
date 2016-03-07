@@ -28,7 +28,7 @@
 		{{#each songs}}
 			{{> song}}
 		{{else}}
-			No songs to play.
+			Getting song list...
 		{{/each}}
 	</section>
 	<hr>
@@ -49,7 +49,11 @@
 
 <template name="song">
 	<div class="song-row {{selected}} {{playing}}">
+		{{#if thumbURL}}
+		<a class="origin-badge {{originBadgeColor}}" href="{{originalURL}}" target="_blank" title="Open original URL in new tab"><img src="{{thumbURL}}" alt="{{artist}}" class="thumb"></a>
+		{{else}}
 		<a class="origin-badge {{originBadgeColor}}" href="{{originalURL}}" target="_blank" title="Open original URL in new tab">{{origin}}</a>
+		{{/if}}
 		<a class="song-item" title="{{name}} - {{artist}}" href="#{{name}}">
 			<span class="song-name">{{name}} - {{artist}}</span>
 			<time class="add-date">{{addDate}}</time>
