@@ -3,6 +3,8 @@
  */
 /*global getSongInfoZing:true, getGzipURL, xml2js*/
 var xmlURLReg = /http:\/\/mp3.zing.vn\/xml\/song-xml\/(\w+)/;
+var avatarURLReg = /thumb-art.*?"(http:\/\/[^"]*)/;
+//sample avatar image from Zing HTML page: <img class="thumb-art" width="110" src="http://image.mp3.zdn.vn/thumb/165_165/avatars/6/2/62b05bf415a3736e551cae7ed1ce90f2_1450237124.jpg" alt="Min">
 
 /**
  * Get Zing stream URL and other info
@@ -11,7 +13,7 @@ var xmlURLReg = /http:\/\/mp3.zing.vn\/xml\/song-xml\/(\w+)/;
  * @return {[type]}         [description]
  */
 getSongInfoZing = function(songurl) {
-	var linkRes, xmlURLResults, xmlURL;
+	var linkRes, xmlURLResults, xmlURL, thumb;
 
 	// First Step: parse the HTML page to get the XML data URL for the flash-based player
 
@@ -27,12 +29,20 @@ getSongInfoZing = function(songurl) {
 	// run the html against regexp to get XML URL
 	xmlURLResults = xmlURLReg.exec(linkRes);
 
+
 	if (xmlURLResults) {
 		xmlURL = xmlURLResults[0];
 		console.log('xmlURLResults:', xmlURLResults[0]);
 	} else {
 		console.log('xmlURL parse failed');
 		return null;
+	}
+
+	thumb = avatarURLReg.exec(linkRes);
+
+	if (thumb) {
+		thumb = thumb[1];
+		console.log('Thumb URL', thumb);
 	}
 
 	// Second Step: get the XML data file for the sone
@@ -78,7 +88,9 @@ getSongInfoZing = function(songurl) {
 				origin: 'Zing',
 				name: jsonItem.title[0],
 				artist: jsonItem.performer[0],
-				streamURL: jsonItem.source[0]
+				streamURL: jsonItem.source[0],
+				thumbURL: thumb,
+				play: 0
 			};
 		} else if (jsonItem.errormessage[0]) {
 			console.log('Error received: ' + jsonItem.errormessage[0]);
