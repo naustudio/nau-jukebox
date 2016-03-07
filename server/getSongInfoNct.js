@@ -4,31 +4,9 @@
 /*global getSongInfoNct:true*/
 
 // Utility / Private functions
-var nctRegExp = /\/([^\/]+)\.([^.]+)\.html/;
+var xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;
+// sample xml url: "http://www.nhaccuatui.com/flash/xml?key1=99decd7306277634419b987bed859265"
 
-/**
- * [parseNctURL description]
- * @param  {[type]} songurl [description]
- * @return {[type]}         [description]
- */
-function parseNctURL(songurl) {
-	var parsed = String(songurl).match(nctRegExp);
-
-	return {
-		name: toTitleCase(parsed[1]).split('-').join(' '),
-		id: String(parsed[2])
-	};
-}
-
-/**
- * [toTitleCase description]
- * @param  {[type]} s [description]
- * @return {[type]}   [description]
- */
-function toTitleCase(s) {
-	s = String(s).toLowerCase();
-	return s.replace( /\b[a-z]/g, function(f) { return f.toUpperCase(); } );
-}
 
 /**
  * Get NCT stream URL and other info
@@ -37,55 +15,143 @@ function toTitleCase(s) {
  * @return {[type]}         [description]
  */
 getSongInfoNct = function(songurl) {
-	var res;
-	var songInfo = parseNctURL(songurl);
-	console.log(songInfo.name, ' - ', songInfo.id);
+	var linkRes, xmlURLResults, xmlURL;
+
+	// First Step: parse the HTML page to get the XML data URL for the flash-based player
 
 	try {
-		// old way
-		// res = HTTP.get('http://www.nhaccuatui.com/download/song/' + songInfo.id);
+		linkRes = getGzipURL(songurl);
+	} catch (err) {
+		console.error('Get NCT MP3 URL Error', err);
+	}
 
-		res = HTTP.post('http://getlinkmusic.appspot.com/getlinkjson', {
-			params: {
-				tb_link: songurl
-			}
+	linkRes = (linkRes.content) ? linkRes.content : '';
+	// console.log('linkRes:', linkRes);
+
+	// run the html against regexp to get XML URL
+	xmlURLResults = xmlURLReg.exec(linkRes);
+
+	if (xmlURLResults) {
+		xmlURL = xmlURLResults[0];
+		console.log('xmlURLResults:', xmlURLResults[0]);
+	} else {
+		console.log('xmlURL parse failed');
+		return null;
+	}
+
+	// Second Step: get the XML data file for the sone
+
+	var xmlRes, json;
+
+	// Note: Manually install the node package in server folder
+	var parser = new xml2js.Parser({
+		trim: true
+	});
+
+	// console.log('XML2JS:', XML2JS);
+
+	try {
+		xmlRes = getGzipURL(xmlURL);
+		xmlRes = xmlRes.content;
+		// console.log('Response:', xmlRes);
+
+		// Third Step: parse and convert the XML string to JSON object
+
+		parser.parseString(xmlRes, function(error, result) {
+			json = result;
 		});
+		console.log('==> ' + JSON.stringify(json));
+		// see sample JSON below
 
-		//TODO: Use the getSongInfoZing approach to parse the URL internally and not rely on 3rd party service
-
-		console.log('Response:', res);
-		res = JSON.parse(res.content); // ignore headers and status code
-		res = res.data[0];
 	} catch (err) {
 		console.error('Get NCT stream Error', err);
 	}
-	// sample response:
-	// {
-	//   "data": [
-	//     {
-	//       "creator": "Maroon 5",
-	//       "lyric": "http://lrc.nct.nixcdn.com/2014/08/19/f/0/c/0/1408465315444.lrc",
-	//       "location": "http://aredir.nixcdn.com/3c9ac28f32f504cba923fe8e0086f94e/5406968d/Unv_Audio20/Maps-Maroon5-3298999.mp3",
-	//       "title": "Maps"
-	//     }
-	//   ]
-	// }
 
-	console.log(res);
-	if (res && res.location) {
-		console.log('Adding new Song');
+	// Fourth Step: normalize the JSON object to a song record
 
-		return {
-			timeAdded: Date.now(),
-			originalURL: songurl,
-			origin: 'NCT',
-			name: res.title,
-			artist: res.creator,
-			streamURL: res.location
-		};
+	if (json && json.tracklist && json.tracklist.track[0]) {
+		console.log('Checking the XML data');
+		var track = json.tracklist.track[0];
+
+		//TODO: need to check if we ever got error with copyright checker like Zing
+		if (track.location[0] /*&& String(track.errorcode[0]) === '0'*/) {
+			console.log('URL is valid. Adding new song.');
+			// return { error: 'testing' }
+			return {
+				timeAdded: Date.now(),
+				originalURL: songurl,
+				origin: 'NCT',
+				name: track.title[0],
+				artist: track.creator[0],
+				streamURL: track.location[0],
+				thumbURL: track.avatar[0],
+				play: 0
+			};
+		} else if (track.errormessage[0]) {
+			console.log('Error received: ' + track.errormessage[0]);
+			return {
+				error: track.errormessage[0]
+			};
+		} else {
+			console.log('Unknown errors');
+			return {
+				error: 'Errors unknown.'
+			};
+		}
+
 	} else {
+		console.log('Can\'t parse link');
 		return {
 			error: 'Can\'t parse and get song info from link'
 		};
 	}
 };
+
+//sample json:
+// {
+// 	"tracklist": {
+// 		"type": [
+// 			"song"
+// 		],
+// 		"track": [
+// 			{
+// 				"title": [
+// 					"Tâm Sự Với Người Lạ"
+// 				],
+// 				"creator": [
+// 					"Tiên Cookie"
+// 				],
+// 				"location": [
+// 					"http://s82.stream.nixcdn.com/bd786719943728e32606ccc9f113864b/56dd7572/NhacCuaTui913/TamSuVoiNguoiLa-TienCookie-4282715.mp3"
+// 				],
+// 				"info": [
+// 					"http://www.nhaccuatui.com/bai-hat/tam-su-voi-nguoi-la-tien-cookie.H8GqrTEErwJR.html"
+// 				],
+// 				"image": [
+// 					"http://avatar.nct.nixcdn.com/singer/avatar/2016/01/25/4/1/1/7/1453716830438.jpg"
+// 				],
+// 				"thumb": [
+// 					""
+// 				],
+// 				"bgimage": [
+// 					"http://avatar.nct.nixcdn.com/singer/avatar/2016/01/25/4/1/1/7/1453716830438.jpg"
+// 				],
+// 				"avatar": [
+// 					"http://avatar.nct.nixcdn.com/singer/avatar/2016/01/25/4/1/1/7/1453716830438.jpg"
+// 				],
+// 				"lyric": [
+// 					"http://lrc.nct.nixcdn.com/2016/02/26/4/7/a/1/1456452594231.lrc"
+// 				],
+// 				"newtab": [
+// 					"http://www.nhaccuatui.com/nghe-si-tien-cookie.html"
+// 				],
+// 				"kbit": [
+// 					"320"
+// 				],
+// 				"key": [
+// 					"H8GqrTEErwJR"
+// 				]
+// 			}
+// 		]
+// 	}
+// }
