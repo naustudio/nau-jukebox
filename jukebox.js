@@ -9,9 +9,11 @@ Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
 
 if (Meteor.isClient) {
+	var nickname = localStorage.getItem('nickname') || '@nauzoo';
 	Session.setDefault('urlFetching', false);
 	Session.setDefault('showAll', false);
 	Session.setDefault('tab', 'tab--play-list');
+	Session.setDefault('nickname', nickname);
 
 	var player; //the MediaElement instance
 
@@ -97,6 +99,12 @@ if (Meteor.isClient) {
 		}
 	});
 
+	Template.body.helpers({
+		getNickname: function() {
+			return Session.get('nickname');
+		}
+	});
+
 	Template.songlist.events({
 		'click #songurl': function(event) {
 			event.currentTarget.select();
@@ -125,7 +133,8 @@ if (Meteor.isClient) {
 			// turn on flag of fetching data
 			Session.set('urlFetching', true);
 			//call server
-			Meteor.call('getSongInfo', this.originalURL, function(error, result) {
+			var nickname = Session.get('nickname');
+			Meteor.call('getSongInfo', this.originalURL, nickname, function(error, result) {
 				if (error) {
 					alert('Cannot add the song at:\n' + this.originalURL + '\nReason: ' + error.reason);
 				}
@@ -190,7 +199,8 @@ if (Meteor.isClient) {
 			}
 
 			//call server
-			Meteor.call('getSongInfo', songurl, function(error, result) {
+			var nickname = Session.get('nickname');
+			Meteor.call('getSongInfo', songurl, nickname, function(error, result) {
 				console.log('getSongInfo callback:', result);
 				if (error) {
 					alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
@@ -221,6 +231,22 @@ if (Meteor.isClient) {
 			Session.set('tab', tab);
 			$this.closest('.playlist-nav--list').find('.playlist-nav--item').removeClass('_active');
 			$this.addClass('_active');
+		},
+
+		'focus .js-nickname-holder': function(e) {
+			Session.set('nickname', '');
+		},
+
+		'keydown .js-nickname-holder': function(e) {
+			console.log('e', e);
+			if (e.keyCode === 13) {
+				var $target = $(e.currentTarget);
+				var value = $target.val();
+
+				localStorage.setItem('nickname', value);
+				Session.set('nickname', value);
+				$target.blur();
+			}
 		}
 	});
 
@@ -302,7 +328,7 @@ if (Meteor.isServer) {
 		// },
 
 		/*global getSongInfoNct, getSongInfoZing*/
-		getSongInfo: function(songurl) {
+		getSongInfo: function(songurl, author) {
 			// Set up a future for async callback sending to clients
 			var songInfo;
 			var fut = new Future();
@@ -314,6 +340,8 @@ if (Meteor.isServer) {
 				console.log('Getting Zing song info');
 				songInfo = getSongInfoZing(songurl);
 			}
+
+			songInfo.author = author;
 
 			if (songInfo.streamURL) {
 				fut['return'](Songs.insert(songInfo));
