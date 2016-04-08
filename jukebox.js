@@ -11,21 +11,52 @@ AppStates = new Meteor.Collection('appstates');
 if (Meteor.isClient) {
 	Session.setDefault('urlFetching', false);
 	Session.setDefault('showAll', false);
+	Session.setDefault('tab', 'tab--play-list');
 
 	var player; //the MediaElement instance
 
 	Template.songlist.helpers({
 		songs: function() {
-			if (Session.get('showAll')) {
-				// only show from 7 days past
-				var last7Days = moment().add('days', -7).toDate();
-				last7Days.setHours(0, 0, 0, 0);
-				return Songs.find({timeAdded: {$gt: last7Days.getTime()}}, {sort: {timeAdded: 1}});
-			} else {
-				var today = new Date();
-				today.setHours(0, 0, 0, 0); //reset to start of day
-				return Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
-			}
+			var tab = Session.get('tab');
+			var earlyOfToday = new Date();
+			var songList;
+			earlyOfToday.setHours(0, 0, 0, 0);
+
+			switch (tab) {
+				case 'tab--play-list':
+					var today = new Date();
+					today.setHours(0, 0, 0, 0); //reset to start of day
+					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+					break;
+
+				case 'tab--yesterday':
+					var last7Days = moment().add(-1, 'days').toDate();
+					last7Days.setHours(0, 0, 0, 0);
+					songList = Songs.find(
+						{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+						{sort: {timeAdded: 1}}
+					);
+					break;
+
+				case 'tab--past-7-days':
+					var last7Days = moment().add(-7, 'days').toDate();
+					last7Days.setHours(0, 0, 0, 0);
+					songList = Songs.find(
+						{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+						{sort: {timeAdded: 1}}
+					);
+					break;
+
+				case 'tab--naustorm':
+					songList = [];
+					break;
+
+				default:
+					songList = [];
+					break;
+				}
+
+			return songList;
 		},
 
 		loadingHidden: function() {
@@ -179,6 +210,15 @@ if (Meteor.isClient) {
 			} else {
 				_pause();
 			}
+		},
+
+		'click .js-playlist-nav': function(event) {
+			var $this = $(event.currentTarget);
+			var tab = $this.attr('data-tab');
+
+			Session.set('tab', tab);
+			$this.closest('.playlist-nav--list').find('.playlist-nav--item').removeClass('_active');
+			$this.addClass('_active');
 		}
 	});
 
