@@ -1,65 +1,116 @@
 <head>
-	<title>Nau Jukebox</title>
+	<title>NÂU-jukebox</title>
 </head>
 
 <body>
-	<a href="https://github.com/naustudio/nau-jukebox" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-	<header class="header">
-		<h1>Nâu Jukebox</h1>
-		<label class="show-all-chk">
-			<input type="checkbox" id="show-all-chk">
-			Past 7 days
-		</label>
-	</header>
-	<main class="main">
-		{{> songlist}}
-		{{> player}}
-	</main>
+	<a href="https://github.com/naustudio/nau-jukebox" target="_blank">
+		<img style="position: fixed; top: 0; right: 0; border: 0; z-index: 3000"
+			src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+			alt="Fork me on GitHub"
+			data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+	</a>
+
+	<nav class="navbar">
+		<div class="container">
+			<ul class="navbar--list">
+				<li class="navbar--item navbar--item__icon">
+					<a href="">NÂU-jukebox</a>
+				</li>
+				<li class="navbar--item navbar--item__input">
+					<form action="#" class="search-box js-add-song-form" id="js-add-song-form">
+						<div class="search-box--input-wrapper">
+							<input type="text" id="songurl" name="songurl"
+								class="search-box--input u-full-width"
+								placeholder="Input url song from mp3 + nhaccuatui..." />
+						</div>
+						<button type="submit" class="search-box--submit js-search-box--submit"></button>
+					</form>
+				</li>
+				<li class="navbar--item navbar--item__tool">
+					<div class="js-play-button play-button _play">
+						<div class="play-button--element play-button--elm-top"></div>
+						<div class="play-button--element play-button--elm-right"></div>
+						<div class="play-button--element play-button--elm-bottom"></div>
+						<div class="play-button--element play-button--elm-left"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="scroll-content">
+		<nav class="playlist-nav">
+			<div class="container">
+				<ul class="playlist-nav--list">
+					<li class="playlist-nav--item _active">
+						<a href="javascript:;">play list</a>
+					</li><!--
+					 --><li class="playlist-nav--item">
+						<a href="javascript:;">yesterday</a>
+					</li><!--
+					 --><li class="playlist-nav--item">
+						<a href="javascript:;">past 7 days</a>
+					</li><!--
+					 --><li class="playlist-nav--item">
+						<a href="javascript:;">naustorm</a>
+					</li>
+					<li class="playlist-nav--item playlist-nav--item__right">
+						<input type="text" placeholder="@ enter your name" />
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<section class="main-content">
+			<div class="container">
+				<div class="playlist">
+					{{> songlist}}
+					{{> player}}
+				</div>
+			</div>
+		</section>
+	</div>
 </body>
 
 <template name="player">
 	<div class="player-panel">
 		<audio id="audio-player" src="song.mp3" preload="none"></audio>
 	</div>
-</template><!-- /player -->
+</template>
+<!-- /player -->
 
 <template name="songlist">
-	<section class="song-list">
+	<ul class="playlist--list">
 		{{#each songs}}
 			{{> song}}
 		{{else}}
 			Getting song list...
 		{{/each}}
-	</section>
-	<hr>
-	<form action="#" id="add-song-form">
-		<label for="songurl">Song URL:</label>
-		<div class="input-group">
-			<input type="url" id="songurl" name="songurl" class="form-control" aria-label="..."
-				placeholder="http://www.nhaccuatui.com/bai-hat/song-name.code.html (NCT, Zing)" required />
-			<div class="input-group-btn">
-				<input type="submit" class="btn btn-primary">
-			</div>
-		</div>
-
-		<span class="loading {{loadingHidden}}">Getting media link...</span>
-	</form>
-
-</template><!-- /songlist -->
+	</ul>
+</template>
+<!-- /songlist -->
 
 <template name="song">
-	<div class="song-row {{selected}} {{playing}}">
-		{{#if thumbURL}}
-		<a class="origin-badge {{originBadgeColor}}" href="{{originalURL}}" target="_blank" title="Open original URL in new tab"><img src="{{thumbURL}}" alt="{{artist}}" class="thumb"></a>
-		{{else}}
-		<a class="origin-badge {{originBadgeColor}}" href="{{originalURL}}" target="_blank" title="Open original URL in new tab">{{origin}}</a>
-		{{/if}}
-		<a class="song-item" title="{{name}} - {{artist}}" href="#{{name}}">
-			<span class="song-name">{{name}} - {{artist}}</span>
-			<time class="add-date">{{addDate}}</time>
+	<li class="js-song-item playlist--item {{selected}} {{playing}}">
+		<span class="playlist--item--active">></span>
+		<a href="{{originalURL}}" class="playlist--item--origin">
+			{{#if thumbURL}}
+				<img src="{{thumbURL}}">
+			{{else}}
+				<img src="http://placehold.it/40x40">
+			{{/if}}
 		</a>
-		<a class="glyphicon glyphicon-remove remove-btn" title="Remove this song"></a>
-		<a class="glyphicon glyphicon-repeat rebook-btn" title="Re-book this song"></a>
-	</div>
-</template><!-- /song -->
+		<a href="javascript:;" class="playlist--item--link"
+			title="{{name}} - {{artist}}">{{name}} - {{artist}}</a>
+		<div class="playlist--item--tools">
+			<small>{{addDate}}</small>
+			<a href="javascript:;" class="loading-block rebook-btn">
+				<span class="loading-block--stable">rebook</span>
+				<span class="loading-block--spinner">...</span>
+			</a>
+			<a href="javascript:;" class="remove-btn">remove</a>
+		</div>
+	</li>
+</template>
+<!-- /song -->
 

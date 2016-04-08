@@ -35,28 +35,21 @@ if (Meteor.isClient) {
 
 	Template.song.helpers({
 		selected: function() {
-			return Session.equals('selectedSong', this._id) ? 'selected' : '';
+			return Session.equals('selectedSong', this._id) ? '_selected' : '';
 		},
 
 		playing: function() {
 			var playingSongs = AppStates.findOne({key: 'playingSongs'});
 			if (playingSongs && Array.isArray(playingSongs.songs)) {
-				return (playingSongs.songs.indexOf(this._id) !== -1) ? 'playing' : '';
+				return (playingSongs.songs.indexOf(this._id) !== -1) ? '_playing' : '';
 			} else {
 				return '';
 			}
 		},
 
 		addDate: function() {
-			var date = new Date(this.timeAdded);
-			var y = date.getFullYear();
-			var m = date.getMonth() + 1;
-			var d = date.getDate();
-
-			if (m < 10) { m = '0' + m; }
-			if (d < 10) { d = '0' + d; }
-
-			return y + '-' + m + '-' + d;
+			var m = moment(this.timeAdded);
+			return m.fromNow();
 		},
 
 		originBadgeColor: function() {
@@ -77,51 +70,17 @@ if (Meteor.isClient) {
 		'click #songurl': function(event) {
 			event.currentTarget.select();
 		},
-
-		'submit #add-song-form': function(event) {
-
-			if (Session.equals('urlFetching', true)) {
-				return;
-			}
-
-			event.preventDefault();
-			var submitData = $(event.currentTarget).serializeArray();
-			var songurl;
-
-			Session.set('urlFetching', true);
-
-			for (var i = 0; i < submitData.length; i++) {
-				if (submitData[i].name === 'songurl') {
-					songurl = submitData[i].value;
-				}
-			}
-			// alert('Song list add ' + songurl);
-
-			//call server
-			Meteor.call('getSongInfo', songurl, function(error, result) {
-				console.log('getSongInfo callback:', result);
-				if (error) {
-					alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
-					this.$('#songurl').val('');
-				}
-
-				// clear input field after inserting has done
-				$(event.currentTarget).find('[name="songurl"]').val('');
-
-				Session.set('urlFetching', false);
-			});
-		}
 	});
 
 	Template.song.events({
-		'click .song-item': function() {
+		'click .js-song-item': function() {
 			playSong(this);
 		},
 		'click .remove-btn': function(e) {
 			Songs.remove(this._id);
 			if (Session.equals('selectedSong', this._id)) {
 				//selected song playing
-				player.pause();
+				_pause();
 				player.media.src = '';
 				AppStates.updatePlayingSongs('', this._id);
 			}
@@ -178,6 +137,48 @@ if (Meteor.isClient) {
 			} else {
 				Session.set('showAll', false);
 			}
+		},
+
+		'submit #js-add-song-form': function(event) {
+			if (Session.equals('urlFetching', true)) {
+				return;
+			}
+
+			event.preventDefault();
+			var submitData = $(event.currentTarget).serializeArray();
+			var songurl;
+
+			Session.set('urlFetching', true);
+
+			for (var i = 0; i < submitData.length; i++) {
+				if (submitData[i].name === 'songurl') {
+					songurl = submitData[i].value;
+				}
+			}
+
+			//call server
+			Meteor.call('getSongInfo', songurl, function(error, result) {
+				console.log('getSongInfo callback:', result);
+				if (error) {
+					alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
+					this.$('#songurl').val('');
+				}
+
+				// clear input field after inserting has done
+				$(event.currentTarget).find('[name="songurl"]').val('');
+
+				Session.set('urlFetching', false);
+			});
+		},
+
+		'click .js-play-button': function(event) {
+			var $playButton = $(event.currentTarget);
+			console.log('$playButton', $playButton.hasClass('_play'));
+			if ($playButton.hasClass('_play')) {
+				_play();
+			} else {
+				_pause();
+			}
 		}
 	});
 
@@ -198,7 +199,7 @@ if (Meteor.isClient) {
 	 */
 	function selectSong(song) { /* jshint ignore:line */
 		if (player) {
-			player.pause();
+			_pause();
 			player.media.src = song.streamURL;
 			player.song = song;
 			document.title = 'NJ :: ' + song.name;
@@ -218,7 +219,20 @@ if (Meteor.isClient) {
 
 		AppStates.updatePlayingSongs(song._id, prevId);
 		selectSong(song);
+
+		_play();
+	}
+
+	function _play() {
+		var $playButton = $('.js-play-button');
+		$playButton.removeClass('_play').addClass('_pause');
 		player.play();
+	}
+
+	function _pause() {
+		var $playButton = $('.js-play-button');
+		$playButton.removeClass('_pause').addClass('_play');
+		player.pause();
 	}
 }
 
