@@ -107,6 +107,7 @@ if (Meteor.isClient) {
 		'click .js-song-item': function() {
 			playSong(this);
 		},
+
 		'click .remove-btn': function(e) {
 			Songs.remove(this._id);
 			if (Session.equals('selectedSong', this._id)) {
@@ -117,6 +118,7 @@ if (Meteor.isClient) {
 			}
 			e.stopPropagation();
 		},
+
 		'click .rebook-btn': function(e) {
 			// add current url into input field
 			$('[name="songurl"]').val(this.originalURL);

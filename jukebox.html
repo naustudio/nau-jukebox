@@ -1,5 +1,6 @@
 <head>
 	<title>NÂU-jukebox</title>
+	<link rel="shortcut icon" type="image/ico" href="/fav.ico"/>
 </head>
 
 <body>
@@ -93,7 +94,7 @@
 <template name="song">
 	<li class="js-song-item playlist--item {{selected}} {{playing}}">
 		<span class="playlist--item--active">></span>
-		<a href="{{originalURL}}" class="playlist--item--origin">
+		<a href="{{originalURL}}" class="playlist--item--origin" target="_blank">
 			{{#if thumbURL}}
 				<img src="{{thumbURL}}">
 			{{else}}
