@@ -18,13 +18,26 @@
 					<a href="">NÂU-jukebox</a>
 				</li>
 				<li class="navbar--item navbar--item__input">
+
 					<form action="#" class="search-box js-add-song-form" id="js-add-song-form">
-						<div class="search-box--input-wrapper">
-							<input type="text" id="songurl" name="songurl"
-								class="search-box--input u-full-width"
-								placeholder="Input url song from mp3 + nhaccuatui..." />
+						<div class="search-box--control">
+							<div class="search-box--input-wrapper">
+								<input type="text" id="songurl" name="songurl"
+									class="search-box--input u-full-width js-search-box"
+									placeholder="Input name of song or url from nhaccuatui, mp3"
+									autocomplete="off" />
+							</div>
+							<button type="submit" class="search-box--submit js-search-box--submit"></button>
 						</div>
-						<button type="submit" class="search-box--submit js-search-box--submit"></button>
+
+						<div class="search-box--result-wrapper">
+							<ul class="song-result--list">
+								{{#each searchResult}}
+									<li class="song-result--item js-song-result--item"
+										data-href="{{originalURL}}">{{name}} - {{artist}}</li>
+								{{/each}}
+							</ul>
+						</div>
 					</form>
 				</li>
 				<li class="navbar--item navbar--item__tool">

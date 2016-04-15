@@ -7,8 +7,7 @@
 				".grunt",
 				".idea",
 				".sass-cache",
-				".sonar",
-				"node_modules"
+				".sonar"
 			],
 			"follow_symlinks": true,
 			"path": "."
