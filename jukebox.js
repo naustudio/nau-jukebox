@@ -15,6 +15,7 @@ if (Meteor.isClient) {
 	Session.setDefault('showAll', false);
 	Session.setDefault('tab', 'tab--play-list');
 	Session.setDefault('nickname', nickname);
+	Session.setDefault('selectedIndex', '0');
 
 	var player; //the MediaElement instance
 
@@ -44,6 +45,11 @@ if (Meteor.isClient) {
 					var today = new Date();
 					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+					songList.observeChanges({
+						added: function(id/*, fields*/) {
+							console.log('songList added', id);
+						}
+					});
 					break;
 
 				case 'tab--yesterday':
@@ -120,7 +126,14 @@ if (Meteor.isClient) {
 		},
 
 		searchResult: function() {
-			return Session.get('searchResult') || [];
+			var searchResult = Session.get('searchResult') || [];
+			var selectedIndex = Session.get('selectedIndex');
+
+			if (selectedIndex >= 0 && selectedIndex < searchResult.length) {
+				searchResult[selectedIndex]._active = '_active';
+			}
+
+			return searchResult;
 		}
 	});
 
@@ -210,7 +223,9 @@ if (Meteor.isClient) {
 			}
 
 			//call server
-			submitSong(songurl);
+			if (songurl.indexOf('http') >= 0) {
+				submitSong(songurl);
+			}
 		},
 
 		'click .js-play-button': function(event) {
@@ -249,9 +264,54 @@ if (Meteor.isClient) {
 		},
 
 		'keyup .js-search-box': function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
 			var $target = $(e.currentTarget);
 			var $form = $target.closest('.js-add-song-form');
 			var value = $target.val();
+			var searchResult = Session.get('searchResult') || [];
+			var selectedIndex = Session.get('selectedIndex');
+			if (selectedIndex > (searchResult.length - 1)) {
+				selectedIndex = searchResult.length - 1;
+				Session.set('selectedIndex', selectedIndex.toString());
+			}
+
+			if (e.keyCode === 38) { // up arrow
+				if (selectedIndex > 0) {
+					selectedIndex--;
+					Session.set('selectedIndex', selectedIndex.toString());
+					return;
+				}
+			}
+
+			if (e.keyCode === 40) { // down arrow
+				if (selectedIndex < (searchResult.length - 1)) {
+					selectedIndex++;
+					Session.set('selectedIndex', selectedIndex.toString());
+					return;
+				}
+			}
+
+			if (e.keyCode === 27) { // esc
+				$target.val('');
+				$form.removeClass('_active');
+
+				if (value.length === 0) {
+					$form.find('input').blur();
+				}
+				return;
+			}
+
+			if (e.keyCode === 13) { // enter
+				var selectedSong = searchResult[selectedIndex];
+				if (selectedSong) {
+					submitSong(selectedSong.originalURL);
+					$form.find('#songurl').val('').blur();
+					$form.removeClass('_active');
+					return false;
+				}
+			}
 
 			if (value.length >= 3) {
 				var data = Songs.find({searchPattern: {$regex: value.toLowerCase() + '*'}}, {limit: 7}).fetch();
@@ -289,6 +349,26 @@ if (Meteor.isClient) {
 		if (selected) {
 			selectSong(selected);
 		}
+
+		$(document).on('keyup', function(e) {
+			console.log('keypress', e.keyCode);
+			var $form = $('.js-add-song-form');
+			var $input = $form.find('input');
+
+			switch (e.keyCode) {
+				case 81: // q
+					$input.focus();
+					break;
+
+				case 27: // esc
+					$input.blur();
+					break;
+
+				case 80: // p
+					// toggle between play/pause
+				default:
+			}
+		});
 	});
 
 	/**

@@ -81,10 +81,10 @@ input[type="text"]:focus {
 	color: #49413f;
 }
 .navbar--item__icon, .navbar--item__tool {
-	width: 15%;
+	width: 20%;
 }
 .navbar--item__input {
-	width: 70%;
+	width: 60%;
 	padding: 7.5px 0;
 	position: relative;
 }
@@ -194,7 +194,7 @@ input[type="text"]:focus {
 	width: 40px;
 	height: 40px;
 	margin: 15px;
-	margin-left: 30px;
+	margin-left: 60px;
 	cursor: pointer;
 }
 .play-button:hover .play-button--element {

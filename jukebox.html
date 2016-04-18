@@ -33,7 +33,7 @@
 						<div class="search-box--result-wrapper">
 							<ul class="song-result--list">
 								{{#each searchResult}}
-									<li class="song-result--item js-song-result--item"
+									<li class="song-result--item js-song-result--item {{_active}}"
 										data-href="{{originalURL}}">{{name}} - {{artist}}</li>
 								{{/each}}
 							</ul>
