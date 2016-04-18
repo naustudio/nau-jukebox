@@ -1,10 +1,11 @@
 /**
  * Main module
  */
-/*global Songs:true, AppStates:true*/
+/*global Songs:true, AppStates:true, moment*/
 
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
+
 Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
 
@@ -14,8 +15,23 @@ if (Meteor.isClient) {
 	Session.setDefault('showAll', false);
 	Session.setDefault('tab', 'tab--play-list');
 	Session.setDefault('nickname', nickname);
+	Session.setDefault('selectedIndex', '0');
 
 	var player; //the MediaElement instance
+
+	var submitSong = function(songurl) {
+		var nickname = Session.get('nickname');
+		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
+			if (error) {
+				alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
+				$('[name="songurl"]').val('');
+			}
+
+			// clear input field after inserting has done
+			$('[name="songurl"]').val('');
+			Session.set('urlFetching', false);
+		});
+	};
 
 	Template.songlist.helpers({
 		songs: function() {
@@ -29,6 +45,11 @@ if (Meteor.isClient) {
 					var today = new Date();
 					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+					songList.observeChanges({
+						added: function(id/*, fields*/) {
+							console.log('songList added', id);
+						}
+					});
 					break;
 
 				case 'tab--yesterday':
@@ -56,7 +77,7 @@ if (Meteor.isClient) {
 				default:
 					songList = [];
 					break;
-				}
+			}
 
 			return songList;
 		},
@@ -102,6 +123,17 @@ if (Meteor.isClient) {
 	Template.body.helpers({
 		getNickname: function() {
 			return Session.get('nickname');
+		},
+
+		searchResult: function() {
+			var searchResult = Session.get('searchResult') || [];
+			var selectedIndex = Session.get('selectedIndex');
+
+			if (selectedIndex >= 0 && selectedIndex < searchResult.length) {
+				searchResult[selectedIndex]._active = '_active';
+			}
+
+			return searchResult;
 		}
 	});
 
@@ -133,15 +165,7 @@ if (Meteor.isClient) {
 			// turn on flag of fetching data
 			Session.set('urlFetching', true);
 			//call server
-			var nickname = Session.get('nickname');
-			Meteor.call('getSongInfo', this.originalURL, nickname, function(error, result) {
-				if (error) {
-					alert('Cannot add the song at:\n' + this.originalURL + '\nReason: ' + error.reason);
-				}
-				$('[name="songurl"]').val('');
-				// turn off flag of fetching data
-				Session.set('urlFetching', false);
-			});
+			submitSong(this.originalURL);
 			e.stopPropagation();
 		}
 	});
@@ -199,19 +223,9 @@ if (Meteor.isClient) {
 			}
 
 			//call server
-			var nickname = Session.get('nickname');
-			Meteor.call('getSongInfo', songurl, nickname, function(error, result) {
-				console.log('getSongInfo callback:', result);
-				if (error) {
-					alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
-					this.$('#songurl').val('');
-				}
-
-				// clear input field after inserting has done
-				$(event.currentTarget).find('[name="songurl"]').val('');
-
-				Session.set('urlFetching', false);
-			});
+			if (songurl.indexOf('http') >= 0) {
+				submitSong(songurl);
+			}
 		},
 
 		'click .js-play-button': function(event) {
@@ -233,7 +247,7 @@ if (Meteor.isClient) {
 			$this.addClass('_active');
 		},
 
-		'focus .js-nickname-holder': function(e) {
+		'focus .js-nickname-holder': function(/*e*/) {
 			Session.set('nickname', '');
 		},
 
@@ -247,7 +261,84 @@ if (Meteor.isClient) {
 				Session.set('nickname', value);
 				$target.blur();
 			}
-		}
+		},
+
+		'keyup .js-search-box': function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			var $target = $(e.currentTarget);
+			var $form = $target.closest('.js-add-song-form');
+			var value = $target.val();
+			var searchResult = Session.get('searchResult') || [];
+			var selectedIndex = Session.get('selectedIndex');
+			if (selectedIndex > (searchResult.length - 1)) {
+				selectedIndex = searchResult.length - 1;
+				Session.set('selectedIndex', selectedIndex.toString());
+			}
+
+			if (e.keyCode === 38) { // up arrow
+				if (selectedIndex > 0) {
+					selectedIndex--;
+					Session.set('selectedIndex', selectedIndex.toString());
+					return;
+				}
+			}
+
+			if (e.keyCode === 40) { // down arrow
+				if (selectedIndex < (searchResult.length - 1)) {
+					selectedIndex++;
+					Session.set('selectedIndex', selectedIndex.toString());
+					return;
+				}
+			}
+
+			if (e.keyCode === 27) { // esc
+				$target.val('');
+				$form.removeClass('_active');
+
+				if (value.length === 0) {
+					$form.find('input').blur();
+				}
+				return;
+			}
+
+			if (e.keyCode === 13) { // enter
+				var selectedSong = searchResult[selectedIndex];
+				if (selectedSong) {
+					submitSong(selectedSong.originalURL);
+					$form.find('#songurl').val('').blur();
+					$form.removeClass('_active');
+					return false;
+				}
+			}
+
+			if (value.length >= 3) {
+				var data = Songs.find({searchPattern: {$regex: value.toLowerCase() + '*'}}, {limit: 7}).fetch();
+
+				if (data.length > 0) {
+					Session.set('searchResult', data);
+					$form.addClass('_active');
+				} else {
+					Session.set('searchResult', []);
+					$form.removeClass('_active');
+				}
+			} else {
+				$form.removeClass('_active');
+			}
+		},
+
+		'click .js-song-result--item': function(e) {
+			var $target = $(e.currentTarget);
+			var $form = $target.closest('.js-add-song-form');
+			var songurl = $target.attr('data-href');
+
+			$form.find('#songurl').val('');
+			$form.removeClass('_active');
+
+			//call server
+			submitSong(songurl);
+		},
 	});
 
 	/*global MediaElementPlayer*/
@@ -258,6 +349,26 @@ if (Meteor.isClient) {
 		if (selected) {
 			selectSong(selected);
 		}
+
+		$(document).on('keyup', function(e) {
+			console.log('keypress', e.keyCode);
+			var $form = $('.js-add-song-form');
+			var $input = $form.find('input');
+
+			switch (e.keyCode) {
+				case 81: // q
+					$input.focus();
+					break;
+
+				case 27: // esc
+					$input.blur();
+					break;
+
+				case 80: // p
+					// toggle between play/pause
+				default:
+			}
+		});
 	});
 
 	/**
@@ -322,10 +433,6 @@ if (Meteor.isServer) {
 	});
 
 	Meteor.methods({
-		// this method is dangerous, disable for now
-		// removeAllSongs: function() {
-		// 	return Songs.remove({});
-		// },
 
 		/*global getSongInfoNct, getSongInfoZing*/
 		getSongInfo: function(songurl, author) {
@@ -342,13 +449,14 @@ if (Meteor.isServer) {
 			}
 
 			songInfo.author = author;
+			songInfo.searchPattern = songInfo.name.toLowerCase() + ' - ' + songInfo.artist.toLowerCase();
 
 			if (songInfo.streamURL) {
 				fut['return'](Songs.insert(songInfo));
 			} else {
+				fut['return'](null);
 				//songInfo is error object
 				throw new Meteor.Error(403, songInfo.error);
-				fut['return'](null);
 			}
 
 			return fut.wait();
