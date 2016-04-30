@@ -5,7 +5,6 @@
 
 autopublish
 insecure
-mizzao:bootstrap-3
 vjau:xml2js
 momentjs:moment
 http
@@ -24,3 +23,7 @@ random
 ejson
 spacebars
 check
+meteorhacks:npm
+
+
+npm-container
