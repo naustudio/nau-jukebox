@@ -1,7 +1,7 @@
 /**
  * NCT URL parser module
  */
-/*global getSongInfoNct:true*/
+/*global getSongInfoNct:false, getGzipURL: true, xml2js: true*/
 
 // Utility / Private functions
 var xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;

@@ -108,11 +108,11 @@
 <template name="song">
 	<li class="js-song-item playlist--item {{selected}} {{playing}}">
 		<span class="playlist--item--active">></span>
-		<a href="{{originalURL}}" class="playlist--item--origin" target="_blank">
+		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
 			{{#if thumbURL}}
 				<img src="{{thumbURL}}">
 			{{else}}
-				<img src="http://placehold.it/40x40">
+				<img src="http://stc.id.nixcdn.com/v11/images/df-singer-300x300.jpg">
 			{{/if}}
 		</a>
 		<a href="javascript:;" class="playlist--item--link"

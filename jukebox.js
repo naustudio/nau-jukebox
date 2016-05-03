@@ -1,6 +1,7 @@
 /**
  * Main module
  */
+/*eslint no-shadow:0*/
 /*global Songs:true, AppStates:true, moment*/
 
 // Set up a collection to contain song information. On the server,
@@ -53,10 +54,10 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--yesterday':
-					var last7Days = moment().add(-1, 'days').toDate();
-					last7Days.setHours(0, 0, 0, 0);
+					var yesterday = moment().add(-1, 'days').toDate();
+					yesterday.setHours(0, 0, 0, 0);
 					songList = Songs.find(
-						{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+						{timeAdded: {$gt: yesterday.getTime(), $lt: earlyOfToday.getTime()}},
 						{sort: {timeAdded: 1}}
 					);
 					break;
@@ -140,7 +141,7 @@ if (Meteor.isClient) {
 	Template.songlist.events({
 		'click #songurl': function(event) {
 			event.currentTarget.select();
-		},
+		}
 	});
 
 	Template.song.events({

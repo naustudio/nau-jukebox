@@ -1,7 +1,7 @@
 /**
  * Zing MP3 URL parser module
  */
-/*global getSongInfoZing:true, getGzipURL, xml2js*/
+/*global getSongInfoZing:false, getGzipURL, xml2js*/
 var xmlURLReg = /http:\/\/mp3.zing.vn\/xml\/song-xml\/(\w+)/;
 var avatarURLReg = /thumb-art.*?"(http:\/\/[^"]*)/;
 //sample avatar image from Zing HTML page: <img class="thumb-art" width="110" src="http://image.mp3.zdn.vn/thumb/165_165/avatars/6/2/62b05bf415a3736e551cae7ed1ce90f2_1450237124.jpg" alt="Min">
