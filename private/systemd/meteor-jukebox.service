@@ -1,0 +1,19 @@
+[Unit]
+Description=A Meteor app
+Requires=mongodb.service
+After=mongodb.service
+
+[Service]
+ExecStart=/home/ubuntu/.nvm/v0.10.43/bin/node /home/ubuntu/meteor/jukebox/bundle/main.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=meteor-jukebox
+User=ubuntu
+Group=ubuntu
+Environment=MONGO_URL=mongodb://localhost:27017/jukebox
+Environment=ROOT_URL=http://jukebox.naustud.io
+Environment=PORT=5002
+
+[Install]
+WantedBy=multi-user.target
