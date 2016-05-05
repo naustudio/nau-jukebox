@@ -11,7 +11,7 @@ Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
 
 if (Meteor.isClient) {
-	var nickname = localStorage.getItem('nickname') || '@nauzoo';
+	var nickname = localStorage.getItem('nickname') || '';
 	Session.setDefault('urlFetching', false);
 	Session.setDefault('showAll', false);
 	Session.setDefault('tab', 'tab--play-list');
@@ -118,6 +118,17 @@ if (Meteor.isClient) {
 					break;
 			}
 			return color;
+		},
+
+		getDisplayTitle: function(limit) {
+			var title = this.name + ' - ' + this.artist;
+			var str = title.substr(0, limit);
+
+			if (str.length < title.length) {
+				str += '...';
+			}
+
+			return str;
 		}
 	});
 
@@ -363,6 +374,8 @@ if (Meteor.isClient) {
 
 				case 27: // esc
 					$input.blur();
+					$input.val('');
+					$form.removeClass('_active');
 					break;
 
 				case 80: // p
