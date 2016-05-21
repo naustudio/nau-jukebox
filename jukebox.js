@@ -104,8 +104,7 @@ if (Meteor.isClient) {
 		},
 
 		addDate: function() {
-			var m = moment(this.timeAdded);
-			return m.fromNow();
+			return Template.instance().addDateFromNow.get();
 		},
 
 		originBadgeColor: function() {
@@ -121,6 +120,21 @@ if (Meteor.isClient) {
 			return color;
 		}
 	});
+
+	Template.song.created = function() {
+		var self = this;
+
+		this.momentTime = moment(this.data.timeAdded);
+		this.addDateFromNow = ReactiveVar(this.momentTime.fromNow());
+
+		this.handle = Meteor.setInterval((function() {
+			self.addDateFromNow.set(self.momentTime.fromNow());
+		}), 1000*60);
+	};
+
+	Template.song.destroyed = function() {
+		Meteor.clearInterval(this.handle);
+	};
 
 	Template.body.helpers({
 		getNickname: function() {
