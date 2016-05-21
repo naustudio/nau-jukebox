@@ -389,10 +389,14 @@ input[type="text"]:focus {
 }
 .playlist--item--link {
 	line-height: 40px;
-	display: inline-block;
 	margin-left: 55px;
 	text-decoration: none;
 	color: black;
+	margin-right: 270px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inherit;
 }
 .playlist--item--tools {
   position: absolute;
@@ -423,7 +427,12 @@ input[type="text"]:focus {
 	background-color: whitesmoke;
 }
 .playlist--item._selected .playlist--item--active {
+  opacity: 0.5;
+}
+.playlist--item._playing .playlist--item--active {
   opacity: 1;
+  color: brown;
+  font-weight: bold;
 }
 
 .loading-block--spinner {
@@ -457,7 +466,6 @@ input[type="text"]:focus {
 						transform: translateX(-65%);
 	}
 }
-
 @keyframes moving {
 	20% {
 		-webkit-transform: translateX(-35%);
@@ -469,6 +477,7 @@ input[type="text"]:focus {
 						transform: translateX(-65%);
 	}
 }
+
 @-webkit-keyframes submit-moving {
 	20% {
 		letter-spacing: 2px;

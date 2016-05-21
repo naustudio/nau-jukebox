@@ -95,6 +95,7 @@ if (Meteor.isClient) {
 
 		playing: function() {
 			var playingSongs = AppStates.findOne({key: 'playingSongs'});
+
 			if (playingSongs && Array.isArray(playingSongs.songs)) {
 				return (playingSongs.songs.indexOf(this._id) !== -1) ? '_playing' : '';
 			} else {
@@ -118,17 +119,6 @@ if (Meteor.isClient) {
 					break;
 			}
 			return color;
-		},
-
-		getDisplayTitle: function(limit) {
-			var title = this.name + ' - ' + this.artist;
-			var str = title.substr(0, limit);
-
-			if (str.length < title.length) {
-				str += '...';
-			}
-
-			return str;
 		}
 	});
 
@@ -164,7 +154,7 @@ if (Meteor.isClient) {
 			Songs.remove(this._id);
 			if (Session.equals('selectedSong', this._id)) {
 				//selected song playing
-				_pause();
+				pauseWithEffect();
 				player.media.src = '';
 				AppStates.updatePlayingSongs('', this._id);
 			}
@@ -244,9 +234,9 @@ if (Meteor.isClient) {
 			var $playButton = $(event.currentTarget);
 			console.log('$playButton', $playButton.hasClass('_play'));
 			if ($playButton.hasClass('_play')) {
-				_play();
+				playWithEffect();
 			} else {
-				_pause();
+				pauseWithEffect();
 			}
 		},
 
@@ -392,7 +382,7 @@ if (Meteor.isClient) {
 	 */
 	function selectSong(song) { /* jshint ignore:line */
 		if (player) {
-			_pause();
+			pauseWithEffect();
 			player.media.src = song.streamURL;
 			player.song = song;
 			document.title = 'NJ :: ' + song.name;
@@ -413,16 +403,16 @@ if (Meteor.isClient) {
 		AppStates.updatePlayingSongs(song._id, prevId);
 		selectSong(song);
 
-		_play();
+		playWithEffect();
 	}
 
-	function _play() {
+	function playWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_play').addClass('_pause');
 		player.play();
 	}
 
-	function _pause() {
+	function pauseWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_pause').addClass('_play');
 		player.pause();
