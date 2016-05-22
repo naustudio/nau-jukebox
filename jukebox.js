@@ -11,7 +11,7 @@ Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
 
 if (Meteor.isClient) {
-	var nickname = localStorage.getItem('nickname') || '@nauzoo';
+	var nickname = localStorage.getItem('nickname') || '';
 	Session.setDefault('urlFetching', false);
 	Session.setDefault('showAll', false);
 	Session.setDefault('tab', 'tab--play-list');
@@ -95,6 +95,7 @@ if (Meteor.isClient) {
 
 		playing: function() {
 			var playingSongs = AppStates.findOne({key: 'playingSongs'});
+
 			if (playingSongs && Array.isArray(playingSongs.songs)) {
 				return (playingSongs.songs.indexOf(this._id) !== -1) ? '_playing' : '';
 			} else {
@@ -103,8 +104,7 @@ if (Meteor.isClient) {
 		},
 
 		addDate: function() {
-			var m = moment(this.timeAdded);
-			return m.fromNow();
+			return Template.instance().addDateFromNow.get();
 		},
 
 		originBadgeColor: function() {
@@ -120,6 +120,21 @@ if (Meteor.isClient) {
 			return color;
 		}
 	});
+
+	Template.song.created = function() {
+		var self = this;
+
+		this.momentTime = moment(this.data.timeAdded);
+		this.addDateFromNow = ReactiveVar(this.momentTime.fromNow());
+
+		this.handle = Meteor.setInterval((function() {
+			self.addDateFromNow.set(self.momentTime.fromNow());
+		}), 1000*60);
+	};
+
+	Template.song.destroyed = function() {
+		Meteor.clearInterval(this.handle);
+	};
 
 	Template.body.helpers({
 		getNickname: function() {
@@ -153,7 +168,7 @@ if (Meteor.isClient) {
 			Songs.remove(this._id);
 			if (Session.equals('selectedSong', this._id)) {
 				//selected song playing
-				_pause();
+				pauseWithEffect();
 				player.media.src = '';
 				AppStates.updatePlayingSongs('', this._id);
 			}
@@ -233,9 +248,9 @@ if (Meteor.isClient) {
 			var $playButton = $(event.currentTarget);
 			console.log('$playButton', $playButton.hasClass('_play'));
 			if ($playButton.hasClass('_play')) {
-				_play();
+				playWithEffect();
 			} else {
-				_pause();
+				pauseWithEffect();
 			}
 		},
 
@@ -363,6 +378,8 @@ if (Meteor.isClient) {
 
 				case 27: // esc
 					$input.blur();
+					$input.val('');
+					$form.removeClass('_active');
 					break;
 
 				case 80: // p
@@ -379,7 +396,7 @@ if (Meteor.isClient) {
 	 */
 	function selectSong(song) { /* jshint ignore:line */
 		if (player) {
-			_pause();
+			pauseWithEffect();
 			player.media.src = song.streamURL;
 			player.song = song;
 			document.title = 'NJ :: ' + song.name;
@@ -400,16 +417,16 @@ if (Meteor.isClient) {
 		AppStates.updatePlayingSongs(song._id, prevId);
 		selectSong(song);
 
-		_play();
+		playWithEffect();
 	}
 
-	function _play() {
+	function playWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_play').addClass('_pause');
 		player.play();
 	}
 
-	function _pause() {
+	function pauseWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_pause').addClass('_play');
 		player.pause();
