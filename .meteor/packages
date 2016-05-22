@@ -9,7 +9,6 @@ vjau:xml2js
 momentjs:moment
 http
 
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -28,3 +27,5 @@ meteorhacks:npm
 
 npm-container
 reactive-var
+standard-minifier-css
+standard-minifier-js
