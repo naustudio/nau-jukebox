@@ -1,6 +1,30 @@
 <head>
 	<title>Nâu Jukebox</title>
 	<link rel="icon" href="/favicon.png" type="image/png">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.5/trianglify.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+	<style>
+		::-webkit-input-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+
+		:-moz-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+
+		::-moz-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+
+		:-ms-input-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+	</style>
 </head>
 
 <body>
@@ -11,7 +35,7 @@
 			data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
 	</a>
 
-	<nav class="navbar">
+	<nav class="navbar" id="js-navbar">
 		<div class="container">
 			<ul class="navbar--list">
 				<li class="navbar--item navbar--item__icon">
@@ -67,6 +91,9 @@
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm">
 						<a href="javascript:;">naustorm</a>
+					</li><!--
+					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--gamblr">
+						<a href="javascript:;">>gamblr</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
 						<input type="text" placeholder="@ enter your name" class="js-nickname-holder"
@@ -76,11 +103,29 @@
 			</div>
 		</nav>
 
-		<section class="main-content">
+		<section id="js-playblock" class="main-content">
 			<div class="container">
 				<div class="playlist">
 					{{> songlist}}
 					{{> player}}
+				</div>
+			</div>
+		</section>
+
+		<section id="js-naustorm" class="main-content"  style="display:none">
+			<div class="container">
+				<div class="naustorm-section">
+					<h5>naustorm\<small> may07 - may14</small></h5>
+					{{> naustorm}}
+				</div>
+			</div>
+		</section>
+
+		<section id="js-gamblr" class="main-content"  style="display:none">
+			<div class="container">
+				<div class="naustorm-section">
+					<h5>>gamblr</h5>
+					<p>one more thing is comming !</p>
 				</div>
 			</div>
 		</section>
@@ -123,9 +168,29 @@
 				<span class="loading-block--stable">rebook</span>
 				<span class="loading-block--spinner">...</span>
 			</a>
-			<a href="javascript:;" class="remove-btn">remove</a>
+			<a href="javascript:;" class="remove-btn">rmv</a>
 		</div>
 	</li>
 </template>
 <!-- /song -->
 
+<template name="naustorm">
+	<div class="row naustorm">
+		{{#each songs}}
+			{{> naustormitem}}
+		{{else}}
+			No songs to play.
+		{{/each}}
+	</div>
+</template>
+
+<template name="naustormitem">
+	<div class="columns three naustorm-elm">
+		<div class="naustorm-elm--wrapper">
+			<div class="naustorm-elm--listens">172</div>
+			<img class="naustorm-elm--cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
+		</div>
+		<h6 class="naustorm-elm--title">{{name}}</h6>
+		<small class="naustorm-elm--artist">{{artist}}</small>
+	</div>
+</template>

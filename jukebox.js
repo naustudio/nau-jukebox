@@ -20,6 +20,25 @@ if (Meteor.isClient) {
 
 	var player; //the MediaElement instance
 
+	var navbarBackground = function() {
+		var rn = Math.floor((Math.random() * 150) + 60);
+		var rs = Math.floor((Math.random() * 11) + 4);
+		var t = new Trianglify({
+			x_gradient: Trianglify.colorbrewer.Spectral[rs],
+			noiseIntensity: 0,
+			cellsize: rn
+		});
+
+		var pattern = t.generate(window.innerWidth, 269);
+		document.getElementById('js-navbar')
+			.setAttribute('style', 'background-image: '+pattern.dataUrl);
+	};
+
+	var showTab = function(tabId) {
+		$('.main-content').css('display', 'none');
+		$('#' + tabId).css('display', 'block');
+	};
+
 	var submitSong = function(songurl) {
 		var nickname = Session.get('nickname');
 		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
@@ -43,6 +62,7 @@ if (Meteor.isClient) {
 
 			switch (tab) {
 				case 'tab--play-list':
+					showTab('js-playblock');
 					var today = new Date();
 					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
@@ -54,6 +74,7 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--yesterday':
+					showTab('js-playblock');
 					var yesterday = moment().add(-1, 'days').toDate();
 					yesterday.setHours(0, 0, 0, 0);
 					songList = Songs.find(
@@ -63,6 +84,7 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--past-7-days':
+					showTab('js-playblock');
 					var last7Days = moment().add(-7, 'days').toDate();
 					last7Days.setHours(0, 0, 0, 0);
 					songList = Songs.find(
@@ -72,7 +94,12 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--naustorm':
-					songList = [];
+					showTab('js-naustorm');
+					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+					break;
+
+				case 'tab--gamblr':
+					showTab('js-gamblr');
 					break;
 
 				default:
@@ -119,6 +146,21 @@ if (Meteor.isClient) {
 			}
 			return color;
 		}
+	});
+
+	Template.naustorm.helpers({
+		songs: function() {
+			var songList;
+			var today = new Date();
+
+			today.setHours(0, 0, 0, 0);
+			songList = Songs
+				.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}, limit: 8});
+			return songList;
+		}
+	});
+
+	Template.naustormitem.helpers({
 	});
 
 	Template.song.created = function() {
@@ -366,6 +408,18 @@ if (Meteor.isClient) {
 			selectSong(selected);
 		}
 
+		navbarBackground();
+
+		$('.js-search-box').on('focus', function(e) {
+			var $form = $('.js-add-song-form');
+			$form.addClass('_focus');
+		});
+
+		$('.js-search-box').on('focusout', function(e) {
+			var $form = $('.js-add-song-form');
+			$form.removeClass('_focus');
+		});
+
 		$(document).on('keyup', function(e) {
 			console.log('keypress', e.keyCode);
 			var $form = $('.js-add-song-form');
@@ -374,12 +428,14 @@ if (Meteor.isClient) {
 			switch (e.keyCode) {
 				case 81: // q
 					$input.focus();
+					// $form.addClass('_focus');
 					break;
 
 				case 27: // esc
 					$input.blur();
 					$input.val('');
 					$form.removeClass('_active');
+					// $form.removeClass('_focus');
 					break;
 
 				case 80: // p
