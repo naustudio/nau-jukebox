@@ -3,6 +3,7 @@
 	<link rel="icon" href="/favicon.png" type="image/png">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.5/trianglify.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 
 	<style>
 		::-webkit-input-placeholder {
@@ -115,7 +116,7 @@
 		<section id="js-naustorm" class="main-content"  style="display:none">
 			<div class="container">
 				<div class="naustorm-section">
-					<h5>naustorm\<small> may07 - may14</small></h5>
+					<h5>naustorm\<small> from past 7 days</small></h5>
 					{{> naustorm}}
 				</div>
 			</div>
@@ -187,7 +188,7 @@
 <template name="naustormitem">
 	<div class="columns three naustorm-elm">
 		<div class="naustorm-elm--wrapper">
-			<div class="naustorm-elm--listens">172</div>
+			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">storms</small></div>
 			<img class="naustorm-elm--cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
 		</div>
 		<h6 class="naustorm-elm--title">{{name}}</h6>

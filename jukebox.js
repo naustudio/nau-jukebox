@@ -95,6 +95,8 @@ if (Meteor.isClient) {
 
 				case 'tab--naustorm':
 					showTab('js-naustorm');
+					var today = new Date();
+					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
 					break;
 
@@ -150,13 +152,29 @@ if (Meteor.isClient) {
 
 	Template.naustorm.helpers({
 		songs: function() {
-			var songList;
-			var today = new Date();
+			var songList, naustorm = [];
+			var earlyOfToday = new Date();
+			var last7Days = moment().add(-7, 'days').toDate();
+			last7Days.setHours(0, 0, 0, 0);
 
-			today.setHours(0, 0, 0, 0);
-			songList = Songs
-				.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}, limit: 8});
-			return songList;
+			songList = Songs.find(
+				{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+				{sort: {timeAdded: 1}}
+			).fetch();
+
+			var group = _.chain(songList)
+				.groupBy('name')
+				.sortBy('-length')
+				.slice(0, 8);
+
+			for (var item in group._wrapped) {
+				var g = group._wrapped[item];
+				var t = g[0];
+				t.listens = g.length
+				naustorm.push(t);
+			}
+
+			return naustorm;
 		}
 	});
 

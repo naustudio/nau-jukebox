@@ -489,6 +489,12 @@ input[type="text"]:focus {
 					animation: moving 0.75s linear infinite;
 }
 
+.naustorm-section h5 small {
+	font-size: 14px;
+	font-weight: 100;
+	margin-left: 7.5px;
+}
+
 .naustorm .columns:nth-child(4n+1) {
   margin-left: 0;
 }
