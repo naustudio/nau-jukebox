@@ -62,7 +62,6 @@ if (Meteor.isClient) {
 
 			switch (tab) {
 				case 'tab--play-list':
-					showTab('js-playblock');
 					var today = new Date();
 					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
@@ -74,7 +73,6 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--yesterday':
-					showTab('js-playblock');
 					var yesterday = moment().add(-1, 'days').toDate();
 					yesterday.setHours(0, 0, 0, 0);
 					songList = Songs.find(
@@ -84,7 +82,6 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--past-7-days':
-					showTab('js-playblock');
 					var last7Days = moment().add(-7, 'days').toDate();
 					last7Days.setHours(0, 0, 0, 0);
 					songList = Songs.find(
@@ -94,14 +91,12 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--naustorm':
-					showTab('js-naustorm');
 					var today = new Date();
 					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
 					break;
 
 				case 'tab--gamblr':
-					showTab('js-gamblr');
 					break;
 
 				default:
@@ -319,6 +314,7 @@ if (Meteor.isClient) {
 			var tab = $this.attr('data-tab');
 
 			Session.set('tab', tab);
+			showTab($this.attr('data-target'));
 			$this.closest('.playlist-nav--list').find('.playlist-nav--item').removeClass('_active');
 			$this.addClass('_active');
 		},
