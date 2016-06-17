@@ -500,26 +500,18 @@ input[type="text"]:focus {
   position: relative;
   width: 100%;
 }
-.naustorm-elm--wrapper:after {
-  position: absolute;
-  z-index: 10;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  content: '';
-  display: block;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
-}
-.naustorm-elm--wrapper:hover:after {
-  background-color: transparent;
-}
+
 .naustorm-elm--cover {
   width: 100%;
   margin-bottom: 0;
   display: inherit;
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+  -webkit-transition: all 0.5s;
+}
+.naustorm-elm--cover:hover {
+  filter: grayscale(0%);
+  -webkit-filter: grayscale(0%);
 }
 .naustorm-elm--title {
   margin-bottom: 0;
