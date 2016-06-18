@@ -126,7 +126,7 @@
 			<div class="container">
 				<div class="naustorm-section">
 					<h5>>gamblr</h5>
-					<p>some thing amz is comming !</p>
+					<p>some thing amz will comming !</p>
 				</div>
 			</div>
 		</section>
@@ -145,7 +145,7 @@
 		{{#each songs}}
 			{{> song}}
 		{{else}}
-			No songs to play.
+			Waiting for storms...
 		{{/each}}
 	</ul>
 </template>
@@ -180,7 +180,7 @@
 		{{#each storms}}
 			{{> naustormitem}}
 		{{else}}
-			No songs to play.
+			Waiting for storms...
 		{{/each}}
 	</div>
 </template>
@@ -188,8 +188,8 @@
 <template name="naustormitem">
 	<div class="columns three naustorm-elm">
 		<div class="naustorm-elm--wrapper">
-			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">stormed</small></div>
 			<img class="naustorm-elm--cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
+			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">stormed</small></div>
 		</div>
 		<h6 class="naustorm-elm--title">{{name}}</h6>
 		<small class="naustorm-elm--artist">{{artist}}</small>
