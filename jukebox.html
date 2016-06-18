@@ -177,7 +177,7 @@
 
 <template name="naustorm">
 	<div class="row naustorm">
-		{{#each songs}}
+		{{#each storms}}
 			{{> naustormitem}}
 		{{else}}
 			No songs to play.
@@ -188,7 +188,7 @@
 <template name="naustormitem">
 	<div class="columns three naustorm-elm">
 		<div class="naustorm-elm--wrapper">
-			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">storms</small></div>
+			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">stormed</small></div>
 			<img class="naustorm-elm--cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
 		</div>
 		<h6 class="naustorm-elm--title">{{name}}</h6>

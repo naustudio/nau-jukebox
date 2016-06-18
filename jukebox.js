@@ -65,11 +65,6 @@ if (Meteor.isClient) {
 					var today = new Date();
 					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
-					songList.observeChanges({
-						added: function(id/*, fields*/) {
-							console.log('songList added', id);
-						}
-					});
 					break;
 
 				case 'tab--yesterday':
@@ -91,11 +86,6 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--naustorm':
-					var today = new Date();
-					today.setHours(0, 0, 0, 0); //reset to start of day
-					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
-					break;
-
 				case 'tab--gamblr':
 					break;
 
@@ -146,32 +136,8 @@ if (Meteor.isClient) {
 	});
 
 	Template.naustorm.helpers({
-		songs: function() {
-			var songList, naustorm = [];
-			var earlyOfToday = new Date();
-			var last7Days = moment().add(-7, 'days').toDate();
-			last7Days.setHours(0, 0, 0, 0);
-
-			songList = Songs.find(
-				{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
-				{sort: {timeAdded: 1}}
-			).fetch();
-
-			var group = _.chain(songList)
-				.groupBy('name')
-				.sortBy(function(i) {
-					return -1 * i.length;
-				})
-				.slice(0, 8);
-
-			for (var item in group._wrapped) {
-				var g = group._wrapped[item];
-				var t = g[0];
-				t.listens = g.length
-				naustorm.push(t);
-			}
-
-			return naustorm;
+		storms: function() {
+		 	return Session.get('naustorm_data');
 		}
 	});
 
@@ -192,6 +158,47 @@ if (Meteor.isClient) {
 	Template.song.destroyed = function() {
 		Meteor.clearInterval(this.handle);
 	};
+
+	Template.naustorm.created = function() {};
+	Template.naustorm.destroyed = function() {};
+
+	Template.naustorm.onCreated(function() {
+		function getNaustormData() {
+			var songList, naustorm = [], group;
+			var earlyOfToday = new Date();
+			var last7Days = moment().add(-7, 'days').toDate();
+			last7Days.setHours(0, 0, 0, 0);
+
+			songList = Songs.find(
+				{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+				{sort: {timeAdded: 1}}
+			).fetch();
+
+			group = _.chain(songList)
+				.groupBy('name')
+				.sortBy(function(i) {
+					return -1 * i.length;
+				})
+				.slice(0, 8);
+
+			for (var item in group._wrapped) {
+				var g = group._wrapped[item];
+				var t = g[0];
+				t.listens = g.length
+				naustorm.push(t);
+			}
+
+			Session.set('naustorm_data', naustorm);
+		};
+
+		// waiting new records from Song collection
+		var listenderForNaustorm = Songs.find();
+		listenderForNaustorm.observeChanges({
+			added: function(id, docs) {
+				getNaustormData();
+			}
+		})
+	});
 
 	Template.body.helpers({
 		getNickname: function() {
@@ -444,14 +451,12 @@ if (Meteor.isClient) {
 			switch (e.keyCode) {
 				case 81: // q
 					$input.focus();
-					// $form.addClass('_focus');
 					break;
 
 				case 27: // esc
 					$input.blur();
 					$input.val('');
 					$form.removeClass('_active');
-					// $form.removeClass('_focus');
 					break;
 
 				case 80: // p
@@ -551,6 +556,17 @@ if (Meteor.isServer) {
 
 			return fut.wait();
 		}
+	});
+
+	Meteor.publish('naustormData', function() {
+		var earlyOfToday = new Date();
+		var last7Days = moment().add(-7, 'days').toDate();
+		last7Days.setHours(0, 0, 0, 0);
+
+		return Songs.find(
+			{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+			{sort: {timeAdded: 1}}
+		);
 	});
 }
 // ============================================================================
