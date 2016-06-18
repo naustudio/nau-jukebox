@@ -159,7 +159,9 @@ if (Meteor.isClient) {
 
 			var group = _.chain(songList)
 				.groupBy('name')
-				.sortBy('-length')
+				.sortBy(function(i) {
+					return -1 * i.length;
+				})
 				.slice(0, 8);
 
 			for (var item in group._wrapped) {
