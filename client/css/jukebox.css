@@ -554,6 +554,22 @@ input[type="text"]:focus {
   transition: all 0.5s;
 }
 
+.group-author {
+	margin-top: 60px;
+}
+
+.g-author--list {
+	list-style-type: none;
+}
+
+.g-author--item {
+	margin-right: 30px;
+}
+
+.g-author--item:last-child {
+	margin-right: 0;
+}
+
 @-webkit-keyframes moving {
 	20% {
 		-webkit-transform: translateX(-35%);

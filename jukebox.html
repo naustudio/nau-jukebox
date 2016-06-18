@@ -115,10 +115,7 @@
 
 		<section id="js-naustorm" class="main-content"  style="display:none">
 			<div class="container">
-				<div class="naustorm-section">
-					<h5>naustorm\<small> from past 7 days</small></h5>
-					{{> naustorm}}
-				</div>
+				{{> naustorm}}
 			</div>
 		</section>
 
@@ -176,12 +173,27 @@
 <!-- /song -->
 
 <template name="naustorm">
-	<div class="row naustorm">
-		{{#each storms}}
-			{{> naustormitem}}
-		{{else}}
-			Waiting for storms...
-		{{/each}}
+	<div class="naustorm-section">
+		<h5>naustorm\<small> {{dateString}}</small></h5>
+
+		<div class="row naustorm">
+			{{#each storms}}
+				{{> naustormitem}}
+			{{else}}
+				Waiting for storms...
+			{{/each}}
+		</div>
+
+		<div class="group-author">
+			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
+			<ul class="g-author--list">
+				{{#each groupByAuthorData}}
+					<li class="g-author--item">{{author}} -> {{books}} storms</li>
+				{{else}}
+					<li class="g-author--item">Waiting for data...</li>
+				{{/each}}
+			</ul>
+		</div>
 	</div>
 </template>
 

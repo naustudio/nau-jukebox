@@ -138,6 +138,21 @@ if (Meteor.isClient) {
 	Template.naustorm.helpers({
 		storms: function() {
 		 	return Session.get('naustorm_data');
+		},
+
+		groupByAuthorData: function() {
+			return Session.get('naustorm_author_data');
+		},
+
+		total: function() {
+			return Session.get('naustorm_total');
+		},
+
+		dateString: function() {
+			var startOfWeek = moment().startOf('isoWeek');
+			var endOfWeek = moment().endOf('isoWeek');
+			var dateStr = startOfWeek.format('MMM Do') + ' - ' + endOfWeek.format('MMM Do');
+			return dateStr;
 		}
 	});
 
@@ -164,13 +179,16 @@ if (Meteor.isClient) {
 
 	Template.naustorm.onCreated(function() {
 		function getNaustormData() {
-			var songList, naustorm = [], group;
-			var earlyOfToday = new Date();
-			var last7Days = moment().add(-7, 'days').toDate();
-			last7Days.setHours(0, 0, 0, 0);
+			var startOfWeek = moment().startOf('isoWeek').toDate();
+			var endOfWeek = moment().endOf('isoWeek').toDate();
+			var songList,
+				naustorm = [],
+				group,
+				groupByAuthor,
+				groupByAuthorData = [];
 
 			songList = Songs.find(
-				{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+				{timeAdded: {$gt: startOfWeek.getTime(), $lt: endOfWeek.getTime()}},
 				{sort: {timeAdded: 1}}
 			).fetch();
 
@@ -181,6 +199,12 @@ if (Meteor.isClient) {
 				})
 				.slice(0, 8);
 
+			groupByAuthor = _.chain(songList)
+				.groupBy('author')
+				.sortBy(function(i) {
+					return -1 * i.length;
+				});
+
 			for (var item in group._wrapped) {
 				var g = group._wrapped[item];
 				var t = g[0];
@@ -188,7 +212,19 @@ if (Meteor.isClient) {
 				naustorm.push(t);
 			}
 
+			for (var item in groupByAuthor._wrapped) {
+				var g = groupByAuthor._wrapped[item];
+				var t = {
+					author: g[0].author.length == 0 ? 'The Many-Faced' : g[0].author,
+					books: g.length
+				};
+
+				groupByAuthorData.push(t);
+			}
+
 			Session.set('naustorm_data', naustorm);
+			Session.set('naustorm_total', songList.length);
+			Session.set('naustorm_author_data', groupByAuthorData);
 		};
 
 		// waiting new records from Song collection
@@ -558,16 +594,16 @@ if (Meteor.isServer) {
 		}
 	});
 
-	Meteor.publish('naustormData', function() {
-		var earlyOfToday = new Date();
-		var last7Days = moment().add(-7, 'days').toDate();
-		last7Days.setHours(0, 0, 0, 0);
+	// Meteor.publish('naustormData', function() {
+	// 	var earlyOfToday = new Date();
+	// 	var last7Days = moment().add(-7, 'days').toDate();
+	// 	last7Days.setHours(0, 0, 0, 0);
 
-		return Songs.find(
-			{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
-			{sort: {timeAdded: 1}}
-		);
-	});
+	// 	return Songs.find(
+	// 		{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+	// 		{sort: {timeAdded: 1}}
+	// 	);
+	// });
 }
 // ============================================================================
 
