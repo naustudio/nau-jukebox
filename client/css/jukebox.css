@@ -91,6 +91,7 @@ input[type="text"]:focus {
   background-size: cover;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s;
 }
 .navbar--list {
 	list-style-type: none;

@@ -468,6 +468,7 @@ if (Meteor.isClient) {
 		}
 
 		navbarBackground();
+		Meteor.setInterval(navbarBackground, 60000);
 
 		$('.js-search-box').on('focus', function(e) {
 			var $form = $('.js-add-song-form');
