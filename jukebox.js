@@ -20,6 +20,25 @@ if (Meteor.isClient) {
 
 	var player; //the MediaElement instance
 
+	var navbarBackground = function() {
+		var rn = Math.floor((Math.random() * 150) + 60);
+		var rs = Math.floor((Math.random() * 11) + 4);
+		var t = new Trianglify({
+			x_gradient: Trianglify.colorbrewer.Spectral[rs],
+			noiseIntensity: 0,
+			cellsize: rn
+		});
+
+		var pattern = t.generate(window.innerWidth, 269);
+		document.getElementById('js-navbar')
+			.setAttribute('style', 'background-image: '+pattern.dataUrl);
+	};
+
+	var showTab = function(tabId) {
+		$('.main-content').css('display', 'none');
+		$('#' + tabId).css('display', 'block');
+	};
+
 	var submitSong = function(songurl) {
 		var nickname = Session.get('nickname');
 		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
@@ -46,11 +65,6 @@ if (Meteor.isClient) {
 					var today = new Date();
 					today.setHours(0, 0, 0, 0); //reset to start of day
 					songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
-					songList.observeChanges({
-						added: function(id/*, fields*/) {
-							console.log('songList added', id);
-						}
-					});
 					break;
 
 				case 'tab--yesterday':
@@ -72,7 +86,7 @@ if (Meteor.isClient) {
 					break;
 
 				case 'tab--naustorm':
-					songList = [];
+				case 'tab--gamblr':
 					break;
 
 				default:
@@ -121,6 +135,30 @@ if (Meteor.isClient) {
 		}
 	});
 
+	Template.naustorm.helpers({
+		storms: function() {
+		 	return Session.get('naustorm_data');
+		},
+
+		groupByAuthorData: function() {
+			return Session.get('naustorm_author_data');
+		},
+
+		total: function() {
+			return Session.get('naustorm_total');
+		},
+
+		dateString: function() {
+			var startOfWeek = moment().startOf('isoWeek');
+			var endOfWeek = moment().endOf('isoWeek');
+			var dateStr = startOfWeek.format('MMM Do') + ' - ' + endOfWeek.format('MMM Do');
+			return dateStr;
+		}
+	});
+
+	Template.naustormitem.helpers({
+	});
+
 	Template.song.created = function() {
 		var self = this;
 
@@ -135,6 +173,68 @@ if (Meteor.isClient) {
 	Template.song.destroyed = function() {
 		Meteor.clearInterval(this.handle);
 	};
+
+	Template.naustorm.created = function() {};
+	Template.naustorm.destroyed = function() {};
+
+	Template.naustorm.onCreated(function() {
+		function getNaustormData() {
+			var startOfWeek = moment().startOf('isoWeek').toDate();
+			var endOfWeek = moment().endOf('isoWeek').toDate();
+			var songList,
+				naustorm = [],
+				group,
+				groupByAuthor,
+				groupByAuthorData = [];
+
+			songList = Songs.find(
+				{timeAdded: {$gt: startOfWeek.getTime(), $lt: endOfWeek.getTime()}},
+				{sort: {timeAdded: 1}}
+			).fetch();
+
+			group = _.chain(songList)
+				.groupBy('name')
+				.sortBy(function(i) {
+					return -1 * i.length;
+				})
+				.slice(0, 8);
+
+			groupByAuthor = _.chain(songList)
+				.groupBy('author')
+				.sortBy(function(i) {
+					return -1 * i.length;
+				});
+
+			for (var item in group._wrapped) {
+				var g = group._wrapped[item];
+				var t = g[0];
+				t.listens = g.length
+				naustorm.push(t);
+			}
+
+			for (var item in groupByAuthor._wrapped) {
+				var g = groupByAuthor._wrapped[item];
+				var t = {
+					author: g[0].author.length == 0 ? 'The Many-Faced' : g[0].author,
+					books: g.length
+				};
+
+				groupByAuthorData.push(t);
+			}
+
+			Session.set('naustorm_data', naustorm);
+			Session.set('naustorm_total', songList.length);
+			Session.set('naustorm_author_data', groupByAuthorData);
+		};
+
+		// waiting new records from Song collection
+		var listenderForNaustorm = Songs.find();
+		listenderForNaustorm.observeChanges({
+			added: function(id, docs) {
+				getNaustormData();
+			}
+		})
+	});
 
 	Template.body.helpers({
 		getNickname: function() {
@@ -259,6 +359,7 @@ if (Meteor.isClient) {
 			var tab = $this.attr('data-tab');
 
 			Session.set('tab', tab);
+			showTab($this.attr('data-target'));
 			$this.closest('.playlist-nav--list').find('.playlist-nav--item').removeClass('_active');
 			$this.addClass('_active');
 		},
@@ -365,6 +466,19 @@ if (Meteor.isClient) {
 		if (selected) {
 			selectSong(selected);
 		}
+
+		navbarBackground();
+		Meteor.setInterval(navbarBackground, 60000);
+
+		$('.js-search-box').on('focus', function(e) {
+			var $form = $('.js-add-song-form');
+			$form.addClass('_focus');
+		});
+
+		$('.js-search-box').on('focusout', function(e) {
+			var $form = $('.js-add-song-form');
+			$form.removeClass('_focus');
+		});
 
 		$(document).on('keyup', function(e) {
 			console.log('keypress', e.keyCode);
@@ -480,6 +594,17 @@ if (Meteor.isServer) {
 			return fut.wait();
 		}
 	});
+
+	// Meteor.publish('naustormData', function() {
+	// 	var earlyOfToday = new Date();
+	// 	var last7Days = moment().add(-7, 'days').toDate();
+	// 	last7Days.setHours(0, 0, 0, 0);
+
+	// 	return Songs.find(
+	// 		{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
+	// 		{sort: {timeAdded: 1}}
+	// 	);
+	// });
 }
 // ============================================================================
 

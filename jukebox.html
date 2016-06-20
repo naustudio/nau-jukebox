@@ -1,6 +1,31 @@
 <head>
 	<title>Nâu Jukebox</title>
 	<link rel="icon" href="/favicon.png" type="image/png">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/trianglify/0.1.5/trianglify.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+
+	<style>
+		::-webkit-input-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+
+		:-moz-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+
+		::-moz-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+
+		:-ms-input-placeholder {
+			color: rgba(0, 0, 0, 0.3);
+			font-weight: 100;
+		}
+	</style>
 </head>
 
 <body>
@@ -11,7 +36,7 @@
 			data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
 	</a>
 
-	<nav class="navbar">
+	<nav class="navbar" id="js-navbar">
 		<div class="container">
 			<ul class="navbar--list">
 				<li class="navbar--item navbar--item__icon">
@@ -56,17 +81,20 @@
 		<nav class="playlist-nav">
 			<div class="container">
 				<ul class="playlist-nav--list">
-					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list">
+					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
 						<a href="javascript:;">play list</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday">
+					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
 						<a href="javascript:;">yesterday</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days">
+					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
 						<a href="javascript:;">past 7 days</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm">
+					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
 						<a href="javascript:;">naustorm</a>
+					</li><!--
+					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--gamblr" data-target="js-gamblr">
+						<a href="javascript:;">>gamblr</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
 						<input type="text" placeholder="@ enter your name" class="js-nickname-holder"
@@ -76,11 +104,26 @@
 			</div>
 		</nav>
 
-		<section class="main-content">
+		<section id="js-playblock" class="main-content">
 			<div class="container">
 				<div class="playlist">
 					{{> songlist}}
 					{{> player}}
+				</div>
+			</div>
+		</section>
+
+		<section id="js-naustorm" class="main-content"  style="display:none">
+			<div class="container">
+				{{> naustorm}}
+			</div>
+		</section>
+
+		<section id="js-gamblr" class="main-content"  style="display:none">
+			<div class="container">
+				<div class="naustorm-section">
+					<h5>>gamblr</h5>
+					<p>some thing amz will comming !</p>
 				</div>
 			</div>
 		</section>
@@ -99,7 +142,7 @@
 		{{#each songs}}
 			{{> song}}
 		{{else}}
-			No songs to play.
+			Waiting for storms...
 		{{/each}}
 	</ul>
 </template>
@@ -123,9 +166,44 @@
 				<span class="loading-block--stable">rebook</span>
 				<span class="loading-block--spinner">...</span>
 			</a>
-			<a href="javascript:;" class="remove-btn">remove</a>
+			<a href="javascript:;" class="remove-btn">rmv</a>
 		</div>
 	</li>
 </template>
 <!-- /song -->
 
+<template name="naustorm">
+	<div class="naustorm-section">
+		<h5>naustorm\<small> {{dateString}}</small></h5>
+
+		<div class="row naustorm">
+			{{#each storms}}
+				{{> naustormitem}}
+			{{else}}
+				Waiting for storms...
+			{{/each}}
+		</div>
+
+		<div class="group-author">
+			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
+			<ul class="g-author--list">
+				{{#each groupByAuthorData}}
+					<li class="g-author--item">{{author}} -> {{books}} storms</li>
+				{{else}}
+					<li class="g-author--item">Waiting for data...</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+</template>
+
+<template name="naustormitem">
+	<div class="columns three naustorm-elm">
+		<div class="naustorm-elm--wrapper">
+			<img class="naustorm-elm--cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
+			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">stormed</small></div>
+		</div>
+		<h6 class="naustorm-elm--title">{{name}}</h6>
+		<small class="naustorm-elm--artist">{{artist}}</small>
+	</div>
+</template>
