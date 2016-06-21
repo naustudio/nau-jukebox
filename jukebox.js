@@ -228,7 +228,9 @@ if (Meteor.isClient) {
 		};
 
 		// waiting new records from Song collection
-		var listenderForNaustorm = Songs.find();
+		var today = new Date();
+		today.setHours(0, 0, 0, 0); //reset to start of day
+		var listenderForNaustorm = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
 		listenderForNaustorm.observeChanges({
 			added: function(id, docs) {
 				getNaustormData();
