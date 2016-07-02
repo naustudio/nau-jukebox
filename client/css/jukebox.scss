@@ -162,6 +162,11 @@ input[type="text"]:focus {
   overflow: hidden;
   background-color: rgba(255,255,255,0.5);
 
+	&._focus {
+	  background-color: rgba(255, 255, 255, 0.8);
+	  border-color: rgba(0, 0, 0, 0.4);
+	}
+
   &._active {
     background-color: rgba(255,255,255,0.95);
     border-color: rgba(0,0,0,0.4);
