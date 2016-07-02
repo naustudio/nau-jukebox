@@ -355,6 +355,10 @@ if (Meteor.isClient) {
 		},
 
 		'submit #js-add-song-form': function(event) {
+			if (!$('[name="songurl"]').val().trim()) {
+				return;
+			}
+
 			if (Session.equals('urlFetching', true)) {
 				return;
 			}
