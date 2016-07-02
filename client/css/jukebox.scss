@@ -637,12 +637,14 @@ input[type="text"]:focus {
   position: fixed;
   right: 0;
   top: $header-h + $playlist-h;
-  z-index: 199;
-  transition: all 0.5s;
-  opacity: 0;
+  // top: $header-h;
+  z-index: 599;
+  transition: all 0.3s;
+  transition-delay: 0.5s;
+  transform: translateX(100%);
 
   &._active {
-    opacity: 1;
+  	transform: translateX(0);
   }
 
   &--content {
