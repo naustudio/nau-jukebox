@@ -103,8 +103,13 @@
 						<a href="javascript:;">>gamblr</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
-						<input type="text" placeholder="@ enter your name" class="js-nickname-holder"
-							value="{{getNickname}}" />
+						<div class="input-control">
+							<input type="text" placeholder="@ enter your name" class="js-nickname-holder"
+								value="{{getNickname}}" />
+							<div class="input-control--error">
+								<p>Your name is required !</p>
+							</div>
+						</div>
 					</li>
 				</ul>
 			</div>

@@ -58,7 +58,6 @@ html {
 
 body {
   margin: 0;
-	padding-top: 69px; /*header height*/
 }
 
 form {
@@ -71,6 +70,44 @@ input {
 
 input[type="text"]:focus {
   border-color: $color-03;
+}
+
+.input-control {
+	position: relative;
+	padding-bottom: 0.5*$gutter;
+
+	&--error {
+		position: absolute;
+		right: -$gutter;
+		top: 50%;
+		transform: translate(100%, -50%);
+		display: none;
+
+		p {
+			margin-bottom: 0;
+		}
+
+		&:after {
+			position: absolute;
+			content: '';
+			display: block;
+			width: 5px;
+			height: 5px;
+			border-radius: 100%;
+			background-color: red;
+			top: 50%;
+			margin-left: - $gutter;
+			transform: translate(100%, -50%);
+			animation: blink-animation 1s infinite;
+			opacity: 1;
+		}
+	}
+
+	&._error {
+		.input-control--error {
+			display: block;
+		}
+	}
 }
 
 .container {
@@ -110,6 +147,7 @@ input[type="text"]:focus {
   background-size: cover;
   border-bottom: 1px solid rgba(0,0,0,0.2);
   box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+  transition: all 0.5s;
 
   &--list {
     list-style-type: none;
@@ -360,7 +398,7 @@ input[type="text"]:focus {
 .scroll-content {
   -webkit-overflow-scroll: touch;
   margin-top: $header-h;
-  // padding-top: $playlist-h;
+  padding-top: $playlist-h;
 }
 
 .playlist-nav {
@@ -678,5 +716,11 @@ input[type="text"]:focus {
   80% {
     transform: translateX(-65%);
     margin-left: 4px;
+  }
+}
+
+@keyframes blink-animation {
+  80% {
+    opacity: 0;
   }
 }

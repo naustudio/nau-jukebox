@@ -9,6 +9,7 @@
 
 Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
+Users = new Meteor.Collection('users');
 
 if (Meteor.isClient) {
 	var nickname = localStorage.getItem('nickname') || '';
@@ -41,19 +42,17 @@ if (Meteor.isClient) {
 
 	var showRequireMessage = function() {
 		var $playlistNav = $('.js-playlist-section');
-		var $messageInfo = $('.js-message-info');
 		var $nicknameHolder = $('.js-nickname-holder');
 
-		$playlistNav.addClass('_focus');
-		$messageInfo.addClass('_active');
-		$nicknameHolder.focus();
+		$playlistNav.addClass('_focus').css('top', 69);
+		$nicknameHolder.focus().closest('.input-control').addClass('_error');
 	};
 
 	var hideRequireMessage = function() {
 		var $playlistNav = $('.js-playlist-section');
-		var $messageInfo = $('.js-message-info');
+		var $nicknameHolder = $('.js-nickname-holder');
 		$playlistNav.removeClass('_focus');
-		$messageInfo.removeClass('_active');
+		$nicknameHolder.closest('.input-control').removeClass('_error');
 
 		var songurl = $('[name="songurl"]').val().trim();
 		if (songurl) {
@@ -728,4 +727,13 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 
 	// update the exact document in AppStates collection with new songs array
 	AppStates.update(playingSongs._id, {key: 'playingSongs', songs: songs});
+};
+
+/**
+ * User Model, managing all users
+ */
+Users.addNewUser = function(userName) {
+};
+
+Users.updateStatus = function(userName) {
 };
