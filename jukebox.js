@@ -39,8 +39,36 @@ if (Meteor.isClient) {
 		$('#' + tabId).css('display', 'block');
 	};
 
+	var showRequireMessage = function() {
+		var $playlistNav = $('.js-playlist-section');
+		var $messageInfo = $('.js-message-info');
+		var $nicknameHolder = $('.js-nickname-holder');
+
+		$playlistNav.addClass('_focus');
+		$messageInfo.addClass('_active');
+		$nicknameHolder.focus();
+	};
+
+	var hideRequireMessage = function() {
+		var $playlistNav = $('.js-playlist-section');
+		var $messageInfo = $('.js-message-info');
+		$playlistNav.removeClass('_focus');
+		$messageInfo.removeClass('_active');
+
+		var songurl = $('[name="songurl"]').val().trim();
+		if (songurl) {
+			submitSong(songurl);
+			$('[name="songurl"]').val('');
+		}
+	};
+
 	var submitSong = function(songurl) {
-		var nickname = Session.get('nickname');
+		var nickname = Session.get('nickname').trim();
+		if (!nickname) {
+			showRequireMessage();
+			return;
+		}
+
 		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
 			if (error) {
 				alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
@@ -235,7 +263,10 @@ if (Meteor.isClient) {
 			added: function(id, docs) {
 				getNaustormData();
 			}
-		})
+		});
+
+		// get storm data for the first time
+		getNaustormData();
 	});
 
 	Template.body.helpers({
@@ -366,20 +397,28 @@ if (Meteor.isClient) {
 			$this.addClass('_active');
 		},
 
-		'focus .js-nickname-holder': function(/*e*/) {
-			Session.set('nickname', '');
+		'keydown .js-nickname-holder': function(e) {
+			if (e.keyCode !== 13) return;
+
+			var $target = $(e.currentTarget);
+			var value = $target.val().trim();
+
+			localStorage.setItem('nickname', value);
+			Session.set('nickname', value);
+			$target.blur();
+
+			hideRequireMessage();
 		},
 
-		'keydown .js-nickname-holder': function(e) {
-			console.log('e', e);
-			if (e.keyCode === 13) {
-				var $target = $(e.currentTarget);
-				var value = $target.val();
+		'focusout .js-nickname-holder': function(e) {
+			var $target = $(e.currentTarget);
+			var value = $target.val().trim();
 
-				localStorage.setItem('nickname', value);
-				Session.set('nickname', value);
-				$target.blur();
-			}
+			$target.val(value);
+			localStorage.setItem('nickname', value);
+			Session.set('nickname', value);
+
+			hideRequireMessage();
 		},
 
 		'keyup .js-search-box': function(e) {
@@ -425,9 +464,11 @@ if (Meteor.isClient) {
 			if (e.keyCode === 13) { // enter
 				var selectedSong = searchResult[selectedIndex];
 				if (selectedSong) {
+					$form.find('#songurl').val(selectedSong.originalURL);
 					submitSong(selectedSong.originalURL);
-					$form.find('#songurl').val('').blur();
+					$form.find('#songurl').blur();
 					$form.removeClass('_active');
+					Session.set('searchResult', []);
 					return false;
 				}
 			}

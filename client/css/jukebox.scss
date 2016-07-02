@@ -636,7 +636,7 @@ input[type="text"]:focus {
   background-color: #EA5455;
   position: fixed;
   right: 0;
-  top: $header-h + $playlist-h + 40;
+  top: $header-h + $playlist-h;
   z-index: 199;
   transition: all 0.5s;
   opacity: 0;
