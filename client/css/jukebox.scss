@@ -1,0 +1,675 @@
+/**
+ * BEM--tw convention
+ *    block
+ * -- element
+ * __ modifier
+ */
+
+// variables
+$gutter: 15px;
+$playbutton-h: 40px;
+$playbutton-w: 6px;
+$header-h: 69px;
+$playlist-h: 55px;
+
+// color pattern http://www.color-hex.com/color-palette/16458
+$color-01: #ffffff;
+$color-02: #eadbcb;
+$color-03: #dfc9b2;
+$color-04: #49413f;
+$color-05: #060201;
+$color-08: #F7EEBB;
+$color-06: rgba(255,255,255,0.2);
+$color-07: rgba(223,201,178,0.4);
+$color-09: rgba(211,211,211,1);
+
+* {
+	box-sizing: border-box;
+}
+
+// change default style for placeholder
+::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 100;
+}
+
+:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 100;
+}
+
+::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 100;
+}
+
+:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 100;
+}
+
+html, body {
+	height: 100%;
+}
+
+html {
+	background-color: white;
+}
+
+body {
+  margin: 0;
+	padding-top: 69px; /*header height*/
+}
+
+form {
+  margin: 0;
+}
+
+input {
+	font-size: 14px;
+}
+
+input[type="text"]:focus {
+  border-color: $color-03;
+}
+
+.container {
+  min-width: 768px;
+  max-width: 768px;
+}
+
+.player-panel {
+	visibility: hidden;
+}
+
+.bg-layer {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100%;
+}
+.bg-layer--img-wrapper {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 200px;
+}
+.bg-layer--img-wrapper img {
+	width: 100%;
+}
+
+.navbar {
+  width: 100%;
+  background-color: $color-08;
+  padding-bottom: 0;
+  position: fixed;
+  top: 0;
+  z-index: 300;
+  background-size: cover;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+
+  &--list {
+    list-style-type: none;
+    margin: 0;
+  }
+
+  &--item {
+    display: inline-block;
+    margin: 0;
+
+    a {
+      padding: 1.5*$gutter;
+      display: inline-block;
+      text-decoration: none;
+      color: $color-01;
+      font-weight: 100;
+    }
+
+    &__icon,
+    &__tool {
+      width: 20%;
+      color: $color-09;
+    }
+    &__input {
+      width: 60%;
+      padding: 0.5*$gutter 0;
+      position: relative;
+    }
+
+    &__icon {
+      float: left;
+
+      a {
+        margin-left: -1.5*$gutter;
+      }
+    }
+    &__tool {
+      float: right;
+    }
+  }
+}
+
+.search-box {
+  $search-w: 90px;
+  position: absolute;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid $color-06;
+  margin-top: 0.5*$gutter;
+  overflow: hidden;
+  background-color: rgba(255,255,255,0.5);
+
+  &._active {
+    background-color: rgba(255,255,255,0.95);
+    border-color: rgba(0,0,0,0.4);
+
+    .search-box--result-wrapper {
+      display: block;
+    }
+
+    .search-box--control {
+      border-bottom: 1px solid gray;
+    }
+  }
+
+  &--control {
+    position: relative;
+  }
+
+  &--input-wrapper {
+    margin-right: $search-w;
+    left: 0;
+  }
+
+  &--result-wrapper {
+    display: none;
+  }
+
+  &--submit {
+    color: rgba(0,0,0,0.5);
+    background-color: $color-06;
+    margin-left: -4px;
+    width: $search-w;
+    position: absolute;
+    padding: 0;
+    top: 0;
+    right: 0;
+    text-align: center;
+    border: 0;
+    border-radius: 0;
+
+    &:before {
+      content: 'Search';
+    }
+
+    &:hover {
+      background-color: $color-06;
+      border-color: $color-04;
+      color: $color-04;
+    }
+
+    &._active {
+      &:before {
+        content: '...';
+        animation: submit-moving .75s linear infinite;
+      }
+    }
+  }
+
+  &--input {
+    margin-bottom: 0;
+    display: inline-block;
+    border-radius: 0;
+  }
+
+  .search-box--input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-radius: 0;
+    border: 0;
+    background-color: transparent;
+
+    &:focus {
+      border: 0;
+    }
+  }
+  .search-box--submit {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+  }
+}
+
+.song-result {
+  &--list {
+    list-style-type: none;
+    margin: 0;
+  }
+
+  &--item {
+    padding: 0.5*$gutter $gutter;
+    margin-bottom: 0;
+    border-top: 1px solid whitesmoke;
+
+    &:first-child {
+      margin-top: $gutter;
+      border-top: 0;
+    }
+
+    &._active {
+      background-color: $color-07;
+    }
+  }
+}
+
+// playbutton's animation was referenced by this pen http://codepen.io/tampham47/pen/wGoJqY
+.play-button {
+  position: relative;
+  width: $playbutton-h;
+  height: $playbutton-h;
+  margin-top: 1*$gutter;
+  margin-left: 4*$gutter;
+  cursor: pointer;
+
+  &:hover {
+    .play-button--element {
+      background: $color-09;
+    }
+  }
+
+  &--element {
+    border-radius: $playbutton-w / 2;
+    background: $color-01;
+    transition: .5s;
+    position: absolute;
+  }
+
+  &--elm-top {
+    width: $playbutton-h;
+    height: $playbutton-w;
+    top: 0;
+    left: 0;
+  }
+  &--elm-right {
+    width: $playbutton-w;
+    height: $playbutton-h;
+    top: 0;
+    left: $playbutton-h - $playbutton-w;
+  }
+  &--elm-bottom {
+    width: $playbutton-h;
+    height: $playbutton-w;
+    top: $playbutton-h - $playbutton-w;
+    left: 0;
+  }
+  &--elm-left {
+    width: $playbutton-w;
+    height: $playbutton-h;
+    top: 0;
+    left: 0;
+  }
+
+  &._play,
+  &._pause,
+  &._stop {
+    transition: 1s;
+  }
+
+  &._play {
+    transform: rotate(270deg);
+
+    .play-button--elm-right {
+      transform-origin: center top;
+      transform: rotate(29deg) translate($playbutton-w/4, $playbutton-w/8) scaleY(1);
+    }
+    .play-button--elm-bottom {
+      display: none;
+    }
+    .play-button--elm-left {
+      transform-origin:center top;
+      transform:rotate(-29deg) translate(-$playbutton-w/4, $playbutton-w/8) scaleY(1);
+    }
+  }
+  &._pause {
+    transform: rotate(0deg);
+
+    .play-button--elm-top {
+      opacity: 0;
+    }
+    .play-button--elm-right {
+      transform: translateX(-$playbutton-w) scaleY(.8);
+    }
+    .play-button--elm-bottom {
+      opacity: 0;
+    }
+    .play-button--elm-left {
+      transform: translateX($playbutton-w) scaleY(.8);
+    }
+  }
+}
+
+// the position of fixed elements should be out of scrolling-area to remove juddering when scroll, https://remysharp.com/2012/05/24/issues-with-position-fixed-scrolling-on-ios
+.scroll-content {
+  -webkit-overflow-scroll: touch;
+  margin-top: $header-h;
+  // padding-top: $playlist-h;
+}
+
+.playlist-nav {
+  position: fixed;
+  width: 100%;
+  top: $header-h;
+  background-color: white;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  z-index: 99;
+
+  &._focus {
+    transition: top 0.5s;
+    top: $header-h !important;
+  }
+
+  &--list {
+    list-style-type: none;
+    margin-bottom: 0;
+  }
+
+  &--item {
+    display: inline-block;
+    margin: 0;
+    transition: all 0.5s;
+
+    a {
+      padding: $gutter;
+      color: black;
+      display: inline-block;
+      text-decoration: none;
+      transition: all 0.5s;
+      opacity: 0.5;
+
+      &:hover {
+        background-color: whitesmoke;
+        opacity: 1;
+      }
+    }
+
+    input {
+      border-color: white;
+      margin-top: 0.5*$gutter;
+      margin-bottom: 0;
+      text-align: right;
+    }
+
+    &:first-child {
+      margin-left: -$gutter;
+    }
+
+    &__right {
+      float: right;
+    }
+
+    &._active {
+      position: relative;
+      a {
+        opacity: 1;
+      }
+
+      &:after {
+        content: '_';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-weight: 600;
+        font-size: 22px;
+        color: $color-04;
+      }
+
+      &.playlist-nav--item__right {
+        &:after {
+          content: none;
+        }
+      }
+    }
+  }
+}
+
+.main-content {
+  padding-top: 2*$gutter;
+  padding-bottom: 2*$gutter;
+}
+
+.playlist {
+  $item-h: 40px;
+
+  &--list {
+    list-style-type: none;
+  }
+
+  &--item {
+    margin-bottom: 0;
+		position: relative;
+		cursor: pointer;
+
+    &--origin {
+      width: $item-h;
+      height: $item-h;
+      left: 0;
+      overflow: hidden;
+      display: inline-block;
+      position: absolute;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    &--nct::after,
+		&--zing::after {
+			content: '';
+			position: absolute;
+			bottom: 1px;
+			left: 1px;
+			height: 100%;
+			width: 100%;
+			background-position: left bottom;
+		  background-size: auto 10px;
+		  background-repeat: no-repeat;
+		  opacity: 0.8;
+		}
+
+		&--nct::after {
+			background-image: url(logo-nct.png);
+		}
+
+		&--zing::after {
+			background-image: url(logo-zing.png);
+		}
+
+    &--link {
+      line-height: 40px;
+			margin-left: 55px;
+			text-decoration: none;
+			color: black;
+			margin-right: 270px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			display: inherit;
+    }
+
+    &--tools {
+      position: absolute;
+      right: $gutter;
+      top: 0;
+      line-height: $item-h;
+
+      small {
+      }
+
+      a {
+        display: inline-block;
+        line-height: $item-h;
+        margin-left: $gutter;
+			  color: #49413f;
+			  text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &--active {
+      position: absolute;
+			left: 0;
+			top: 50%;
+			margin-left: -7.5px;
+			opacity: 0;
+			transform: translate(-100%, -50%);
+    }
+
+    &:hover {
+      background-color: rgba(245,245,245,0.3);
+    }
+  }
+}
+
+.playlist--item._selected .playlist--item--active {
+  opacity: 0.5;
+}
+.playlist--item._playing .playlist--item--active {
+  opacity: 1;
+  color: brown;
+  font-weight: bold;
+}
+
+.naustorm-section {
+	h5 small {
+		font-size: 14px;
+		font-weight: 100;
+		margin-left: 7.5px;
+	}
+}
+.naustorm {
+  .columns:nth-child(4n + 1) {
+    margin-left: 0;
+  }
+}
+.naustorm-elm {
+  margin-top: $gutter;
+
+  &--wrapper {
+    position: relative;
+	  width: 100%;
+	  overflow: hidden;
+  }
+
+  &--cover {
+    width: 100%;
+	  margin-bottom: 0;
+	  display: inherit;
+	  -webkit-filter: grayscale(100%);
+	  filter: grayscale(100%);
+	  -webkit-transition: all 0.5s;
+	  transition: all 0.5s;
+
+	  &:hover {
+	  	-webkit-filter: grayscale(0%);
+		  filter: grayscale(0%);
+		  -webkit-transform: rotate(3deg) scale(1.1, 1.1);
+		  transform: rotate(3deg) scale(1.1, 1.1);
+
+			~ .naustorm-elm--listens {
+				opacity: 1;
+			}
+	  }
+  }
+
+  &--title {
+    margin-bottom: 0;
+	  margin-top: 7.5px;
+	  white-space: nowrap;
+	  text-overflow: ellipsis;
+	  overflow-x: hidden;
+  }
+  &--artist {
+    margin-top: -5px;
+	  display: block;
+	  opacity: 0.7;
+  }
+  &--listens {
+    position: absolute;
+	  left: 15px;
+	  bottom: 15px;
+	  -webkit-transform: translateY(25%);
+	          transform: translateY(25%);
+	  color: white;
+	  z-index: 20;
+	  font-weight: 100;
+	  font-size: 16px;
+	  opacity: 0.4;
+	  -webkit-transition: all 0.5s;
+	  transition: all 0.5s;
+  }
+}
+
+.group-author {
+	margin-top: 60px;
+}
+
+.g-author--list {
+	list-style-type: none;
+}
+
+.g-author--item {
+	margin-right: 30px;
+}
+
+.g-author--item:last-child {
+	margin-right: 0;
+}
+
+.message-info {
+  background-color: #EA5455;
+  position: fixed;
+  right: 0;
+  top: $header-h + $playlist-h + 40;
+  z-index: 199;
+  transition: all 0.5s;
+  opacity: 0;
+
+  &._active {
+    opacity: 1;
+  }
+
+  &--content {
+    color: white;
+    padding: $gutter;
+    padding-right: 5*$gutter;
+    margin-bottom: 0;
+  }
+}
+
+@keyframes moving {
+  20% {
+    transform: translateX(-35%);
+    letter-spacing: 2px;
+  }
+  80% {
+    transform: translateX(-65%);
+  }
+}
+
+@keyframes submit-moving {
+  20% {
+    letter-spacing: 2px;
+    margin-left: -4px;
+  }
+  80% {
+    transform: translateX(-65%);
+    margin-left: 4px;
+  }
+}

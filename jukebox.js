@@ -503,6 +503,38 @@ if (Meteor.isClient) {
 				default:
 			}
 		});
+
+		// on scrolling
+		var oldScrollTop = 0;
+		var headerHeight = 69;
+		var playlistHeight = 55;
+		var isScrollingDown = false;
+		var $playlist = $('.playlist-nav');
+
+		$(document).on('scroll', function(e) {
+		  var newScrollTop = $(this).scrollTop();
+		  var pos = parseInt($playlist.css('top'), 10);
+		  var delta = Math.abs(newScrollTop - oldScrollTop);
+		  console.log('newScrollTop', newScrollTop);
+
+		  if (newScrollTop > oldScrollTop) {
+		    // scrolling down
+		    if (pos - delta < (headerHeight - playlistHeight)) {
+		      $playlist.css('top', headerHeight - playlistHeight);
+		    } else {
+		      $playlist.css('top', pos - delta);
+		    }
+		  } else {
+		    // scrolling up
+		    if (pos + delta > headerHeight) {
+		      $playlist.css('top', headerHeight);
+		    } else {
+		      $playlist.css('top', pos + delta);
+		    }
+		  }
+
+		  oldScrollTop = newScrollTop;
+		});
 	});
 
 	/**

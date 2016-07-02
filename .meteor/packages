@@ -27,5 +27,6 @@ meteorhacks:npm
 
 npm-container
 reactive-var
-standard-minifier-css
 standard-minifier-js
+seba:minifiers-autoprefixer
+fourseven:scss
