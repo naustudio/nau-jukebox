@@ -48,9 +48,9 @@ $color-09: rgba(211,211,211,1);
   font-weight: 100;
 }
 
-html, body {
-	height: 100%;
-}
+// html, body {
+// 	height: 100%;
+// }
 
 html {
 	background-color: white;
@@ -58,6 +58,7 @@ html {
 
 body {
   margin: 0;
+  -webkit-overflow-scroll: touch;
 }
 
 form {
@@ -396,7 +397,6 @@ input[type="text"]:focus {
 
 // the position of fixed elements should be out of scrolling-area to remove juddering when scroll, https://remysharp.com/2012/05/24/issues-with-position-fixed-scrolling-on-ios
 .scroll-content {
-  -webkit-overflow-scroll: touch;
   margin-top: $header-h;
   padding-top: $playlist-h;
 }
