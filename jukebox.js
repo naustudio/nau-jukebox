@@ -9,6 +9,7 @@
 
 Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
+Users = new Meteor.Collection('users');
 
 if (Meteor.isClient) {
 	var nickname = localStorage.getItem('nickname') || '';
@@ -39,8 +40,34 @@ if (Meteor.isClient) {
 		$('#' + tabId).css('display', 'block');
 	};
 
+	var showRequireMessage = function() {
+		var $playlistNav = $('.js-playlist-section');
+		var $nicknameHolder = $('.js-nickname-holder');
+
+		$playlistNav.addClass('_focus').css('top', 69);
+		$nicknameHolder.focus().closest('.input-control').addClass('_error');
+	};
+
+	var hideRequireMessage = function() {
+		var $playlistNav = $('.js-playlist-section');
+		var $nicknameHolder = $('.js-nickname-holder');
+		$playlistNav.removeClass('_focus');
+		$nicknameHolder.closest('.input-control').removeClass('_error');
+
+		var songurl = $('[name="songurl"]').val().trim();
+		if (songurl) {
+			submitSong(songurl);
+			$('[name="songurl"]').val('');
+		}
+	};
+
 	var submitSong = function(songurl) {
-		var nickname = Session.get('nickname');
+		var nickname = Session.get('nickname').trim();
+		if (!nickname) {
+			showRequireMessage();
+			return;
+		}
+
 		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
 			if (error) {
 				alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
@@ -235,7 +262,10 @@ if (Meteor.isClient) {
 			added: function(id, docs) {
 				getNaustormData();
 			}
-		})
+		});
+
+		// get storm data for the first time
+		getNaustormData();
 	});
 
 	Template.body.helpers({
@@ -324,6 +354,10 @@ if (Meteor.isClient) {
 		},
 
 		'submit #js-add-song-form': function(event) {
+			if (!$('[name="songurl"]').val().trim()) {
+				return;
+			}
+
 			if (Session.equals('urlFetching', true)) {
 				return;
 			}
@@ -366,20 +400,28 @@ if (Meteor.isClient) {
 			$this.addClass('_active');
 		},
 
-		'focus .js-nickname-holder': function(/*e*/) {
-			Session.set('nickname', '');
+		'keydown .js-nickname-holder': function(e) {
+			if (e.keyCode !== 13) return;
+
+			var $target = $(e.currentTarget);
+			var value = $target.val().trim();
+
+			localStorage.setItem('nickname', value);
+			Session.set('nickname', value);
+			$target.blur();
+
+			hideRequireMessage();
 		},
 
-		'keydown .js-nickname-holder': function(e) {
-			console.log('e', e);
-			if (e.keyCode === 13) {
-				var $target = $(e.currentTarget);
-				var value = $target.val();
+		'focusout .js-nickname-holder': function(e) {
+			var $target = $(e.currentTarget);
+			var value = $target.val().trim();
 
-				localStorage.setItem('nickname', value);
-				Session.set('nickname', value);
-				$target.blur();
-			}
+			$target.val(value);
+			localStorage.setItem('nickname', value);
+			Session.set('nickname', value);
+
+			hideRequireMessage();
 		},
 
 		'keyup .js-search-box': function(e) {
@@ -425,9 +467,11 @@ if (Meteor.isClient) {
 			if (e.keyCode === 13) { // enter
 				var selectedSong = searchResult[selectedIndex];
 				if (selectedSong) {
+					$form.find('#songurl').val(selectedSong.originalURL);
 					submitSong(selectedSong.originalURL);
-					$form.find('#songurl').val('').blur();
+					$form.find('#songurl').blur();
 					$form.removeClass('_active');
+					Session.set('searchResult', []);
 					return false;
 				}
 			}
@@ -502,6 +546,38 @@ if (Meteor.isClient) {
 					// toggle between play/pause
 				default:
 			}
+		});
+
+		// on scrolling
+		var oldScrollTop = 0;
+		var headerHeight = 69;
+		var playlistHeight = 55;
+		var isScrollingDown = false;
+		var $playlist = $('.playlist-nav');
+
+		$(document).on('scroll', function(e) {
+		  var newScrollTop = $(this).scrollTop();
+		  var pos = parseInt($playlist.css('top'), 10);
+		  var delta = Math.abs(newScrollTop - oldScrollTop);
+		  console.log('newScrollTop', newScrollTop);
+
+		  if (newScrollTop > oldScrollTop) {
+		    // scrolling down
+		    if (pos - delta < (headerHeight - playlistHeight)) {
+		      $playlist.css('top', headerHeight - playlistHeight);
+		    } else {
+		      $playlist.css('top', pos - delta);
+		    }
+		  } else {
+		    // scrolling up
+		    if (pos + delta > headerHeight) {
+		      $playlist.css('top', headerHeight);
+		    } else {
+		      $playlist.css('top', pos + delta);
+		    }
+		  }
+
+		  oldScrollTop = newScrollTop;
 		});
 	});
 
@@ -651,4 +727,13 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 
 	// update the exact document in AppStates collection with new songs array
 	AppStates.update(playingSongs._id, {key: 'playingSongs', songs: songs});
+};
+
+/**
+ * User Model, managing all users
+ */
+Users.addNewUser = function(userName) {
+};
+
+Users.updateStatus = function(userName) {
 };
