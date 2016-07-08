@@ -46,7 +46,7 @@
 		<div class="container">
 			<ul class="navbar--list">
 				<li class="navbar--item navbar--item__icon">
-					<a href="https://naustud.io" target="_blank">Nâu Jukebox</a>
+					<a href="https://naustud.io" target="_blank"><strong>NAU STUDIO</strong></a>
 				</li>
 				<li class="navbar--item navbar--item__input">
 
@@ -88,19 +88,19 @@
 			<div class="container">
 				<ul class="playlist-nav--list">
 					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
-						<a href="javascript:;">play list</a>
+						<a href="javascript:;">Now playing</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
-						<a href="javascript:;">yesterday</a>
+						<a href="javascript:;">Yesterday</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
-						<a href="javascript:;">past 7 days</a>
+						<a href="javascript:;">Past 7 days</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
-						<a href="javascript:;">naustorm</a>
+						<a href="javascript:;">Naustorm</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--gamblr" data-target="js-gamblr">
-						<a href="javascript:;">>gamblr</a>
+						<a href="javascript:;">Gamblr</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
 						<div class="input-control">
@@ -153,7 +153,7 @@
 		{{#each songs}}
 			{{> song}}
 		{{else}}
-			Waiting for storms...
+			No song to play
 		{{/each}}
 	</ul>
 </template>
@@ -176,7 +176,7 @@
 			<a href="javascript:;" class="loading-block rebook-btn">
 				<span class="loading-block--stable">rebook</span>
 			</a>
-			<a href="javascript:;" class="remove-btn">rmv</a>
+			<a href="javascript:;" class="remove-btn">remove</a>
 		</div>
 	</li>
 </template>

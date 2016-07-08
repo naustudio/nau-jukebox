@@ -297,14 +297,21 @@ if (Meteor.isClient) {
 		},
 
 		'click .remove-btn': function(e) {
-			Songs.remove(this._id);
-			if (Session.equals('selectedSong', this._id)) {
-				//selected song playing
-				pauseWithEffect();
-				player.media.src = '';
-				AppStates.updatePlayingSongs('', this._id);
-			}
+			var $target = $(e.target);
+			var self = this;
 			e.stopPropagation();
+			$target.closest('.js-song-item').animate({'opacity': 0},
+				1000,
+				function() {
+					Songs.remove(self._id);
+					if (Session.equals('selectedSong', self._id)) {
+						//selected song playing
+						pauseWithEffect();
+						player.media.src = '';
+						AppStates.updatePlayingSongs('', self._id);
+					}
+				}
+			);
 		},
 
 		'click .rebook-btn': function(e) {
