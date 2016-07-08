@@ -22,7 +22,8 @@ $color-08: #F7EEBB;
 $color-06: rgba(255,255,255,0.2);
 $color-07: rgba(223,201,178,0.4);
 $color-09: rgba(211,211,211,1);
-$nau:			 #8c6b4b;
+$nau-lighter:			 #a17f5f;
+$nau:							 #8c6b4b;
 
 * {
 	box-sizing: border-box;
@@ -406,7 +407,7 @@ input[type="text"]:focus {
   position: fixed;
   width: 100%;
   top: $header-h;
-  background-color: rgba(140,107,75, 0.9);
+  background-color: $nau-lighter;
   border-bottom: 1px solid rgba(0,0,0,0.1);
   transition: top 0.3s ease;
   z-index: 99;
@@ -434,7 +435,7 @@ input[type="text"]:focus {
       transition: all 0.7s;
 
       &:hover {
-        background-color: rgb(140, 107, 75);
+        background-color: $nau;
       }
     }
 
@@ -456,7 +457,7 @@ input[type="text"]:focus {
     &._active {
       position: relative;
       a {
-        background-color: rgb(140, 107, 75);
+        background-color: $nau;
       }
 
       // &:after {
