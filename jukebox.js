@@ -301,7 +301,7 @@ if (Meteor.isClient) {
 			var self = this;
 			e.stopPropagation();
 			$target.closest('.js-song-item').animate({'opacity': 0},
-				1000,
+				500,
 				function() {
 					Songs.remove(self._id);
 					if (Session.equals('selectedSong', self._id)) {
@@ -559,32 +559,23 @@ if (Meteor.isClient) {
 		var oldScrollTop = 0;
 		var headerHeight = 69;
 		var playlistHeight = 55;
-		var isScrollingDown = false;
 		var $playlist = $('.playlist-nav');
 
 		$(document).on('scroll', function(e) {
-		  var newScrollTop = $(this).scrollTop();
-		  var pos = parseInt($playlist.css('top'), 10);
-		  var delta = Math.abs(newScrollTop - oldScrollTop);
-		  console.log('newScrollTop', newScrollTop);
+			var newScrollTop = $(this).scrollTop();
+			// var pos = parseInt($playlist.css('top'), 10);
+			// var delta = Math.abs(newScrollTop - oldScrollTop);
+			console.log('newScrollTop', newScrollTop);
 
-		  if (newScrollTop > oldScrollTop) {
-		    // scrolling down
-		    if (pos - delta < (headerHeight - playlistHeight)) {
-		      $playlist.css('top', headerHeight - playlistHeight);
-		    } else {
-		      $playlist.css('top', pos - delta);
-		    }
-		  } else {
-		    // scrolling up
-		    if (pos + delta > headerHeight) {
-		      $playlist.css('top', headerHeight);
-		    } else {
-		      $playlist.css('top', pos + delta);
-		    }
-		  }
+			if (newScrollTop > oldScrollTop) {
+			// scrolling down
+				$playlist.css('top', headerHeight - playlistHeight);
+			} else {
+			// scrolling up
+				$playlist.css('top', headerHeight);
+			}
 
-		  oldScrollTop = newScrollTop;
+			oldScrollTop = newScrollTop;
 		});
 	});
 
