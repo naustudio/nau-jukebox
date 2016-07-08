@@ -459,23 +459,6 @@ input[type="text"]:focus {
       a {
         background-color: $nau;
       }
-
-      // &:after {
-      //   content: '_';
-      //   position: absolute;
-      //   bottom: 0;
-      //   left: 50%;
-      //   transform: translateX(-50%);
-      //   font-weight: 600;
-      //   font-size: 22px;
-      //   color: $color-04;
-      // }
-
-      // &.playlist-nav--item__right {
-      //   &:after {
-      //     content: none;
-      //   }
-      // }
     }
   }
 }
