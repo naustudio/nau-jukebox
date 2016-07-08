@@ -31,8 +31,8 @@ getSongInfoZing = function(songurl) {
 
 
 	if (xmlURLResults) {
-		xmlURL = xmlURLResults[0];
-		console.log('xmlURLResults:', xmlURLResults[0]);
+		xmlURL = xmlURLResults[0].replace('html5', '');
+		console.log('xmlURLResults:', xmlURL);
 	} else {
 		console.log('xmlURL parse failed');
 		return null;
@@ -57,7 +57,7 @@ getSongInfoZing = function(songurl) {
 	// console.log('XML2JS:', XML2JS);
 
 	try {
-		xmlRes = getGzipURL(xmlURL.replace('html5', ''));
+		xmlRes = getGzipURL(xmlURL);
 		xmlRes = xmlRes.content;
 		// console.log('Response:', xmlRes);
 
