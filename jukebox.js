@@ -2,7 +2,7 @@
  * Main module
  */
 /*eslint no-shadow:0*/
-/*global Songs:true, AppStates:true, moment*/
+/*global Songs:true, AppStates:true, SC:true, moment*/
 
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
@@ -156,6 +156,9 @@ if (Meteor.isClient) {
 					break;
 				case 'Zing':
 					color = 'zing';
+					break;
+				case 'Soundcloud':
+					color = 'sc';
 					break;
 			}
 			return color;
@@ -587,7 +590,16 @@ if (Meteor.isClient) {
 	 * @return {[type]}      [description]
 	 */
 	function selectSong(song) { /* jshint ignore:line */
+
 		if (player) {
+			SC.initialize({
+				client_id: 'f6dbfb46c6b75cb6b5cd84aeb50d79e3'
+			});
+
+			SC.stream(song.streamURL).then(function(scPlayer) {
+				player.soundCloudPlayer = scPlayer;
+			});
+
 			pauseWithEffect();
 			player.media.src = song.streamURL;
 			player.song = song;
@@ -615,13 +627,23 @@ if (Meteor.isClient) {
 	function playWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_play').addClass('_pause');
-		player.play();
+
+		if (player.soundCloudPlayer) {
+			player.soundCloudPlayer.play();
+		} else {
+			player.play();
+		}
+
 	}
 
 	function pauseWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_pause').addClass('_play');
-		player.pause();
+		if (player.soundCloudPlayer) {
+			player.soundCloudPlayer.pause();
+		} else {
+			player.pause();
+		}
 	}
 }
 
@@ -644,7 +666,7 @@ if (Meteor.isServer) {
 
 	Meteor.methods({
 
-		/*global getSongInfoNct, getSongInfoZing*/
+		/*global getSongInfoNct, getSongInfoZing, getSongInfoSoundcloud*/
 		getSongInfo: function(songurl, author) {
 			// Set up a future for async callback sending to clients
 			var songInfo;
@@ -656,6 +678,9 @@ if (Meteor.isServer) {
 			} else if (String(songurl).contains('mp3.zing')) {
 				console.log('Getting Zing song info');
 				songInfo = getSongInfoZing(songurl);
+			} else if (String(songurl).contains('soundcloud')) {
+				console.log('Getting Soundclound song info');
+				songInfo = getSongInfoSoundcloud(songurl);
 			}
 
 			songInfo.author = author;

@@ -510,7 +510,8 @@ input[type="text"]:focus {
     }
 
     &--nct::after,
-		&--zing::after {
+		&--zing::after,
+		&--sc::after {
 			content: '';
 			position: absolute;
 			bottom: 1px;
@@ -529,6 +530,10 @@ input[type="text"]:focus {
 
 		&--zing::after {
 			background-image: url(logo-zing.png);
+		}
+
+		&--sc::after {
+			background-image: url(logo-soundcloud.jpg);
 		}
 
     &--link {
