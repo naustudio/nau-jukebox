@@ -164,7 +164,7 @@ if (Meteor.isClient) {
 
 	Template.naustorm.helpers({
 		storms: function() {
-		 	return Session.get('naustorm_data');
+			return Session.get('naustorm_data');
 		},
 
 		groupByAuthorData: function() {
@@ -263,9 +263,6 @@ if (Meteor.isClient) {
 				getNaustormData();
 			}
 		});
-
-		// get storm data for the first time
-		getNaustormData();
 	});
 
 	Template.body.helpers({
@@ -556,28 +553,37 @@ if (Meteor.isClient) {
 		var $playlist = $('.playlist-nav');
 
 		$(document).on('scroll', function(e) {
-		  var newScrollTop = $(this).scrollTop();
-		  var pos = parseInt($playlist.css('top'), 10);
-		  var delta = Math.abs(newScrollTop - oldScrollTop);
-		  console.log('newScrollTop', newScrollTop);
+			var newScrollTop = $(this).scrollTop();
+			var pos = parseInt($playlist.css('top'), 10);
+			var delta = Math.abs(newScrollTop - oldScrollTop);
+			console.log('newScrollTop', newScrollTop);
 
-		  if (newScrollTop > oldScrollTop) {
-		    // scrolling down
-		    if (pos - delta < (headerHeight - playlistHeight)) {
-		      $playlist.css('top', headerHeight - playlistHeight);
-		    } else {
-		      $playlist.css('top', pos - delta);
-		    }
-		  } else {
-		    // scrolling up
-		    if (pos + delta > headerHeight) {
-		      $playlist.css('top', headerHeight);
-		    } else {
-		      $playlist.css('top', pos + delta);
-		    }
-		  }
+			if (newScrollTop > oldScrollTop) {
+				// scrolling down
+				if (pos - delta < (headerHeight - playlistHeight)) {
+					$playlist.css('top', headerHeight - playlistHeight);
+				} else {
+					$playlist.css('top', pos - delta);
+				}
+			} else {
+				// scrolling up
+				if (pos + delta > headerHeight) {
+					$playlist.css('top', headerHeight);
+				} else {
+					$playlist.css('top', pos + delta);
+				}
+			}
 
-		  oldScrollTop = newScrollTop;
+			oldScrollTop = newScrollTop;
+		});
+
+		$('.js-dot').on('click', function(e) {
+			var $loader = $(this).closest('.loader');
+			if ($loader.hasClass('_active')) {
+				$loader.removeClass('_active');
+			} else {
+				$loader.addClass('_active');
+			}
 		});
 	});
 
@@ -672,17 +678,6 @@ if (Meteor.isServer) {
 			return fut.wait();
 		}
 	});
-
-	// Meteor.publish('naustormData', function() {
-	// 	var earlyOfToday = new Date();
-	// 	var last7Days = moment().add(-7, 'days').toDate();
-	// 	last7Days.setHours(0, 0, 0, 0);
-
-	// 	return Songs.find(
-	// 		{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
-	// 		{sort: {timeAdded: 1}}
-	// 	);
-	// });
 }
 // ============================================================================
 
