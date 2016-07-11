@@ -157,7 +157,7 @@
 <!-- /songlist -->
 
 <template name="song">
-	<li class="js-song-item playlist--item {{selected}} {{playing}}">
+	<li class="playlist--item {{selected}} {{playing}}">
 		<span class="playlist--item--active">&rtri;</span>
 		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
 			{{#if thumbURL}}
@@ -166,7 +166,7 @@
 				<img src="http://stc.id.nixcdn.com/v11/images/df-singer-300x300.jpg">
 			{{/if}}
 		</a>
-		<a href="javascript:;" class="playlist--item--link"
+		<a href="javascript:;" class="playlist--item--link js-song-item"
 			title="{{name}} - {{artist}}">{{name}} - {{artist}}</a>
 		<div class="playlist--item--tools">
 			<small>{{addDate}}</small>

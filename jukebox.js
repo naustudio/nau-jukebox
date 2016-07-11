@@ -68,6 +68,8 @@ if (Meteor.isClient) {
 			return;
 		}
 
+		Users.addOrUpdate(nickname);
+
 		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
 			if (error) {
 				alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
@@ -203,7 +205,6 @@ if (Meteor.isClient) {
 
 	Template.naustorm.created = function() {};
 	Template.naustorm.destroyed = function() {};
-
 	Template.naustorm.onCreated(function() {
 		function getNaustormData() {
 			var startOfWeek = moment().startOf('isoWeek').toDate();
@@ -261,6 +262,31 @@ if (Meteor.isClient) {
 		});
 	});
 
+	Template.body.onCreated(function() {
+		var userDataChanged = function(id) {
+			var u = Users.findOne({_id: id});
+			var nickname = Session.get('nickname').trim();
+			var $loader = $('.js-dot').closest('.loader');
+
+			if (u.userName === nickname) {
+				if (u.isHost) {
+					$loader.addClass('_active');
+				} else {
+					$loader.removeClass('_active');
+				}
+			}
+		};
+
+		var userList = Users.find();
+		userList.observeChanges({
+			added: function(id, data) {
+				userDataChanged(id);
+			},
+			changed: function(id, data) {
+				userDataChanged(id);
+			}
+		});
+	});
 	Template.body.helpers({
 		getNickname: function() {
 			return Session.get('nickname');
@@ -552,7 +578,6 @@ if (Meteor.isClient) {
 			var newScrollTop = $(this).scrollTop();
 			var pos = parseInt($playlist.css('top'), 10);
 			var delta = Math.abs(newScrollTop - oldScrollTop);
-			console.log('newScrollTop', newScrollTop);
 
 			if (newScrollTop > oldScrollTop) {
 				// scrolling down
@@ -580,7 +605,15 @@ if (Meteor.isClient) {
 			} else {
 				var passcode = prompt('Please enter passcode: nau110114', '');
 				if (passcode.toLowerCase() === 'nau110114') {
+					var nickname = Session.get('nickname').trim();
+					if (!nickname) {
+						showRequireMessage();
+						return;
+					}
 					$loader.addClass('_active');
+					Meteor.call('changeHost', nickname, function(err) {
+						// handle error here
+					});
 				}
 			}
 		});
@@ -675,7 +708,19 @@ if (Meteor.isServer) {
 			}
 
 			return fut.wait();
+		},
+
+		changeHost: function(userName) {
+			var u = Users.findOne({userName: userName});
+			Users.update({}, {$set: {isHost: false}}, {multi: true});
+			Users.update(u._id, {
+				$set: {
+					isHost: true,
+					lastModified: new Date()
+				}
+			});
 		}
+
 	});
 }
 // ============================================================================
@@ -726,22 +771,21 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 /**
  * User Model, managing all users
  */
-Users.addOrUpdate = function(userData) {
-};
-
-/**
- * update isHost props of all user to false, change the current to true
- * @param  {[type]} hostName [description]
- * @return {[type]}          [description]
- */
-Users.changeHost = function(hostName) {
-};
-
-/**
- * Upate on/off line status
- * @param  {[type]} userName [description]
- * @param  {[type]} status   [description]
- * @return {[type]}          [description]
- */
-Users.updateStatus = function(userName, status) {
+Users.addOrUpdate = function(userName) {
+	if (Users.find({userName: userName}).count() === 0) {
+		Users.insert({
+			userName: userName,
+			isHost: false,
+			isOnline: true,
+			lastModified: new Date()
+		});
+	} else {
+		var u = Users.findOne({userName: userName});
+		Users.update(u._id, {
+			$set: {
+				isOnline: true,
+				lastModified: new Date()
+			}
+		});
+	}
 };
