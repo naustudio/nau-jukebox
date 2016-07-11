@@ -195,7 +195,7 @@
 			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
 			<ul class="g-author--list">
 				{{#each groupByAuthorData}}
-					<li class="g-author--item">{{author}} -> {{books}} storms</li>
+					<li class="g-author--item">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
 				{{else}}
 					<li class="g-author--item">Waiting for data...</li>
 				{{/each}}

@@ -12,7 +12,8 @@ $playbutton-w: 6px;
 $header-h: 69px;
 $playlist-h: 55px;
 $dot-w: 24px;
-$dot-color: red;
+$dot-color: white;
+$dot-color--active: #A9C52F;
 
 // color pattern http://www.color-hex.com/color-palette/16458
 $color-01: #ffffff;
@@ -667,17 +668,51 @@ input[type="text"]:focus {
 	margin-top: 60px;
 }
 
-.g-author--list {
-	list-style-type: none;
+.g-author {
+	$status-default-color: #F6B61E;
+	$status-active-color: #347A2A;
+
+	&--list {
+		list-style-type: none;
+	}
+
+	&--item {
+		margin-right: 30px;
+		margin-left: $gutter;
+		position: relative;
+
+		&:after {
+			position: absolute;
+			left: -$gutter;
+			width: 7.5px;
+			height: 7.5px;
+			content: '';
+			display: block;
+			border-radius: 100%;
+			background-color: $status-default-color;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		&._active {
+			&:after {
+				background-color: $status-active-color;
+			}
+		}
+	}
+
+	&--item:last-child {
+		margin-right: 0;
+	}
+
+	&--storm {
+		padding: 2px 0.5*$gutter;
+		background-color: whitesmoke;
+		border-radius: 2px;
+		margin-left: 0.5*$gutter;
+	}
 }
 
-.g-author--item {
-	margin-right: 30px;
-}
-
-.g-author--item:last-child {
-	margin-right: 0;
-}
 
 .loader {
   position: absolute;
@@ -722,10 +757,12 @@ input[type="text"]:focus {
   .dot {
     opacity: 1;
     animation: slide 1s infinite;
+    background: $dot-color--active;
 
     &:hover {
     	&:after {
     		content: 'guest';
+    		color: $dot-color--active;
     	}
     }
   }
@@ -736,7 +773,7 @@ input[type="text"]:focus {
     transform: scale(1);
   }
   80% {
-    opacity: 0.3;
+    opacity: 0.7;
     transform: scale(1);
   }
   100% {

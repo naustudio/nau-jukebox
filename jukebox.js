@@ -226,11 +226,7 @@ if (Meteor.isClient) {
 				})
 				.slice(0, 8);
 
-			groupByAuthor = _.chain(songList)
-				.groupBy('author')
-				.sortBy(function(i) {
-					return -1 * i.length;
-				});
+			groupByAuthor = _.chain(songList).groupBy('author');
 
 			for (var item in group._wrapped) {
 				var g = group._wrapped[item];
@@ -582,7 +578,10 @@ if (Meteor.isClient) {
 			if ($loader.hasClass('_active')) {
 				$loader.removeClass('_active');
 			} else {
-				$loader.addClass('_active');
+				var passcode = prompt('Please enter passcode: nau110114', '');
+				if (passcode.toLowerCase() === 'nau110114') {
+					$loader.addClass('_active');
+				}
 			}
 		});
 	});
