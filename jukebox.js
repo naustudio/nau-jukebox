@@ -727,8 +727,22 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 /**
  * User Model, managing all users
  */
-Users.addNewUser = function(userName) {
+Users.addOrUpdate = function(userData) {
 };
 
-Users.updateStatus = function(userName) {
+/**
+ * update isHost props of all user to false, change the current to true
+ * @param  {[type]} hostName [description]
+ * @return {[type]}          [description]
+ */
+Users.changeHost = function(hostName) {
+};
+
+/**
+ * Upate on/off line status
+ * @param  {[type]} userName [description]
+ * @param  {[type]} status   [description]
+ * @return {[type]}          [description]
+ */
+Users.updateStatus = function(userName, status) {
 };

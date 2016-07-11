@@ -626,7 +626,7 @@ input[type="text"]:focus {
 			-webkit-transform: rotate(3deg) scale(1.1, 1.1);
 			transform: rotate(3deg) scale(1.1, 1.1);
 
-			~ .naustorm-elm--listens {
+			~.naustorm-elm--listens {
 				opacity: 1;
 			}
 		}
@@ -643,6 +643,9 @@ input[type="text"]:focus {
 		margin-top: -5px;
 		display: block;
 		opacity: 0.7;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow-x: hidden;
 	}
 	&--listens {
 		position: absolute;
@@ -675,28 +678,6 @@ input[type="text"]:focus {
 .g-author--item:last-child {
 	margin-right: 0;
 }
-
-// .message-info {
-//   background-color: #EA5455;
-//   position: fixed;
-//   right: 0;
-//   top: $header-h + $playlist-h;
-//   z-index: 599;
-//   transition: all 0.3s;
-//   transition-delay: 0.5s;
-//   transform: translateX(100%);
-
-//   &._active {
-//   	transform: translateX(0);
-//   }
-
-//   &--content {
-//     color: white;
-//     padding: $gutter;
-//     padding-right: 5*$gutter;
-//     margin-bottom: 0;
-//   }
-// }
 
 .loader {
   position: absolute;
@@ -741,6 +722,12 @@ input[type="text"]:focus {
   .dot {
     opacity: 1;
     animation: slide 1s infinite;
+
+    &:hover {
+    	&:after {
+    		content: 'guest';
+    	}
+    }
   }
 }
 
