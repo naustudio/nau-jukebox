@@ -38,17 +38,14 @@
 			data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
 	</a>
 
-	<div class="message-info js-message-info">
-	  <p class="message-info--content">
-	    Your name is required !
-	  </p>
-	</div>
-
 	<nav class="navbar" id="js-navbar">
+		<div class="loader">
+			<div class="dot js-dot"></div>
+		</div>
 		<div class="container">
 			<ul class="navbar--list">
 				<li class="navbar--item navbar--item__icon">
-					<a href="#"><strong>NAU JUKEBOX</strong></a>
+					<a href="https://naustud.io" target="_blank">Nâu Jukebox</a>
 				</li>
 				<li class="navbar--item navbar--item__input">
 
@@ -90,19 +87,19 @@
 			<div class="container">
 				<ul class="playlist-nav--list">
 					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
-						<a href="javascript:;">Now playing</a>
+						<a href="javascript:;">play list</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
-						<a href="javascript:;">Yesterday</a>
+						<a href="javascript:;">yesterday</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
-						<a href="javascript:;">Past 7 days</a>
+						<a href="javascript:;">past 7 days</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
-						<a href="javascript:;">Naustorm</a>
+						<a href="javascript:;">naustorm</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--gamblr" data-target="js-gamblr">
-						<a href="javascript:;">Gamblr</a>
+						<a href="javascript:;">>gamblr</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
 						<div class="input-control">
@@ -135,8 +132,8 @@
 		<section id="js-gamblr" class="main-content"  style="display:none">
 			<div class="container">
 				<div class="naustorm-section">
-					<h5>Gamblr</h5>
-					<p>This section is under construction. Some thing amazing is comming!</p>
+					<h5>>gamblr</h5>
+					<p>some thing amz will comming !</p>
 				</div>
 			</div>
 		</section>
@@ -155,14 +152,14 @@
 		{{#each songs}}
 			{{> song}}
 		{{else}}
-			No song to play
+			Waiting for storms...
 		{{/each}}
 	</ul>
 </template>
 <!-- /songlist -->
 
 <template name="song">
-	<li class="js-song-item playlist--item {{selected}} {{playing}}">
+	<li class="playlist--item {{selected}} {{playing}}">
 		<span class="playlist--item--active">&rtri;</span>
 		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
 			{{#if thumbURL}}
@@ -171,14 +168,14 @@
 				<img src="http://stc.id.nixcdn.com/v11/images/df-singer-300x300.jpg">
 			{{/if}}
 		</a>
-		<a href="javascript:;" class="playlist--item--link"
+		<a href="javascript:;" class="playlist--item--link js-song-item"
 			title="{{name}} - {{artist}}">{{name}} - {{artist}}</a>
 		<div class="playlist--item--tools">
 			<small>{{addDate}}</small>
 			<a href="javascript:;" class="loading-block rebook-btn">
 				<span class="loading-block--stable">rebook</span>
 			</a>
-			<a href="javascript:;" class="remove-btn">remove</a>
+			<a href="javascript:;" class="remove-btn">rmv</a>
 		</div>
 	</li>
 </template>
@@ -186,7 +183,7 @@
 
 <template name="naustorm">
 	<div class="naustorm-section">
-		<h5>Naustorm Ranking |<small>{{dateString}}</small></h5>
+		<h5>naustorm\<small> {{dateString}}</small></h5>
 
 		<div class="row naustorm">
 			{{#each storms}}
@@ -197,10 +194,10 @@
 		</div>
 
 		<div class="group-author">
-			<h5>Naustorm Bookers</h5>
+			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
 			<ul class="g-author--list">
 				{{#each groupByAuthorData}}
-					<li class="g-author--item">{{author}} -> {{books}} storms</li>
+					<li class="g-author--item">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
 				{{else}}
 					<li class="g-author--item">Waiting for data...</li>
 				{{/each}}

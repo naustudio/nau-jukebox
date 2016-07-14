@@ -72,6 +72,8 @@ if (Meteor.isClient) {
 			return;
 		}
 
+		Users.addOrUpdate(nickname);
+
 		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
 			if (error) {
 				alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
@@ -171,7 +173,7 @@ if (Meteor.isClient) {
 
 	Template.naustorm.helpers({
 		storms: function() {
-		 	return Session.get('naustorm_data');
+			return Session.get('naustorm_data');
 		},
 
 		groupByAuthorData: function() {
@@ -210,7 +212,6 @@ if (Meteor.isClient) {
 
 	Template.naustorm.created = function() {};
 	Template.naustorm.destroyed = function() {};
-
 	Template.naustorm.onCreated(function() {
 		function getNaustormData() {
 			var startOfWeek = moment().startOf('isoWeek').toDate();
@@ -233,11 +234,7 @@ if (Meteor.isClient) {
 				})
 				.slice(0, 8);
 
-			groupByAuthor = _.chain(songList)
-				.groupBy('author')
-				.sortBy(function(i) {
-					return -1 * i.length;
-				});
+			groupByAuthor = _.chain(songList).groupBy('author');
 
 			for (var item in group._wrapped) {
 				var g = group._wrapped[item];
@@ -270,11 +267,33 @@ if (Meteor.isClient) {
 				getNaustormData();
 			}
 		});
-
-		// get storm data for the first time
-		getNaustormData();
 	});
 
+	Template.body.onCreated(function() {
+		var userDataChanged = function(id) {
+			var u = Users.findOne({_id: id});
+			var nickname = Session.get('nickname').trim();
+			var $loader = $('.js-dot').closest('.loader');
+
+			if (u.userName === nickname) {
+				if (u.isHost) {
+					$loader.addClass('_active');
+				} else {
+					$loader.removeClass('_active');
+				}
+			}
+		};
+
+		var userList = Users.find();
+		userList.observeChanges({
+			added: function(id, data) {
+				userDataChanged(id);
+			},
+			changed: function(id, data) {
+				userDataChanged(id);
+			}
+		});
+	});
 	Template.body.helpers({
 		getNickname: function() {
 			return Session.get('nickname');
@@ -304,21 +323,14 @@ if (Meteor.isClient) {
 		},
 
 		'click .remove-btn': function(e) {
-			var $target = $(e.target);
-			var self = this;
+			Songs.remove(this._id);
+			if (Session.equals('selectedSong', this._id)) {
+				//selected song playing
+				pauseWithEffect();
+				player.media.src = '';
+				AppStates.updatePlayingSongs('', this._id);
+			}
 			e.stopPropagation();
-			$target.closest('.js-song-item').animate({'opacity': 0},
-				500,
-				function() {
-					Songs.remove(self._id);
-					if (Session.equals('selectedSong', self._id)) {
-						//selected song playing
-						pauseWithEffect();
-						player.media.src = '';
-						AppStates.updatePlayingSongs('', self._id);
-					}
-				}
-			);
 		},
 
 		'click .rebook-btn': function(e) {
@@ -570,23 +582,51 @@ if (Meteor.isClient) {
 		var oldScrollTop = 0;
 		var headerHeight = 69;
 		var playlistHeight = 55;
+		var isScrollingDown = false;
 		var $playlist = $('.playlist-nav');
 
 		$(document).on('scroll', function(e) {
 			var newScrollTop = $(this).scrollTop();
-			// var pos = parseInt($playlist.css('top'), 10);
-			// var delta = Math.abs(newScrollTop - oldScrollTop);
-			console.log('newScrollTop', newScrollTop);
+			var pos = parseInt($playlist.css('top'), 10);
+			var delta = Math.abs(newScrollTop - oldScrollTop);
 
 			if (newScrollTop > oldScrollTop) {
-			// scrolling down
-				$playlist.css('top', headerHeight - playlistHeight);
+				// scrolling down
+				if (pos - delta < (headerHeight - playlistHeight)) {
+					$playlist.css('top', headerHeight - playlistHeight);
+				} else {
+					$playlist.css('top', pos - delta);
+				}
 			} else {
-			// scrolling up
-				$playlist.css('top', headerHeight);
+				// scrolling up
+				if (pos + delta > headerHeight) {
+					$playlist.css('top', headerHeight);
+				} else {
+					$playlist.css('top', pos + delta);
+				}
 			}
 
 			oldScrollTop = newScrollTop;
+		});
+
+		$('.js-dot').on('click', function(e) {
+			var $loader = $(this).closest('.loader');
+			if ($loader.hasClass('_active')) {
+				$loader.removeClass('_active');
+			} else {
+				var passcode = prompt('Please enter passcode: nau110114', '');
+				if (passcode.toLowerCase() === 'nau110114') {
+					var nickname = Session.get('nickname').trim();
+					if (!nickname) {
+						showRequireMessage();
+						return;
+					}
+					$loader.addClass('_active');
+					Meteor.call('changeHost', nickname, function(err) {
+						// handle error here
+					});
+				}
+			}
 		});
 	});
 
@@ -715,19 +755,20 @@ if (Meteor.isServer) {
 			}
 
 			return fut.wait();
+		},
+
+		changeHost: function(userName) {
+			var u = Users.findOne({userName: userName});
+			Users.update({}, {$set: {isHost: false}}, {multi: true});
+			Users.update(u._id, {
+				$set: {
+					isHost: true,
+					lastModified: new Date()
+				}
+			});
 		}
+
 	});
-
-	// Meteor.publish('naustormData', function() {
-	// 	var earlyOfToday = new Date();
-	// 	var last7Days = moment().add(-7, 'days').toDate();
-	// 	last7Days.setHours(0, 0, 0, 0);
-
-	// 	return Songs.find(
-	// 		{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
-	// 		{sort: {timeAdded: 1}}
-	// 	);
-	// });
 }
 // ============================================================================
 
@@ -777,8 +818,21 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 /**
  * User Model, managing all users
  */
-Users.addNewUser = function(userName) {
-};
-
-Users.updateStatus = function(userName) {
+Users.addOrUpdate = function(userName) {
+	if (Users.find({userName: userName}).count() === 0) {
+		Users.insert({
+			userName: userName,
+			isHost: false,
+			isOnline: true,
+			lastModified: new Date()
+		});
+	} else {
+		var u = Users.findOne({userName: userName});
+		Users.update(u._id, {
+			$set: {
+				isOnline: true,
+				lastModified: new Date()
+			}
+		});
+	}
 };
