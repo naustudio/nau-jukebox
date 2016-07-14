@@ -19,32 +19,22 @@ getSongInfoSoundcloud = function(songurl) {
 
 	if (json && json.data) {
 		console.log('Checking the XML data');
-
-	// 	//TODO: need to check if we ever got error with copyright checker like Zing
-	// 	if (track.location[0] /*&& String(track.errorcode[0]) === '0'*/) {
-	// 		console.log('URL is valid. Adding new song.');
-	// 		// return { error: 'testing' }
-		return {
-			timeAdded: Date.now(),
-			originalURL: songurl,
-			origin: 'Soundcloud',
-			name: json.data.title,
-			artist: json.data.user.username,
-			streamURL: '/tracks/' + json.data.id,
-			thumbURL: json.data.user.avatar_url,
-			play: 0
-		};
-	// 	} else if (track.errormessage[0]) {
-	// 		console.log('Error received: ' + track.errormessage[0]);
-	// 		return {
-	// 			error: track.errormessage[0]
-	// 		};
-	// 	} else {
-	// 		console.log('Unknown errors');
-	// 		return {
-	// 			error: 'Errors unknown.'
-	// 		};
-	// 	}
+		if (json.data.streamable) {
+			return {
+				timeAdded: Date.now(),
+				originalURL: songurl,
+				origin: 'Soundcloud',
+				name: json.data.title,
+				artist: json.data.user.username,
+				streamURL: '/tracks/' + json.data.id,
+				thumbURL: json.data.user.avatar_url,
+				play: 0
+			};
+		} else {
+			return {
+				error: 'This Soundcloud is not streamable'
+			};
+		}
 
 	} else {
 		console.log('Can\'t parse link');

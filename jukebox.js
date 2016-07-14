@@ -20,6 +20,10 @@ if (Meteor.isClient) {
 	Session.setDefault('selectedIndex', '0');
 
 	var player; //the MediaElement instance
+	var playerSoundcloud;
+	var playerSoundcloudDictionary;
+	var currentSong;
+	var prevSong;
 
 	var navbarBackground = function() {
 		var rn = Math.floor((Math.random() * 150) + 60);
@@ -516,8 +520,12 @@ if (Meteor.isClient) {
 
 	/*global MediaElementPlayer*/
 	Meteor.startup(function() {
+		SC.initialize({
+			client_id: 'f6dbfb46c6b75cb6b5cd84aeb50d79e3'
+		});
 		// init the media player
 		player = new MediaElementPlayer('#audio-player');
+		playerSoundcloudDictionary = new Array();
 		var selected = Songs.findOne(Session.get('selectedSong'));
 		if (selected) {
 			selectSong(selected);
@@ -590,17 +598,34 @@ if (Meteor.isClient) {
 	function selectSong(song) { /* jshint ignore:line */
 
 		if (player) {
-			SC.initialize({
-				client_id: 'f6dbfb46c6b75cb6b5cd84aeb50d79e3'
-			});
+			prevSong = currentSong;
+			currentSong = song;
+			player.song = currentSong;
+			if (prevSong && prevSong.origin === 'Soundcloud') {
+				playerSoundcloud.pause();
+			} else {
+				player.pause();
+			}
 
-			SC.stream(song.streamURL).then(function(scPlayer) {
-				player.soundCloudPlayer = scPlayer;
-			});
-
-			pauseWithEffect();
-			player.media.src = song.streamURL;
-			player.song = song;
+			if (currentSong.origin === 'Soundcloud') {
+				if (playerSoundcloudDictionary && playerSoundcloudDictionary[song.streamURL]) {
+					playerSoundcloud = playerSoundcloudDictionary[song.streamURL];
+					playerSoundcloud.seek(0);
+					playWithEffect();
+				} else {
+					SC.stream(song.streamURL).then(function(scPlayer) {
+						if (scPlayer.options.protocols[0] === 'rtmp') {
+							scPlayer.options.protocols.splice(0, 1);
+						}
+						playerSoundcloudDictionary[song.streamURL] = scPlayer;
+						playerSoundcloud = playerSoundcloudDictionary[song.streamURL];
+						playWithEffect();
+					});
+				}
+			} else {
+				player.media.src = song.streamURL;
+				playWithEffect();
+			}
 			document.title = 'NJ :: ' + song.name;
 		}
 	}
@@ -618,27 +643,24 @@ if (Meteor.isClient) {
 
 		AppStates.updatePlayingSongs(song._id, prevId);
 		selectSong(song);
-
-		playWithEffect();
 	}
 
 	function playWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_play').addClass('_pause');
 
-		if (player.soundCloudPlayer) {
-			player.soundCloudPlayer.play();
+		if (currentSong.origin === 'Soundcloud') {
+			playerSoundcloud.play();
 		} else {
 			player.play();
 		}
-
 	}
 
 	function pauseWithEffect() {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_pause').addClass('_play');
-		if (player.soundCloudPlayer) {
-			player.soundCloudPlayer.pause();
+		if (currentSong && currentSong.origin === 'Soundcloud' && playerSoundcloud) {
+			playerSoundcloud.pause();
 		} else {
 			player.pause();
 		}
