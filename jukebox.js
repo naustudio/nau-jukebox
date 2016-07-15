@@ -356,7 +356,7 @@ if (Meteor.isClient) {
 		// event dispatched from the audio element
 		'ended #audio-player': function() {
 			console.log('Audio ended for:', player.song.name);
-			var nextSong = Songs.findOne({timeAdded: {$gt: player.song.timeAdded}});
+			var nextSong = Songs.findOne({timeAdded: {$gt: currentSong.timeAdded}});
 
 			if (nextSong) {
 				//delay some time so that calling play on the next song can work
@@ -651,6 +651,19 @@ if (Meteor.isClient) {
 				if (playerSoundcloudDictionary && playerSoundcloudDictionary[song.streamURL]) {
 					playerSoundcloud = playerSoundcloudDictionary[song.streamURL];
 					playerSoundcloud.seek(0);
+					playerSoundcloud.on('finish', function() {
+						console.log('Audio ended for:', player.song.name);
+						var nextSong = Songs.findOne({timeAdded: {$gt: currentSong.timeAdded}});
+
+						if (nextSong) {
+							//delay some time so that calling play on the next song can work
+							setTimeout(function() {
+								playSong(nextSong);
+							}, 500);
+						} else {
+							console.log('No more song to play');
+						}
+					});
 					playWithEffect();
 				} else {
 					SC.stream(song.streamURL).then(function(scPlayer) {
