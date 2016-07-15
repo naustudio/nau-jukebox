@@ -502,9 +502,8 @@ if (Meteor.isClient) {
 				}
 			}
 
-			if (value.length >= 3) {
-				var data = Songs.find({searchPattern: {$regex: value.toLowerCase() + '*'}}, {limit: 7}).fetch();
-
+			var data = [];
+			var activeSearchResult = function() {
 				if (data.length > 0) {
 					Session.set('searchResult', data);
 					$form.addClass('_active');
@@ -512,8 +511,31 @@ if (Meteor.isClient) {
 					Session.set('searchResult', []);
 					$form.removeClass('_active');
 				}
+			};
+
+			if (value.indexOf('sc') === 0) {
+				var newq = value.substr(2, value.length);
+
+				SC.get('/tracks', {
+					q: newq,
+					limit: 7,
+				}).then(function(tracks) {
+					data = tracks.map(function(item) {
+						return {
+							originalURL: item.permalink_url,
+							name: item.title,
+							artist: item.genre
+						};
+					});
+					activeSearchResult();
+				});
 			} else {
-				$form.removeClass('_active');
+				if (value.length >= 3) {
+					data = Songs.find({searchPattern: {$regex: value.toLowerCase() + '*'}}, {limit: 7}).fetch();
+					activeSearchResult();
+				} else {
+					$form.removeClass('_active');
+				}
 			}
 		},
 
