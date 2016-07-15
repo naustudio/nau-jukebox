@@ -651,25 +651,25 @@ if (Meteor.isClient) {
 				if (playerSoundcloudDictionary && playerSoundcloudDictionary[song.streamURL]) {
 					playerSoundcloud = playerSoundcloudDictionary[song.streamURL];
 					playerSoundcloud.seek(0);
-					playerSoundcloud.on('finish', function() {
-						console.log('Audio ended for:', player.song.name);
-						var nextSong = Songs.findOne({timeAdded: {$gt: currentSong.timeAdded}});
-
-						if (nextSong) {
-							//delay some time so that calling play on the next song can work
-							setTimeout(function() {
-								playSong(nextSong);
-							}, 500);
-						} else {
-							console.log('No more song to play');
-						}
-					});
 					playWithEffect();
 				} else {
 					SC.stream(song.streamURL).then(function(scPlayer) {
 						if (scPlayer.options.protocols[0] === 'rtmp') {
 							scPlayer.options.protocols.splice(0, 1);
 						}
+						scPlayer.on('finish', function() {
+							console.log('Audio ended for:', player.song.name);
+							var nextSong = Songs.findOne({timeAdded: {$gt: currentSong.timeAdded}});
+
+							if (nextSong) {
+								//delay some time so that calling play on the next song can work
+								setTimeout(function() {
+									playSong(nextSong);
+								}, 500);
+							} else {
+								console.log('No more song to play');
+							}
+						});
 						playerSoundcloudDictionary[song.streamURL] = scPlayer;
 						playerSoundcloud = playerSoundcloudDictionary[song.streamURL];
 						playWithEffect();
