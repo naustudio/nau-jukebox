@@ -64,12 +64,21 @@ form {
 	margin: 0;
 }
 
-input {
+input, select {
 	font-size: 14px;
+	&:focus {
+		border-color: $color-03;
+	}
 }
 
 input[type="text"]:focus {
 	border-color: $color-03;
+}
+
+h5 small {
+  font-size: 14px;
+  font-weight: 100;
+  margin-left: 7.5px;
 }
 
 .input-control {
@@ -682,7 +691,8 @@ input[type="text"]:focus {
 		margin-left: $gutter;
 		position: relative;
 
-		&:after {
+		&:after,
+		&:before {
 			position: absolute;
 			left: -$gutter;
 			width: 7.5px;
@@ -700,18 +710,38 @@ input[type="text"]:focus {
 				background-color: $status-active-color;
 			}
 		}
+
+		&._admin {
+      &:before {
+        background-color: pink;
+        left: -$gutter - 2px;
+        width: 0.5*$gutter;
+        height: 0.5*$gutter;
+        transform: translate(0, -50%);
+        border: 2px solid lighten($status-active-color, 17%);
+      }
+    }
 	}
 
 	&--item:last-child {
 		margin-right: 0;
 	}
 
-	&--storm {
+	&--storm,
+	&--ncoin {
 		padding: 2px 0.5*$gutter;
 		background-color: whitesmoke;
 		border-radius: 2px;
 		margin-left: 0.5*$gutter;
 	}
+
+	&--ncoin {
+    background-color: #A8896C;
+    color: white;
+    &:before {
+      content: '₦';
+    }
+  }
 }
 
 
@@ -767,6 +797,63 @@ input[type="text"]:focus {
     	}
     }
   }
+}
+
+
+/**
+ * Naucoin css
+ */
+.input-coin {
+  position: relative;
+
+  input {
+    margin-bottom: 0;
+  }
+
+  &:after {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(-100%, -50%);
+    content: '₦';
+    color: black;
+    opacity: 0.5;
+  }
+}
+
+.naucoin-section {
+  h5 small {
+    float: right;
+    margin-right: $gutter;
+    margin-top: 15px;
+  }
+}
+
+.payment-block {
+  margin-top: $gutter;
+  margin-bottom: $gutter;
+
+  label {
+    font-weight: 100;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+}
+
+// $btn-color: #A75265;
+$btn-color: #c08e52;
+$btn-color-active: #A65E09;
+
+button.button-naucoin {
+	background-color: $btn-color;
+	border-color: $btn-color;
+	color: white;
+
+	&:hover {
+		background-color: $btn-color-active;
+		border-color: $btn-color-active;
+		color: white;
+	}
 }
 
 @keyframes slide {
