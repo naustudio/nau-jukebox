@@ -740,10 +740,10 @@ h5 small {
     color: white;
     &:before {
       content: '₦';
+      margin-right: 4px;
     }
   }
 }
-
 
 .loader {
   position: absolute;
