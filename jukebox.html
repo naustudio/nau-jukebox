@@ -203,7 +203,7 @@
 			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
 			<ul class="g-author--list">
 				{{#each groupByAuthorData}}
-					<li class="g-author--item">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
+					{{> naustormauthoritem}}
 				{{else}}
 					<li class="g-author--item">Waiting for data...</li>
 				{{/each}}
@@ -223,11 +223,15 @@
 	</div>
 </template>
 
+<template name="naustormauthoritem">
+	<li class="g-author--item {{getStatus}}">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
+</template>
+
 <template name="naucoin">
 	<div class="naucoin-section">
 		<h5>₦aucoin\<small>₦1.00 = 1000VND</small></h5>
 
-		<div class="payment-block">
+		<div class="payment-block {{getDisplayStatus}}">
 			<form action="#" onsubmit="return false;" class="js-naucoin-submit-btn">
 				<div class="row">
 					<div class="columns four">
@@ -262,6 +266,6 @@
 </template>
 
 <template name="naucoinitem">
-	<li class="g-author--item">{{userName}}<span class="g-author--ncoin">{{getBalance}}</span>
+	<li class="g-author--item {{getStatus}}">{{userName}}<span class="g-author--ncoin">{{getBalance}}</span>
 	</li>
 </template>

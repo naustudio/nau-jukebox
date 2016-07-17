@@ -19,6 +19,8 @@ if (Meteor.isClient) {
 	Session.setDefault('nickname', nickname);
 	Session.setDefault('selectedIndex', '0');
 	Session.setDefault('isHost', false);
+	Session.setDefault('USER_LIST', []);
+	Session.setDefault('IS_HOST', false);
 
 	var player; //the MediaElement instance
 	var playerSoundcloud;
@@ -85,6 +87,26 @@ if (Meteor.isClient) {
 			$('[name="songurl"]').val('');
 			Session.set('urlFetching', false);
 		});
+	};
+
+	var mergeData = function() {
+		var userList = Session.get('naustorm_author_data');
+		var userDataList = Users.find({}).fetch();
+		var newUserList;
+
+		newUserList = userList.map(function(item) {
+			var t = _.find(userDataList, function(i) {
+				return i.userName === item.author;
+			});
+			if (t !== undefined) {
+				t.books = item.books;
+				t.author = item.author;
+			}
+			return t;
+		});
+
+		Session.set('USER_LIST', newUserList);
+		return newUserList;
 	};
 
 	Template.songlist.helpers({
@@ -173,6 +195,15 @@ if (Meteor.isClient) {
 	});
 
 	Template.naustormitem.helpers({
+		getStatus: function() {
+			return (this.isOnline ? '_active' : '');
+		}
+	});
+
+	Template.naustormauthoritem.helpers({
+		getStatus: function() {
+			return (this.isOnline ? '_active' : '');
+		}
 	});
 
 	Template.song.created = function() {
@@ -196,7 +227,7 @@ if (Meteor.isClient) {
 		},
 
 		groupByAuthorData: function() {
-			return Session.get('naustorm_author_data');
+			return Session.get('USER_LIST');
 		},
 
 		total: function() {
@@ -265,13 +296,18 @@ if (Meteor.isClient) {
 		listenderForNaustorm.observeChanges({
 			added: function(id, docs) {
 				getNaustormData();
+				mergeData();
 			}
 		});
 	});
 
 	Template.naucoin.helpers({
 		dataContext: function() {
-			return Users.find();
+			return Session.get('USER_LIST');
+		},
+		getDisplayStatus: function() {
+			var isHost = Session.get('IS_HOST');
+			return (isHost ? '' : 'u-hide');
 		}
 	});
 	Template.naucoin.events({
@@ -288,11 +324,25 @@ if (Meteor.isClient) {
 			});
 		}
 	});
-	Template.naucoin.onCreated(function() {});
+	Template.naucoin.onCreated(function() {
+		var userDataContext = Users.find();
+
+		userDataContext.observeChanges({
+			changed: function(id, data) {
+				mergeData();
+			},
+			added: function(id, data) {
+				mergeData();
+			}
+		});
+	});
 
 	Template.naucoinitem.helpers({
 		getBalance: function() {
 			return (this.balance || 0).toFixed(2);
+		},
+		getStatus: function() {
+			return (this.isOnline ? '_active' : '');
 		}
 	});
 
@@ -304,8 +354,10 @@ if (Meteor.isClient) {
 
 			if (u.userName === nickname) {
 				if (u.isHost) {
+					Session.set('IS_HOST', true);
 					$loader.addClass('_active');
 				} else {
+					Session.set('IS_HOST', false);
 					$loader.removeClass('_active');
 				}
 			}
