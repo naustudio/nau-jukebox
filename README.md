@@ -8,7 +8,24 @@ The songs URL is parsable from nhaccuatui.com and mp3.zing.com
 Changelog:
 ----------
 
-### Release 2016-03-05
+### Release 2016-07-19
+- New experiment __NauCoin__ feature
+
+### Release 2016-07-15
+- New __SoundCloud__ URL support
+- Make `nickname` compulsory field to book songs
+- New __host (admin)__ role (require login)
+- Bug fixes
+
+### Release 2016-06-20
+- New __NauStorm__ section
+- New dynamic header background 
+
+### Release 2016-05-22
+- Upgrade to Meteor 1.3.2.4
+- Many bug fixes
+
+### Release 2016-05-03
 - UI refresh
 - New nickname input to store the person who book the songs
 - New keyboard shortcuts to focus on the input field
@@ -22,4 +39,4 @@ Colophon:
 - Other Meteor packages: see .meteor/packages
 
 ---
-Licensed under MIT license.
+© 2016 Nâu Studio and contributors. Licensed under MIT license.
