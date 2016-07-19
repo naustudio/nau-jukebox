@@ -98,8 +98,8 @@
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
 						<a href="javascript:;">naustorm</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--gamblr" data-target="js-gamblr">
-						<a href="javascript:;">>gamblr</a>
+					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naucoin" data-target="js-naucoin">
+						<a href="javascript:;">₦aucoin</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
 						<div class="input-control">
@@ -133,8 +133,14 @@
 			<div class="container">
 				<div class="naustorm-section">
 					<h5>>gamblr</h5>
-					<p>some thing amz will comming !</p>
+					<p>You want to change, make changes. Help us to make it real, plz !!!</p>
 				</div>
+			</div>
+		</section>
+
+		<section id="js-naucoin" class="main-content" style="display:none">
+			<div class="container">
+				{{> naucoin}}
 			</div>
 		</section>
 	</div>
@@ -197,7 +203,7 @@
 			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
 			<ul class="g-author--list">
 				{{#each groupByAuthorData}}
-					<li class="g-author--item">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
+					{{> naustormauthoritem}}
 				{{else}}
 					<li class="g-author--item">Waiting for data...</li>
 				{{/each}}
@@ -215,4 +221,51 @@
 		<h6 class="naustorm-elm--title">{{name}}</h6>
 		<small class="naustorm-elm--artist">{{artist}}</small>
 	</div>
+</template>
+
+<template name="naustormauthoritem">
+	<li class="g-author--item {{getStatus}}">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
+</template>
+
+<template name="naucoin">
+	<div class="naucoin-section">
+		<h5>₦aucoin\<small>₦1.00 = 1000VND</small></h5>
+
+		<div class="payment-block {{getDisplayStatus}}">
+			<form action="#" onsubmit="return false;" class="js-naucoin-submit-btn">
+				<div class="row">
+					<div class="columns four">
+						<label for="">select user</label>
+						<select name="userName" id="naucoin-username" class="u-full-width">
+							{{#each dataContext}}
+								<option value="{{userName}}">{{userName}}</option>
+							{{/each}}
+						</select>
+					</div>
+					<div class="columns three">
+						<label for="">amount of payment (+/-)</label>
+						<div class="input-coin u-full-width">
+							<input type="text" class="u-full-width" name="amount" id="naucoin-amount" />
+						</div>
+					</div>
+					<div class="columns three">
+						<label for="">&nbsp;</label>
+						<button type="submit" class="button-naucoin">Submit</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<ul class="g-author--list g-author--list__naucoin">
+			{{#each dataContext}}
+				{{> naucoinitem}}
+			{{else}}
+				No user !
+			{{/each}}
+		</ul>
+	</div>
+</template>
+
+<template name="naucoinitem">
+	<li class="g-author--item {{getStatus}}">{{userName}}<span class="g-author--ncoin">{{getBalance}}</span>
+	</li>
 </template>

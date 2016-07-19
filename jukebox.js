@@ -18,6 +18,9 @@ if (Meteor.isClient) {
 	Session.setDefault('tab', 'tab--play-list');
 	Session.setDefault('nickname', nickname);
 	Session.setDefault('selectedIndex', '0');
+	Session.setDefault('isHost', false);
+	Session.setDefault('USER_LIST', []);
+	Session.setDefault('IS_HOST', false);
 
 	var player; //the MediaElement instance
 	var playerSoundcloud;
@@ -84,6 +87,26 @@ if (Meteor.isClient) {
 			$('[name="songurl"]').val('');
 			Session.set('urlFetching', false);
 		});
+	};
+
+	var mergeData = function() {
+		var userList = Session.get('naustorm_author_data');
+		var userDataList = Users.find({}).fetch();
+		var newUserList;
+
+		newUserList = userList.map(function(item) {
+			var t = _.find(userDataList, function(i) {
+				return i.userName === item.author;
+			});
+			if (t !== undefined) {
+				t.books = item.books;
+				t.author = item.author;
+			}
+			return t;
+		});
+
+		Session.set('USER_LIST', newUserList);
+		return newUserList;
 	};
 
 	Template.songlist.helpers({
@@ -171,28 +194,16 @@ if (Meteor.isClient) {
 		}
 	});
 
-	Template.naustorm.helpers({
-		storms: function() {
-			return Session.get('naustorm_data');
-		},
-
-		groupByAuthorData: function() {
-			return Session.get('naustorm_author_data');
-		},
-
-		total: function() {
-			return Session.get('naustorm_total');
-		},
-
-		dateString: function() {
-			var startOfWeek = moment().startOf('isoWeek');
-			var endOfWeek = moment().endOf('isoWeek');
-			var dateStr = startOfWeek.format('MMM Do') + ' - ' + endOfWeek.format('MMM Do');
-			return dateStr;
+	Template.naustormitem.helpers({
+		getStatus: function() {
+			return (this.isOnline ? '_active' : '');
 		}
 	});
 
-	Template.naustormitem.helpers({
+	Template.naustormauthoritem.helpers({
+		getStatus: function() {
+			return (this.isOnline ? '_active' : '');
+		}
 	});
 
 	Template.song.created = function() {
@@ -210,6 +221,26 @@ if (Meteor.isClient) {
 		Meteor.clearInterval(this.handle);
 	};
 
+	Template.naustorm.helpers({
+		storms: function() {
+			return Session.get('naustorm_data');
+		},
+
+		groupByAuthorData: function() {
+			return Session.get('USER_LIST');
+		},
+
+		total: function() {
+			return Session.get('naustorm_total');
+		},
+
+		dateString: function() {
+			var startOfWeek = moment().startOf('isoWeek');
+			var endOfWeek = moment().endOf('isoWeek');
+			var dateStr = startOfWeek.format('MMM Do') + ' - ' + endOfWeek.format('MMM Do');
+			return dateStr;
+		}
+	});
 	Template.naustorm.created = function() {};
 	Template.naustorm.destroyed = function() {};
 	Template.naustorm.onCreated(function() {
@@ -265,8 +296,54 @@ if (Meteor.isClient) {
 		listenderForNaustorm.observeChanges({
 			added: function(id, docs) {
 				getNaustormData();
+				mergeData();
 			}
 		});
+	});
+
+	Template.naucoin.helpers({
+		dataContext: function() {
+			return Session.get('USER_LIST');
+		},
+		getDisplayStatus: function() {
+			var isHost = Session.get('IS_HOST');
+			return (isHost ? '' : 'u-hide');
+		}
+	});
+	Template.naucoin.events({
+		'submit .js-naucoin-submit-btn': function(e) {
+			var userName = $(e.currentTarget).find('[name=userName]').val();
+			var amount = $(e.currentTarget).find('[name=amount]').val();
+
+			if (!amount) {
+				return;
+			}
+
+			Meteor.call('naucoinPay', userName, amount, function(err, result) {
+				$(e.currentTarget).find('[name=amount]').val('');
+			});
+		}
+	});
+	Template.naucoin.onCreated(function() {
+		var userDataContext = Users.find();
+
+		userDataContext.observeChanges({
+			changed: function(id, data) {
+				mergeData();
+			},
+			added: function(id, data) {
+				mergeData();
+			}
+		});
+	});
+
+	Template.naucoinitem.helpers({
+		getBalance: function() {
+			return (this.balance || 0).toFixed(2);
+		},
+		getStatus: function() {
+			return (this.isOnline ? '_active' : '');
+		}
 	});
 
 	Template.body.onCreated(function() {
@@ -277,8 +354,10 @@ if (Meteor.isClient) {
 
 			if (u.userName === nickname) {
 				if (u.isHost) {
+					Session.set('IS_HOST', true);
 					$loader.addClass('_active');
 				} else {
+					Session.set('IS_HOST', false);
 					$loader.removeClass('_active');
 				}
 			}
@@ -434,8 +513,9 @@ if (Meteor.isClient) {
 
 			localStorage.setItem('nickname', value);
 			Session.set('nickname', value);
-			$target.blur();
+			Users.addOrUpdate(value);
 
+			$target.blur();
 			hideRequireMessage();
 		},
 
@@ -502,9 +582,8 @@ if (Meteor.isClient) {
 				}
 			}
 
-			if (value.length >= 3) {
-				var data = Songs.find({searchPattern: {$regex: value.toLowerCase() + '*'}}, {limit: 7}).fetch();
-
+			var data = [];
+			var activeSearchResult = function() {
 				if (data.length > 0) {
 					Session.set('searchResult', data);
 					$form.addClass('_active');
@@ -512,8 +591,31 @@ if (Meteor.isClient) {
 					Session.set('searchResult', []);
 					$form.removeClass('_active');
 				}
+			};
+
+			if (value.indexOf('sc') === 0) {
+				var newq = value.substr(2, value.length);
+
+				SC.get('/tracks', {
+					q: newq,
+					limit: 7,
+				}).then(function(tracks) {
+					data = tracks.map(function(item) {
+						return {
+							originalURL: item.permalink_url,
+							name: item.title,
+							artist: item.genre
+						};
+					});
+					activeSearchResult();
+				});
 			} else {
-				$form.removeClass('_active');
+				if (value.length >= 3) {
+					data = Songs.find({searchPattern: {$regex: value.toLowerCase() + '*'}}, {limit: 7}).fetch();
+					activeSearchResult();
+				} else {
+					$form.removeClass('_active');
+				}
 			}
 		},
 
@@ -545,6 +647,15 @@ if (Meteor.isClient) {
 
 		navbarBackground();
 		Meteor.setInterval(navbarBackground, 60000);
+		// update online status every minutes
+		var updateOnlineStatus = function() {
+			var nickname = Session.get('nickname').trim();
+			Meteor.call('updateStatus', nickname, function(err, result) {
+				console.log('updateStatus', nickname, err, result);
+			});
+		};
+		updateOnlineStatus();
+		Meteor.setInterval(updateOnlineStatus, 60000);
 
 		$('.js-search-box').on('focus', function(e) {
 			var $form = $('.js-add-song-form');
@@ -557,7 +668,6 @@ if (Meteor.isClient) {
 		});
 
 		$(document).on('keyup', function(e) {
-			console.log('keypress', e.keyCode);
 			var $form = $('.js-add-song-form');
 			var $input = $form.find('input');
 
@@ -582,7 +692,6 @@ if (Meteor.isClient) {
 		var oldScrollTop = 0;
 		var headerHeight = 69;
 		var playlistHeight = 55;
-		var isScrollingDown = false;
 		var $playlist = $('.playlist-nav');
 
 		$(document).on('scroll', function(e) {
@@ -689,8 +798,6 @@ if (Meteor.isClient) {
 	 * @return {[type]}      [description]
 	 */
 	function playSong(song) { /* jshint ignore:line */
-		console.log('to play:', song);
-
 		var prevId = Session.get('selectedSong');
 		Session.set('selectedSong', song._id);
 
@@ -735,6 +842,15 @@ if (Meteor.isServer) {
 			console.log('Insert AppStates.playingSongs key');
 		}
 
+		Meteor.setInterval(function() {
+			var passAMinute = moment().add(-90, 'seconds').toDate();
+			Users.update({lastModified: {$lt: passAMinute}}, {
+				$set: {
+					isOnline: false
+				}
+			}, {multi: true});
+			console.log('Checking online status was run at: ', new Date());
+		}, 90000);
 	});
 
 	Meteor.methods({
@@ -771,12 +887,33 @@ if (Meteor.isServer) {
 		},
 
 		changeHost: function(userName) {
-			var u = Users.findOne({userName: userName});
+			// var u = Users.findOne({userName: userName});
 			Users.update({}, {$set: {isHost: false}}, {multi: true});
-			Users.update(u._id, {
+			Users.update({userName: userName}, {
 				$set: {
 					isHost: true,
 					lastModified: new Date()
+				}
+			});
+		},
+
+		updateStatus: function(userName) {
+			return Users.update({userName: userName}, {
+				$set: {
+					isOnline: true,
+					lastModified: new Date()
+				}
+			});
+		},
+
+		naucoinPay: function(userName, amount) {
+			var u = Users.findOne({userName: userName});
+			var oldBalance = u.balance || 0;
+			var newBalance = oldBalance + parseFloat(amount);
+
+			return Users.update(u._id, {
+				$set: {
+					balance: newBalance
 				}
 			});
 		}
