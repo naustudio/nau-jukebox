@@ -105,6 +105,10 @@ if (Meteor.isClient) {
 			return t;
 		});
 
+		newUserList = _.sortBy(newUserList, function(i) {
+			return -1 * (1000 * (i.isOnline ? 1 : 0)) - (i.balance || 0);
+		});
+
 		Session.set('USER_LIST', newUserList);
 		return newUserList;
 	};
