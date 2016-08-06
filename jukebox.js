@@ -428,6 +428,11 @@ if (Meteor.isClient) {
 
 		'click .lyric-modal-toggle': function(e) {
 			$('.js-lyric-modal-song-title').html(this.name);
+			if (this.lyric) {
+				$('.js-lyric-modal-song-lyric').html($(this.lyric).html());
+			} else {
+				$('.js-lyric-modal-song-lyric').html('Sorry there is no lyric for this song');
+			}
 			$('.lyric-modal').addClass('active');
 		}
 	});

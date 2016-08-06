@@ -941,10 +941,13 @@ button.button-naucoin {
 		display: block;
 		margin-top: 10px;
 		text-align: center;
+		padding-right: 20px;
 	}
 
 	.lyric-modal-content {
 		text-align: center;
 		padding: 0 20px;
+		overflow-y: scroll;
+		height: 85%;
 	}
 }
