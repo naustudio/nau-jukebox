@@ -424,6 +424,11 @@ if (Meteor.isClient) {
 			//call server
 			submitSong(this.originalURL);
 			e.stopPropagation();
+		},
+
+		'click .lyric-modal-toggle': function(e) {
+			$('.js-lyric-modal-song-title').html(this.name);
+			$('.lyric-modal').addClass('active');
 		}
 	});
 
@@ -633,6 +638,17 @@ if (Meteor.isClient) {
 
 			//call server
 			submitSong(songurl);
+		},
+
+		'click .js-lyric-modal-close': function(e) {
+			$('.lyric-modal').removeClass('active');
+		},
+
+		'click .js-lyric-modal': function(e) {
+			var $target = $(e.target);
+			if ($target.closest('.lyric-modal-inner').length === 0) {
+				$target.removeClass('active');
+			}
 		},
 	});
 

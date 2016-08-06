@@ -144,6 +144,21 @@
 			</div>
 		</section>
 	</div>
+
+	<div class="lyric-modal js-lyric-modal">
+		<div class="lyric-modal-inner">
+			<span class="lyric-modal-close js-lyric-modal-close">X</span>
+			<h4 class="lyric-modal-header">Lyric</h4>
+			<div class="lyric-modal-content">
+				<strong class="js-lyric-modal-song-title">
+					Test
+				</strong><br>
+				<p class="js-lyric-modal-song-lyric">
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br> Possimus perspiciatis qui repellat, aperiam amet dignissimos soluta inventore exercitationem impedit excepturi vero et ea dolore voluptas enim suscipit id quo hic.
+				</p>
+			</div>
+		</div>
+	</div>
 </body>
 
 <template name="player">
@@ -178,6 +193,7 @@
 			title="{{name}} - {{artist}}">{{name}} - {{artist}}</a>
 		<div class="playlist--item--tools">
 			<small>{{addDate}}</small>
+			<a href="javascript:;" class="lyric-modal-toggle">lyric</a>
 			<a href="javascript:;" class="loading-block rebook-btn">
 				<span class="loading-block--stable">rebook</span>
 			</a>
