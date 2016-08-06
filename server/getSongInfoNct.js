@@ -42,7 +42,11 @@ getSongInfoNct = function(songurl) {
 	}
 
 	if (lyricResults) {
-		lyric = lyricResults[0];
+		if (lyricResults[0].indexOf('javascript:;') > -1) {
+			lyric = null;
+		} else {
+			lyric = lyricResults[0];
+		}
 		console.log('lyricResult: ', lyricResults[0]);
 	} else {
 		console.log('lyric get failed');
