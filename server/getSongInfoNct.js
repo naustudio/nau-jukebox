@@ -5,6 +5,7 @@
 
 // Utility / Private functions
 var xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;
+var lyricReg = /<p id=\"divLyric\"[\s\S]+ <\/p>/;
 // sample xml url: "http://www.nhaccuatui.com/flash/xml?key1=99decd7306277634419b987bed859265"
 
 
@@ -15,7 +16,7 @@ var xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;
  * @return {[type]}         [description]
  */
 getSongInfoNct = function(songurl) {
-	var linkRes, xmlURLResults, xmlURL;
+	var linkRes, xmlURLResults, lyricResults, xmlURL, lyric;
 
 	// First Step: parse the HTML page to get the XML data URL for the flash-based player
 
@@ -30,6 +31,7 @@ getSongInfoNct = function(songurl) {
 
 	// run the html against regexp to get XML URL
 	xmlURLResults = xmlURLReg.exec(linkRes);
+	lyricResults = lyricReg.exec(linkRes);
 
 	if (xmlURLResults) {
 		xmlURL = xmlURLResults[0];
@@ -37,6 +39,17 @@ getSongInfoNct = function(songurl) {
 	} else {
 		console.log('xmlURL parse failed');
 		return null;
+	}
+
+	if (lyricResults) {
+		if (lyricResults[0].indexOf('javascript:;') > -1) {
+			lyric = null;
+		} else {
+			lyric = lyricResults[0];
+		}
+		console.log('lyricResult: ', lyricResults[0]);
+	} else {
+		console.log('lyric get failed');
 	}
 
 	// Second Step: get the XML data file for the sone
@@ -85,6 +98,7 @@ getSongInfoNct = function(songurl) {
 				artist: track.creator[0],
 				streamURL: track.location[0],
 				thumbURL: track.avatar[0],
+				lyric: lyric,
 				play: 0
 			};
 		} else if (track.errormessage[0]) {

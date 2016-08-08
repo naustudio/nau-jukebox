@@ -553,7 +553,7 @@ h5 small {
 			margin-left: 55px;
 			text-decoration: none;
 			color: black;
-			margin-right: 270px;
+			margin-right: 280px;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
@@ -897,5 +897,57 @@ button.button-naucoin {
 @keyframes blink-animation {
 	80% {
 		opacity: 0;
+	}
+}
+
+
+//lyric modal
+
+.lyric-modal {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 300;
+	display: none;
+
+	&.active {
+		display: block;
+	}
+
+	.lyric-modal-inner {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 50vw;
+		height: 60vh;
+		min-height: 540px;
+		transform: translate(-50%, -50%);
+		background-color: #fff;
+		border-radius: 10px;
+	}
+
+	.lyric-modal-close {
+		position: absolute;
+		font-size: 30px;
+		right: 20px;
+		top: 5px;
+		cursor: pointer;
+	}
+
+	.lyric-modal-header {
+		display: block;
+		margin-top: 10px;
+		text-align: center;
+		padding-right: 20px;
+	}
+
+	.lyric-modal-content {
+		text-align: center;
+		padding: 0 20px;
+		overflow-y: scroll;
+		height: 85%;
 	}
 }
