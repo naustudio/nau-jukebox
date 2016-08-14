@@ -8,6 +8,10 @@ The songs URL is parsable from nhaccuatui.com and mp3.zing.com
 Changelog:
 ----------
 
+### Release 2016-08-14
+- Upgrade to Meteor 1.4.0.1 with support for Node 4 & MongoDB 3
+- New lyrics display (for NCT & Zing only)
+
 ### Release 2016-07-19
 - New experiment __NauCoin__ feature
 
