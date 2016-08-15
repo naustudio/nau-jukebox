@@ -1,7 +1,9 @@
 /**
  * Zing MP3 URL parser module
  */
-/*global getSongInfoZing:false, getGzipURL, xml2js*/
+import xml2js from 'meteor/vjau:xml2js';
+import { getGzipURL } from './getGzipURL';
+
 var xmlURLReg = /http:\/\/mp3.zing.vn\/html5xml\/song-xml\/(\w+)/;
 var avatarURLReg = /thumb-art.*?"(http:\/\/[^"]*)/;
 var lyricReg = /<p class=\"fn-wlyrics fn-content\"(.*?)<\/p>/;
@@ -13,7 +15,7 @@ var lyricReg = /<p class=\"fn-wlyrics fn-content\"(.*?)<\/p>/;
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-getSongInfoZing = function(songurl) {
+export const getSongInfoZing = function(songurl) {
 	var linkRes, xmlURLResults, lyricResults, xmlURL, thumb, lyric;
 
 	// First Step: parse the HTML page to get the XML data URL for the flash-based player
