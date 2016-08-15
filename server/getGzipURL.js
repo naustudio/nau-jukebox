@@ -1,4 +1,4 @@
-/*global getGzipURL:true, HTTP:true*/
+import { HTTP } from 'meteor/http';
 
 /**
  * getGzipURL
@@ -6,7 +6,7 @@
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-getGzipURL = Meteor.wrapAsync(function(url, callback) {
+export const getGzipURL = Meteor.wrapAsync(function(url, callback) {
 	// Learn this synchronous wrapper technique in http package source
 	var reqOptions = {
 		url: url,

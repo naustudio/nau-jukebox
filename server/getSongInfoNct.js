@@ -1,7 +1,8 @@
 /**
  * NCT URL parser module
  */
-/*global getSongInfoNct:false, getGzipURL: true, xml2js: true*/
+import xml2js from 'meteor/vjau:xml2js';
+import { getGzipURL } from './getGzipURL';
 
 // Utility / Private functions
 var xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;
@@ -15,7 +16,7 @@ var lyricReg = /<p id=\"divLyric\"[\s\S]+ <\/p>/;
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-getSongInfoNct = function(songurl) {
+export const getSongInfoNct = function(songurl) {
 	var linkRes, xmlURLResults, lyricResults, xmlURL, lyric;
 
 	// First Step: parse the HTML page to get the XML data URL for the flash-based player

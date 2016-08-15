@@ -1,7 +1,6 @@
 /**
  * Soudcloud URL parser module
  */
-/*global getSongInfoSoundcloud:false, SC: true*/
 
 /**
  * Get NCT stream URL and other info
@@ -9,7 +8,7 @@
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-getSongInfoSoundcloud = function(songurl) {
+export const getSongInfoSoundcloud = function(songurl) {
 	var json;
 	// First Step: Initialize Soundcloud API
 

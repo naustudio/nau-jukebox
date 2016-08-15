@@ -30,3 +30,4 @@ reactive-var@1.0.10
 standard-minifier-js@1.1.8
 seba:minifiers-autoprefixer
 fourseven:scss
+ecmascript
