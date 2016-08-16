@@ -1,7 +1,7 @@
 /**
  * Zing MP3 URL parser module
  */
-import xml2js from 'meteor/vjau:xml2js';
+import { xml2js } from 'meteor/vjau:xml2js';
 import { getGzipURL } from './getGzipURL';
 
 var xmlURLReg = /http:\/\/mp3.zing.vn\/html5xml\/song-xml\/(\w+)/;

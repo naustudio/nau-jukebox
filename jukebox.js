@@ -2,14 +2,18 @@
  * Main module
  */
 /*eslint no-shadow:0*/
-/*global Songs:true, AppStates:true, SC:true, moment*/
+/*global Songs:true, AppStates:true, Users:true, SC, moment*/
+import { getSongInfoNct } from './imports/parsers/getSongInfoNct.js';
+import { getSongInfoZing } from './imports/parsers/getSongInfoZing.js';
+import { getSongInfoSoundcloud } from './imports/parsers/getSongInfoSoundcloud.js';
+import { getSongInfoYouTube } from './imports/parsers/getSongInfoYouTube.js';
 
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
 
-Songs = new Meteor.Collection('songs');
-AppStates = new Meteor.Collection('appstates');
-Users = new Meteor.Collection('users');
+/*export var*/ Songs = new Meteor.Collection('songs');
+/*export var*/ AppStates = new Meteor.Collection('appstates');
+/*export var*/ Users = new Meteor.Collection('users');
 
 if (Meteor.isClient) {
 	var nickname = localStorage.getItem('nickname') || '';
@@ -27,7 +31,7 @@ if (Meteor.isClient) {
 	var playerSoundcloudDictionary;
 	var currentSong;
 	var prevSong;
-
+	/*global Trianglify*/
 	var navbarBackground = function() {
 		var rn = Math.floor((Math.random() * 150) + 60);
 		var rs = Math.floor((Math.random() * 11) + 4);
@@ -410,7 +414,7 @@ if (Meteor.isClient) {
 			if (Session.equals('selectedSong', this._id)) {
 				//selected song playing
 				pauseWithEffect();
-				player.media.src = '';
+				player.setSrc('');
 				AppStates.updatePlayingSongs('', this._id);
 			}
 			e.stopPropagation();
@@ -810,7 +814,7 @@ if (Meteor.isClient) {
 					});
 				}
 			} else {
-				player.media.src = song.streamURL;
+				player.media.setSrc(song.streamURL);
 				playWithEffect();
 			}
 			document.title = 'NJ :: ' + song.name;
@@ -880,7 +884,6 @@ if (Meteor.isServer) {
 
 	Meteor.methods({
 
-		/*global getSongInfoNct, getSongInfoZing, getSongInfoSoundcloud*/
 		getSongInfo: function(songurl, author) {
 			// Set up a future for async callback sending to clients
 			var songInfo;
