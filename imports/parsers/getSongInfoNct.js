@@ -1,7 +1,7 @@
 /**
  * NCT URL parser module
  */
-import xml2js from 'meteor/vjau:xml2js';
+import { xml2js } from 'meteor/vjau:xml2js';
 import { getGzipURL } from './getGzipURL';
 
 // Utility / Private functions
