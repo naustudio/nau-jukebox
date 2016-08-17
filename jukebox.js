@@ -7,6 +7,7 @@ import { getSongInfoNct } from './imports/parsers/getSongInfoNct.js';
 import { getSongInfoZing } from './imports/parsers/getSongInfoZing.js';
 import { getSongInfoSoundcloud } from './imports/parsers/getSongInfoSoundcloud.js';
 import { getSongInfoYouTube } from './imports/parsers/getSongInfoYouTube.js';
+import { JukeboxPlayer } from './imports/player/JukeboxPlayer.js';
 
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
@@ -26,11 +27,8 @@ if (Meteor.isClient) {
 	Session.setDefault('USER_LIST', []);
 	Session.setDefault('IS_HOST', false);
 
-	var player; //the MediaElement instance
-	var playerSoundcloud;
-	var playerSoundcloudDictionary;
-	var currentSong;
-	var prevSong;
+	var player; // the jukebox player, will be init when clientStartup
+
 	/*global Trianglify*/
 	var navbarBackground = function() {
 		var rn = Math.floor((Math.random() * 150) + 60);
@@ -43,7 +41,7 @@ if (Meteor.isClient) {
 
 		var pattern = t.generate(window.innerWidth, 269);
 		document.getElementById('js-navbar')
-			.setAttribute('style', 'background-image: '+pattern.dataUrl);
+			.setAttribute('style', 'background-image: ' + pattern.dataUrl);
 	};
 
 	var showTab = function(tabId) {
@@ -222,7 +220,7 @@ if (Meteor.isClient) {
 
 		this.handle = Meteor.setInterval((function() {
 			self.addDateFromNow.set(self.momentTime.fromNow());
-		}), 1000*60);
+		}), 1000 * 60);
 	};
 
 	Template.song.destroyed = function() {
@@ -255,11 +253,11 @@ if (Meteor.isClient) {
 		function getNaustormData() {
 			var startOfWeek = moment().startOf('isoWeek').toDate();
 			var endOfWeek = moment().endOf('isoWeek').toDate();
-			var songList,
-				naustorm = [],
-				group,
-				groupByAuthor,
-				groupByAuthorData = [];
+			var songList;
+			var naustorm = [];
+			var group;
+			var groupByAuthor;
+			var groupByAuthorData = [];
 
 			songList = Songs.find(
 				{timeAdded: {$gt: startOfWeek.getTime(), $lt: endOfWeek.getTime()}},
@@ -275,17 +273,17 @@ if (Meteor.isClient) {
 
 			groupByAuthor = _.chain(songList).groupBy('author');
 
-			for (var item in group._wrapped) {
-				var g = group._wrapped[item];
-				var t = g[0];
-				t.listens = g.length
+			for (let item in group._wrapped) {
+				let g = group._wrapped[item];
+				let t = g[0];
+				t.listens = g.length;
 				naustorm.push(t);
 			}
 
-			for (var item in groupByAuthor._wrapped) {
-				var g = groupByAuthor._wrapped[item];
-				var t = {
-					author: g[0].author.length == 0 ? 'The Many-Faced' : g[0].author,
+			for (let item in groupByAuthor._wrapped) {
+				let g = groupByAuthor._wrapped[item];
+				let t = {
+					author: g[0].author.length === 0 ? 'The Many-Faced' : g[0].author,
 					books: g.length
 				};
 
@@ -295,7 +293,7 @@ if (Meteor.isClient) {
 			Session.set('naustorm_data', naustorm);
 			Session.set('naustorm_total', songList.length);
 			Session.set('naustorm_author_data', groupByAuthorData);
-		};
+		}
 
 		// waiting new records from Song collection
 		var today = new Date();
@@ -406,16 +404,14 @@ if (Meteor.isClient) {
 
 	Template.song.events({
 		'click .js-song-item': function() {
-			playSong(this);
+			player.selectSong(this);
 		},
 
 		'click .remove-btn': function(e) {
 			Songs.remove(this._id);
 			if (Session.equals('selectedSong', this._id)) {
 				//selected song playing
-				pauseWithEffect();
-				player.setSrc('');
-				AppStates.updatePlayingSongs('', this._id);
+				player.pause();
 			}
 			e.stopPropagation();
 		},
@@ -438,31 +434,6 @@ if (Meteor.isClient) {
 				$('.js-lyric-modal-song-lyric').html('Sorry there is no lyric for this song');
 			}
 			$('.lyric-modal').addClass('active');
-		}
-	});
-
-	Template.player.events({
-		'playing #audio-player': function() {
-			AppStates.updatePlayingSongs(Session.get('selectedSong'));
-		},
-
-		'pause #audio-player': function() {
-			// remove from playing songs list
-			AppStates.updatePlayingSongs('', Session.get('selectedSong'));
-		},
-		// event dispatched from the audio element
-		'ended #audio-player': function() {
-			console.log('Audio ended for:', player.song.name);
-			var nextSong = Songs.findOne({timeAdded: {$gt: currentSong.timeAdded}});
-
-			if (nextSong) {
-				//delay some time so that calling play on the next song can work
-				setTimeout(function() {
-					playSong(nextSong);
-				}, 500);
-			} else {
-				console.log('No more song to play');
-			}
 		}
 	});
 
@@ -507,9 +478,9 @@ if (Meteor.isClient) {
 			var $playButton = $(event.currentTarget);
 			console.log('$playButton', $playButton.hasClass('_play'));
 			if ($playButton.hasClass('_play')) {
-				playWithEffect();
+				player.play();
 			} else {
-				pauseWithEffect();
+				player.pause();
 			}
 		},
 
@@ -524,7 +495,7 @@ if (Meteor.isClient) {
 		},
 
 		'keydown .js-nickname-holder': function(e) {
-			if (e.keyCode !== 13) return;
+			if (e.keyCode !== 13) { return; }
 
 			var $target = $(e.currentTarget);
 			var value = $target.val().trim();
@@ -663,12 +634,9 @@ if (Meteor.isClient) {
 
 	/*global MediaElementPlayer*/
 	Meteor.startup(function() {
-		SC.initialize({
-			client_id: 'f6dbfb46c6b75cb6b5cd84aeb50d79e3'
-		});
-		// init the media player
-		player = new MediaElementPlayer('#audio-player');
-		playerSoundcloudDictionary = new Array();
+
+		player = new JukeboxPlayer();
+
 		var selected = Songs.findOne(Session.get('selectedSong'));
 		if (selected) {
 			selectSong(selected);
@@ -767,93 +735,6 @@ if (Meteor.isClient) {
 			}
 		});
 	});
-
-	/**
-	 * Keep the media player have a selected song ready to play
-	 * @param  {[type]} song [description]
-	 * @return {[type]}      [description]
-	 */
-	function selectSong(song) { /* jshint ignore:line */
-
-		if (player) {
-			prevSong = currentSong;
-			currentSong = song;
-			player.song = currentSong;
-			if (prevSong && prevSong.origin === 'Soundcloud') {
-				playerSoundcloud.pause();
-			} else {
-				player.pause();
-			}
-
-			if (currentSong.origin === 'Soundcloud') {
-				if (playerSoundcloudDictionary && playerSoundcloudDictionary[song.streamURL]) {
-					playerSoundcloud = playerSoundcloudDictionary[song.streamURL];
-					playerSoundcloud.seek(0);
-					playWithEffect();
-				} else {
-					SC.stream(song.streamURL).then(function(scPlayer) {
-						if (scPlayer.options.protocols[0] === 'rtmp') {
-							scPlayer.options.protocols.splice(0, 1);
-						}
-						scPlayer.on('finish', function() {
-							console.log('Audio ended for:', player.song.name);
-							var nextSong = Songs.findOne({timeAdded: {$gt: currentSong.timeAdded}});
-
-							if (nextSong) {
-								//delay some time so that calling play on the next song can work
-								setTimeout(function() {
-									playSong(nextSong);
-								}, 500);
-							} else {
-								console.log('No more song to play');
-							}
-						});
-						playerSoundcloudDictionary[song.streamURL] = scPlayer;
-						playerSoundcloud = playerSoundcloudDictionary[song.streamURL];
-						playWithEffect();
-					});
-				}
-			} else {
-				player.media.setSrc(song.streamURL);
-				playWithEffect();
-			}
-			document.title = 'NJ :: ' + song.name;
-		}
-	}
-
-	/**
-	 * Actually play the song
-	 * @param  {[type]} song [description]
-	 * @return {[type]}      [description]
-	 */
-	function playSong(song) { /* jshint ignore:line */
-		var prevId = Session.get('selectedSong');
-		Session.set('selectedSong', song._id);
-
-		AppStates.updatePlayingSongs(song._id, prevId);
-		selectSong(song);
-	}
-
-	function playWithEffect() {
-		var $playButton = $('.js-play-button');
-		$playButton.removeClass('_play').addClass('_pause');
-
-		if (currentSong.origin === 'Soundcloud') {
-			playerSoundcloud.play();
-		} else {
-			player.play();
-		}
-	}
-
-	function pauseWithEffect() {
-		var $playButton = $('.js-play-button');
-		$playButton.removeClass('_pause').addClass('_play');
-		if (currentSong && currentSong.origin === 'Soundcloud' && playerSoundcloud) {
-			playerSoundcloud.pause();
-		} else {
-			player.pause();
-		}
-	}
 }
 
 if (Meteor.isServer) {
@@ -898,6 +779,9 @@ if (Meteor.isServer) {
 			} else if (String(songurl).contains('soundcloud')) {
 				console.log('Getting Soundclound song info');
 				songInfo = getSongInfoSoundcloud(songurl);
+			} else if (String(songurl).contains('youtube')) {
+				console.log('Getting YouTube song info');
+				songInfo = getSongInfoYouTube(songurl);
 			}
 
 			songInfo.author = author;

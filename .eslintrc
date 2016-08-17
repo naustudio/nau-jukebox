@@ -27,6 +27,7 @@
 		"no-script-url"               : 0,
 		"no-sequences"                : 2,
 		"no-shadow"                   : 2,
+		"no-unused-vars"              :[2, { "args": "none" }],
 		"no-with"                     : 2,
 		"one-var"                     :[2, { "initialized": "never" }],
 		"quotes"                      :[2, "single" ],
