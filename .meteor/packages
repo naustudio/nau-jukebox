@@ -7,16 +7,16 @@ autopublish@1.0.7
 insecure@1.0.7
 vjau:xml2js
 momentjs:moment
-http@1.2.8
+http@1.2.9
 
 meteor-base@1.0.4
 mobile-experience@1.0.4
-mongo@1.1.10
+mongo@1.1.11
 blaze-html-templates@1.0.4
 session@1.1.6
 jquery@1.11.9
 tracker@1.1.0
-logging@1.1.14
+logging@1.1.15
 reload@1.1.10
 random@1.0.10
 ejson@1.0.12
@@ -27,7 +27,8 @@ meteorhacks:npm
 
 npm-container
 reactive-var@1.0.10
-standard-minifier-js@1.1.8
+standard-minifier-js@1.2.0
 seba:minifiers-autoprefixer
 fourseven:scss
-ecmascript
+ecmascript@0.5.8
+shell-server
