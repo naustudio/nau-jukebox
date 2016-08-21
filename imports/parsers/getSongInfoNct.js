@@ -1,6 +1,7 @@
 /**
  * NCT URL parser module
  */
+import { SongOrigin } from '../constants.js';
 import { xml2js } from 'meteor/vjau:xml2js';
 import { getGzipURL } from './getGzipURL';
 
@@ -94,7 +95,7 @@ export const getSongInfoNct = function(songurl) {
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
-				origin: 'NCT',
+				origin: SongOrigin.NHACCUATUI,
 				name: track.title[0],
 				artist: track.creator[0],
 				streamURL: track.location[0],

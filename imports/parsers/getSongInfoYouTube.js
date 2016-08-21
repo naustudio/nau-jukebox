@@ -1,4 +1,5 @@
 import { HTTP } from 'meteor/http';
+import { SongOrigin } from '../constants.js';
 
 /**
  * Youtube URL parser module
@@ -35,7 +36,7 @@ export const getSongInfoYouTube = function(songurl) {
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
-				origin: 'YouTube',
+				origin: SongOrigin.YOUTUBE,
 				name: title[1],
 				artist: user[1], // this is not really means artist, this is the uploader field from youtube page
 				streamURL: songurl, // media element can play youtube URL directly

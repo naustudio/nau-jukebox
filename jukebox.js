@@ -8,6 +8,8 @@ import { getSongInfoZing } from './imports/parsers/getSongInfoZing.js';
 import { getSongInfoSoundcloud } from './imports/parsers/getSongInfoSoundcloud.js';
 import { getSongInfoYouTube } from './imports/parsers/getSongInfoYouTube.js';
 import { JukeboxPlayer } from './imports/player/JukeboxPlayer.js';
+import { SongOrigin } from './imports/constants.js';
+
 
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
@@ -183,19 +185,22 @@ if (Meteor.isClient) {
 		},
 
 		originBadgeColor: function() {
-			var color = 'black';
+			var className = 'black';
 			switch (this.origin) {
-				case 'NCT':
-					color = 'nct';
+				case SongOrigin.NHACCUATUI:
+					className = 'nct';
 					break;
-				case 'Zing':
-					color = 'zing';
+				case SongOrigin.ZING:
+					className = 'zing';
 					break;
-				case 'Soundcloud':
-					color = 'sc';
+				case SongOrigin.SOUNDCLOUD:
+					className = 'sc';
+					break;
+				case SongOrigin.YOUTUBE:
+					className = 'yt';
 					break;
 			}
-			return color;
+			return className;
 		}
 	});
 

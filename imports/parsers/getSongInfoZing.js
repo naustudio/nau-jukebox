@@ -1,6 +1,7 @@
 /**
  * Zing MP3 URL parser module
  */
+import { SongOrigin } from '../constants.js';
 import { xml2js } from 'meteor/vjau:xml2js';
 import { getGzipURL } from './getGzipURL';
 
@@ -96,7 +97,7 @@ export const getSongInfoZing = function(songurl) {
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
-				origin: 'Zing',
+				origin: SongOrigin.ZING,
 				name: jsonItem.title[0],
 				artist: jsonItem.performer[0],
 				streamURL: jsonItem.source[0],
