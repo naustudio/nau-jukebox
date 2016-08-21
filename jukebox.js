@@ -11,10 +11,9 @@ import { JukeboxPlayer } from './imports/player/JukeboxPlayer.js';
 
 // Set up a collection to contain song information. On the server,
 // it is backed by a MongoDB collection named 'songs'.
-
-/*export var*/ Songs = new Meteor.Collection('songs');
-/*export var*/ AppStates = new Meteor.Collection('appstates');
-/*export var*/ Users = new Meteor.Collection('users');
+Songs = new Meteor.Collection('songs');
+AppStates = new Meteor.Collection('appstates');
+Users = new Meteor.Collection('users');
 
 if (Meteor.isClient) {
 	var nickname = localStorage.getItem('nickname') || '';
@@ -680,6 +679,8 @@ if (Meteor.isClient) {
 
 				case 80: // p
 					// toggle between play/pause
+					//
+					break;
 				default:
 			}
 		});
@@ -835,9 +836,12 @@ if (Meteor.isServer) {
 
 /**
  * String.prototype.contains polyfill
+ *
+ * @param {String} substr The string to match
+ * @return {Boolean} whether the string has the substr
  */
 if ( !String.prototype.contains ) {
-	String.prototype.contains = function() {
+	String.prototype.contains = function(substr) {
 		return String.prototype.indexOf.apply( this, arguments ) !== -1;
 	};
 }
@@ -854,6 +858,7 @@ if ( !String.prototype.contains ) {
  *
  * @param  {String} played  next play song ID
  * @param  {String} stopped previously played, and now stopped song ID
+ * @return {void}
  */
 AppStates.updatePlayingSongs = function(played, stopped) {
 	var playingSongs = AppStates.findOne({key: 'playingSongs'});
@@ -878,6 +883,8 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 
 /**
  * User Model, managing all users
+ * @param {String} userName [description]
+ * @return {void}
  */
 Users.addOrUpdate = function(userName) {
 	if (Users.find({userName: userName}).count() === 0) {

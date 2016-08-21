@@ -1,7 +1,9 @@
 /*global MediaElementPlayer*/
 
 /**
- * This wraps the basic media element player
+ * The YouTube player.
+ *
+ * This wraps the basic media element player with separate <video> tag
  */
 export class YouTubePlayer {
 
@@ -11,15 +13,6 @@ export class YouTubePlayer {
 		this.$player = $('#youtube-player');
 	}
 
-	// _createPlayer(streamURL) {
-	// 	// play new song
-	// 	this.$player.find('source').attr('src', streamURL);
-	// 	this.player = new MediaElementPlayer(this.$player, {
-	// 		success: (media) => {
-	// 			this.player.play();
-	// 		}
-	// 	});
-	// }
 	getYTVideoId(url) {
 		var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 		var match = url.match(regExp);

@@ -4,6 +4,11 @@ import { SCPlayer } from './SCPlayer.js';
 import { AudioPlayer } from './AudioPlayer.js';
 import { YouTubePlayer } from './YouTubePlayer.js';
 
+/**
+ * The main JukeboxPlayer which act as wrapper for different type of player inside
+ *
+ * Currently in the wrapper: AudioPlayer, SoundCloudPlayer, YouTubePlayer
+ */
 export class JukeboxPlayer {
 
 	constructor() {
