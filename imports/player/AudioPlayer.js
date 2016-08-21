@@ -9,20 +9,10 @@ export class AudioPlayer {
 		this.player = new MediaElementPlayer('#audio-player');
 		this.song = null;
 
-		Template.player.events({
-			// 'playing #audio-player': function() {
-			// 	AppStates.updatePlayingSongs(Session.get('selectedSong'));
-			// },
 
-			// 'pause #audio-player': function() {
-			// 	// remove from playing songs list
-			// 	AppStates.updatePlayingSongs('', Session.get('selectedSong'));
-			// },
-			// event dispatched from the audio element
-			'ended #audio-player': function() {
-				console.log('Audio ended for:', mainPlayer.currentSong.name);
-				mainPlayer.playNext();
-			}
+		$('#audio-player').on('ended', function() {
+			console.log('Audio ended for:', mainPlayer.currentSong.name);
+			mainPlayer.playNext();
 		});
 	}
 

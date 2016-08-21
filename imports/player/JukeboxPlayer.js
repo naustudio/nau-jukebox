@@ -14,6 +14,7 @@ export class JukeboxPlayer {
 		this.currentSong = null;
 		this.prevSong = null;
 		this.playing = false;
+		this._isNew = false;
 	}
 
 	/**
@@ -23,38 +24,42 @@ export class JukeboxPlayer {
 	 * @return {[type]}      [description]
 	 */
 	selectSong(song, stopped) {
-		this.prevSong = this.currentSong;
-		this.currentSong = song;
+		if (!this.currentSong || song._id !== this.currentSong._id) {
+			this.prevSong = this.currentSong;
+			this.currentSong = song;
+			this._isNew = true;
 
-		Session.set('selectedSong', song._id);
+			Session.set('selectedSong', song._id);
 
-		this.pause();
+			this.pause();
 
-		// switch active player base on its original
-		if (this.currentSong.origin === SongOrigin.SOUNDCLOUD) {
-			this.activePlayer = this.playerSoundcloud;
-		} else {
-			this.activePlayer = this.playerAudio;
+			// switch active player base on its original
+			if (this.currentSong.origin === SongOrigin.SOUNDCLOUD) {
+				this.activePlayer = this.playerSoundcloud;
+			} else {
+				this.activePlayer = this.playerAudio;
+			}
 		}
 
+
 		if (!stopped) {
-			this.play(true);
+			this.play();
 		}
 		document.title = 'NJ :: ' + song.name;
 	}
 
 	/**
 	 * Play current or new song
-	 * @param  {Boolean} isNew whether active player needs to change its song or just resume playing current
 	 * @return {[type]}        [description]
 	 */
-	play(isNew) {
+	play() {
 		AppStates.updatePlayingSongs(this.currentSong._id, this.prevSong ? this.prevSong._id : '');
 
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_play').addClass('_pause');
 
-		if (isNew) {
+		if (this._isNew) {
+			this._isNew = false;
 			this.activePlayer.play(this.currentSong);
 		} else {
 			this.activePlayer.play();
@@ -72,10 +77,10 @@ export class JukeboxPlayer {
 		var $playButton = $('.js-play-button');
 		$playButton.removeClass('_pause').addClass('_play');
 
-		this.playing = false;
 		if (this.activePlayer) {
 			this.activePlayer.pause();
 		}
+		this.playing = false;
 	}
 
 	/**
