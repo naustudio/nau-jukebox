@@ -129,7 +129,14 @@ h5 small {
 }
 
 .player-panel {
-	visibility: hidden;
+	position: fixed;
+	right: 0;
+	bottom: 0;
+
+	.mejs-audio {
+		visibility: hidden;
+	}
+
 }
 
 .bg-layer {
@@ -521,9 +528,7 @@ h5 small {
 			}
 		}
 
-    	&--nct::after,
-		&--zing::after,
-		&--sc::after {
+    	&--origin::after {
 			content: '';
 			position: absolute;
 			bottom: 1px;
@@ -545,7 +550,11 @@ h5 small {
 		}
 
 		&--sc::after {
-			background-image: url(logo-soundcloud.jpg);
+			background-image: url(logo-soundcloud.png);
+		}
+
+		&--yt::after {
+			background-image: url(logo-youtube.png);
 		}
 
 		&--link {

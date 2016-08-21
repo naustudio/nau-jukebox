@@ -1,3 +1,4 @@
+/*Deprecated, to remove*/
 import { HTTP } from 'meteor/http';
 
 /**

@@ -1,6 +1,7 @@
 /**
  * Soudcloud URL parser module
  */
+import { SongOrigin } from '../constants.js';
 
 /**
  * Get NCT stream URL and other info
@@ -22,7 +23,7 @@ export const getSongInfoSoundcloud = function(songurl) {
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
-				origin: 'Soundcloud',
+				origin: SongOrigin.SOUNDCLOUD,
 				name: json.data.title,
 				artist: json.data.user.username,
 				streamURL: '/tracks/' + json.data.id,
