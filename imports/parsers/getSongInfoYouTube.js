@@ -1,43 +1,46 @@
-/**
- * Youtube URL parser module
- */
 import { HTTP } from 'meteor/http';
 
-
-
-
 /**
- * Get NCT stream URL and other info
+ * Youtube URL parser module
  *
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
 export const getSongInfoYouTube = function(songurl) {
 	console.log('getting youtube link:', songurl);
-	let html = HTTP.call('GET', songurl);
+	let http = HTTP.call('GET', songurl);
 
-	console.log(html);
+	let html = http.content;
+	// console.log(html);
 
-	//TODO: to parse YouTube metadata here
+	if (html) {
+		console.log('Parsing the song data through html source');
 
+		let title = (/<meta.*name="title".*content="(.*?)">/ig).exec(html);
+		let thumbURL = (/watch-header[\s\S]*?yt-thumb-clip[\s\S]*?<img.*data-thumb="(.*?)"/igm).exec(html);
+		let user = (/watch-header[\s\S]*?"yt-user-info"\s*>[\s\S]*?>(.*)<\/a>/igm).exec(html);
+		let length = (/"length_seconds":"(\d*)"/).exec(html);
+		length = length ? (+length[1]) : 0;
+		console.log(length);
 
-	if (true) {
-		console.log('Checking the XML data');
-
-		if (true) {
+		if (!html.match(/"allow_embed":"1"/i)) {
+			return {
+				error: 'This YouTube video is not allowed to embed'
+			};
+		} else if (length > 10 * 60 || length < 10) {
+			return {
+				error: 'This YouTube video is too long (>10min) or too short (<10sec) to play'
+			};
+		} else {
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
 				origin: 'YouTube',
-				name: 'title',
-				artist: 'uploader',
-				streamURL: songurl, // mediaelement can play youtube URL directly
-				thumbURL: 'https://yt3.ggpht.com/-qfdylQER4GU/AAAAAAAAAAI/AAAAAAAAAAA/QQTnVEWuEU4/s88-c-k-no-mo-rj-c0xffffff/photo.jpg',
+				name: title[1],
+				artist: user[1], // this is not really means artist, this is the uploader field from youtube page
+				streamURL: songurl, // media element can play youtube URL directly
+				thumbURL: thumbURL[1],
 				play: 0
-			};
-		} else {
-			return {
-				error: 'This Soundcloud is not streamable'
 			};
 		}
 

@@ -632,14 +632,13 @@ if (Meteor.isClient) {
 		},
 	});
 
-	/*global MediaElementPlayer*/
 	Meteor.startup(function() {
 
 		player = new JukeboxPlayer();
 
 		var selected = Songs.findOne(Session.get('selectedSong'));
 		if (selected) {
-			selectSong(selected);
+			player.selectSong(selected, true); //select but stop
 		}
 
 		navbarBackground();
@@ -785,9 +784,9 @@ if (Meteor.isServer) {
 			}
 
 			songInfo.author = author;
-			songInfo.searchPattern = songInfo.name.toLowerCase() + ' - ' + songInfo.artist.toLowerCase();
 
 			if (songInfo.streamURL) {
+				songInfo.searchPattern = songInfo.name.toLowerCase() + ' - ' + songInfo.artist.toLowerCase();
 				fut['return'](Songs.insert(songInfo));
 			} else {
 				fut['return'](null);
