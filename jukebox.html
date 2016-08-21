@@ -120,8 +120,8 @@
 			<div class="container">
 				<div class="playlist">
 					{{> songlist}}
-					{{> player}}
 				</div>
+				{{> player}}
 			</div>
 		</section>
 
@@ -165,7 +165,11 @@
 
 <template name="player">
 	<div class="player-panel">
-		<audio id="audio-player" src="song.mp3" preload="none"></audio>
+		<audio id="audio-player" src="song.mp3" preload="none" width="300"></audio>
+
+		<video id="youtube-player" preload="none" width="300" height="200">
+			<source type="video/youtube" src="" />
+		</video>
 	</div>
 </template>
 <!-- /player -->

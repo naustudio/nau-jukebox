@@ -129,7 +129,14 @@ h5 small {
 }
 
 .player-panel {
-	visibility: hidden;
+	position: fixed;
+	right: 0;
+	bottom: 0;
+
+	.mejs-audio {
+		visibility: hidden;
+	}
+
 }
 
 .bg-layer {
