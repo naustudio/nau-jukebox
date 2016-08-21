@@ -2,11 +2,16 @@ NAU JUKEBOX
 ===========
 This is a fun, side project to allow our team to collectively suggest and play a continuously pending list of songs.
 
-The songs URL is parsable from nhaccuatui.com and mp3.zing.com
+The songs URL is currently parsable from nhaccuatui.com, ~~mp3.zing.com~~, soundcloud.com, youtube.com
 
 
 Changelog:
 ----------
+
+### Release 2016-08-21
+- Refactor parsers to use new ES6 module format
+- Completely refactor the player to allow to play more type of source 
+- Implement Youtube parser and player (using MediaElementJS wrapper with YouTube iFrame player API)
 
 ### Release 2016-08-14
 - Upgrade to Meteor 1.4.0.1 with support for Node 4 & MongoDB 3
