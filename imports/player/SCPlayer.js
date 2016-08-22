@@ -32,6 +32,7 @@ export class SCPlayer {
 				// get existing SC player
 				this.player = this.playerSoundcloudDictionary[song.streamURL];
 				this.player.seek(0);
+				this.player.play();
 				// playWithEffect(); --> moved
 			} else {
 				// create new SC player
