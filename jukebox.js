@@ -236,6 +236,11 @@ if (Meteor.isClient) {
 			return Session.get('naustorm_data');
 		},
 
+		getDisplayStatus: function() {
+			var isHost = Session.get('IS_HOST');
+			return (isHost ? '' : 'u-hide');
+		},
+
 		groupByAuthorData: function() {
 			return Session.get('USER_LIST');
 		},
