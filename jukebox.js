@@ -170,6 +170,11 @@ if (Meteor.isClient) {
 			return Session.equals('selectedSong', this._id) ? '_selected' : '';
 		},
 
+		getDisplayStatus: function() {
+			var isHost = Session.get('IS_HOST');
+			return (isHost ? '' : 'u-hide');
+		},
+
 		playing: function() {
 			var playingSongs = AppStates.findOne({key: 'playingSongs'});
 
@@ -234,6 +239,11 @@ if (Meteor.isClient) {
 	Template.naustorm.helpers({
 		storms: function() {
 			return Session.get('naustorm_data');
+		},
+
+		getDisplayStatus: function() {
+			var isHost = Session.get('IS_HOST');
+			return (isHost ? '' : 'u-hide');
 		},
 
 		groupByAuthorData: function() {
@@ -418,6 +428,14 @@ if (Meteor.isClient) {
 				player.pause();
 			}
 			e.stopPropagation();
+		},
+
+		'click .js-show-book-user': function(e) {
+			Songs.update(this._id, {
+				$set: {
+					isUp: true
+				}
+			});
 		},
 
 		'click .rebook-btn': function(e) {

@@ -575,17 +575,21 @@ h5 small {
 			top: 0;
 			line-height: $item-h;
 
-			small {}
+			small {
+				margin-right: $gutter;
+			}
 
 			a {
 				display: inline-block;
 				line-height: $item-h;
-				margin-left: $gutter;
-				color: #49413f;
+				color: gray;
 				text-decoration: none;
+				padding-left: $gutter/2;
+				padding-right: $gutter/2;
 
 				&:hover {
 					text-decoration: underline;
+					color: #755f4b;
 				}
 			}
 		}
@@ -596,6 +600,15 @@ h5 small {
 			top: 50%;
 			margin-left: -7.5px;
 			opacity: 0;
+			transform: translate(-100%, -50%);
+		}
+
+		&--author {
+			position: absolute;
+			left: 0;
+			top: 50%;
+			margin-left: -7.5px - $gutter;
+			opacity: 1;
 			transform: translate(-100%, -50%);
 		}
 
@@ -960,3 +973,6 @@ button.button-naucoin {
 		height: 85%;
 	}
 }
+
+// new css will be seperated
+@import '_buttons';

@@ -1,0 +1,30 @@
+/**
+ * nau2016
+ * tw
+ */
+
+$button-w: 35px;
+$nau-color: #A8896C;
+$warning-color: #BF382A;
+
+.button.button--action {
+	width: $button-w;
+	height: $button-w;
+	line-height: $button-w;
+	border-radius: 100%;
+	border: 1px solid whitesmoke;
+	padding: 0;
+	margin-bottom: 0;
+
+	i {
+		display: block;
+		vertical-align: middle;
+		line-height: $button-w;
+	}
+
+	&:hover {
+		text-decoration: none;
+		background-color: $nau-color;
+		color: white;
+	}
+}
