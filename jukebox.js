@@ -596,6 +596,13 @@ if (Meteor.isClient) {
 			var data = [];
 			var activeSearchResult = function() {
 				if (data.length > 0) {
+					// remove duplicated songs
+					data = _.uniq(data, false, function(song) {
+						return song.searchPattern;
+					});
+
+					data = _.first(data, 10);
+
 					Session.set('searchResult', data);
 					$form.addClass('_active');
 				} else {
@@ -622,7 +629,14 @@ if (Meteor.isClient) {
 				});
 			} else {
 				if (value.length >= 3) {
-					data = Songs.find({searchPattern: {$regex: value.toLowerCase() + '*'}}, {limit: 7}).fetch();
+					data = Songs.find({
+						searchPattern: {$regex: value.toLowerCase() + '*'},
+						// FIXME: ignore Zing for now since its URL are not parsable
+						origin: { $nin: [ SongOrigin.ZING ] }
+					}, {
+						limit: 50, // we remove duplicated result and limit further
+						reactive: false
+					}).fetch();
 					activeSearchResult();
 				} else {
 					$form.removeClass('_active');
