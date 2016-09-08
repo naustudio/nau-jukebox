@@ -52,7 +52,14 @@ export class JukeboxPlayer {
 		console.log('selectSong', song.name, song.origin, this.activePlayer.type);
 
 		if (!stopped) {
-			this.play();
+			if (this.activePlayer.type === 'AudioPlayer') {
+				// delay for MediaElementPlayer has a bug if we pause and play next song immediately
+				setTimeout(() => {
+					this.play();
+				}, 700);
+			} else {
+				this.play();
+			}
 		}
 		document.title = 'NJ :: ' + song.origin + ' : ' + song.name;
 	}
@@ -105,9 +112,7 @@ export class JukeboxPlayer {
 
 		if (nextSong) {
 			//delay some time so that calling play on the next song can work
-			setTimeout(() => {
-				this.selectSong(nextSong);
-			}, 500);
+			this.selectSong(nextSong);
 		} else {
 			console.log('No more song to play');
 		}
