@@ -8,6 +8,7 @@
 export class YouTubePlayer {
 
 	constructor(mainPlayer) {
+		this.type = 'YouTubePlayer';
 		this.song = null;
 		this.mainPlayer = mainPlayer;
 		this.$player = $('#youtube-player');
@@ -26,6 +27,7 @@ export class YouTubePlayer {
 
 	_onVideoEnded() {
 		console.log('Video ended for:', this.song.name);
+		this.player.media.pluginApi.stopVideo();
 		this.mainPlayer.playNext();
 	}
 
@@ -63,7 +65,8 @@ export class YouTubePlayer {
 					}
 				});
 
-				window.mePlayer = this.player;
+				// for debugging
+				// window.mePlayer = this.player;
 			}
 		} else {
 			this.player.play();

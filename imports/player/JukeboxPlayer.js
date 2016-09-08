@@ -49,11 +49,12 @@ export class JukeboxPlayer {
 				this.activePlayer = this.playerAudio;
 			}
 		}
+		console.log('selectSong', song.name, song.origin, this.activePlayer.type);
 
 		if (!stopped) {
 			this.play();
 		}
-		document.title = 'NJ :: ' + song.name;
+		document.title = 'NJ :: ' + song.origin + ' : ' + song.name;
 	}
 
 	/**
@@ -100,6 +101,7 @@ export class JukeboxPlayer {
 	 */
 	playNext() {
 		var nextSong = Songs.findOne({timeAdded: {$gt: this.currentSong.timeAdded}});
+		// console.log('Play next:', nextSong.name, nextSong.origin);
 
 		if (nextSong) {
 			//delay some time so that calling play on the next song can work

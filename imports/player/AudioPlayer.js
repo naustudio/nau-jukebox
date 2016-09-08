@@ -6,6 +6,7 @@
 export class AudioPlayer {
 
 	constructor(mainPlayer) {
+		this.type = 'AudioPlayer';
 		this.player = new MediaElementPlayer('#audio-player');
 		this.song = null;
 

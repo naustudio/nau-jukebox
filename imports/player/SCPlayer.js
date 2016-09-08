@@ -6,6 +6,7 @@
 export class SCPlayer {
 
 	constructor(mainPlayer) {
+		this.type = 'SoundCloudPlayer';
 		this.mainPlayer = mainPlayer;
 		this.playerSoundcloudDictionary = {}; //
 		this.player = null; //
