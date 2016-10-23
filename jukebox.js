@@ -335,7 +335,10 @@ if (Meteor.isClient) {
 			var userName = $(e.currentTarget).find('[name=userName]').val();
 			var amount = $(e.currentTarget).find('[name=amount]').val();
 
-			if (!amount) {
+			if (!amount || isNaN(amount)) {
+				alert('Input value is invalid !');
+				$(e.currentTarget).find('[name=amount]').val('');
+				console.log('amount', amount);
 				return;
 			}
 
@@ -594,14 +597,15 @@ if (Meteor.isClient) {
 			}
 
 			var data = [];
-			var activeSearchResult = function() {
+			var activeSearchResult = function(isSoundcloud) {
 				if (data.length > 0) {
 					// remove duplicated songs
-					data = _.uniq(data, false, function(song) {
-						return song.searchPattern;
-					});
-
-					data = _.first(data, 10);
+					if (!isSoundcloud) {
+						data = _.uniq(data, false, function(song) {
+							return song.searchPattern;
+						});
+						data = _.first(data, 10);
+					}
 
 					Session.set('searchResult', data);
 					$form.addClass('_active');
@@ -625,7 +629,7 @@ if (Meteor.isClient) {
 							artist: item.genre
 						};
 					});
-					activeSearchResult();
+					activeSearchResult(true);
 				});
 			} else {
 				if (value.length >= 3) {
