@@ -54,9 +54,11 @@ export class JukeboxPlayer {
 		if (!stopped) {
 			if (this.activePlayer.type === 'AudioPlayer') {
 				// delay for MediaElementPlayer has a bug if we pause and play next song immediately
+				console.log('Next player is AudioPlayer, delaying...');
 				setTimeout(() => {
+					console.log('AudioPlayer play now!');
 					this.play();
-				}, 700);
+				}, 500);
 			} else {
 				this.play();
 			}

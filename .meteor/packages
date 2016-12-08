@@ -29,6 +29,6 @@ npm-container
 reactive-var@1.0.10
 standard-minifier-js@1.2.0
 seba:minifiers-autoprefixer
-fourseven:scss
+fourseven:scss@=3.8.0_1
 ecmascript@0.5.8
 shell-server

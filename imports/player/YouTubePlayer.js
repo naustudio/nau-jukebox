@@ -12,6 +12,11 @@ export class YouTubePlayer {
 		this.song = null;
 		this.mainPlayer = mainPlayer;
 		this.$player = $('#youtube-player');
+		$(document).on('playercued', event => {
+			// this is a misterious event triggered from mediaelement and some how pause the AudioPlayer
+			// We wait until this to play next
+			this._onVideoEnded();
+		});
 	}
 
 	getYTVideoId(url) {
@@ -27,7 +32,6 @@ export class YouTubePlayer {
 
 	_onVideoEnded() {
 		console.log('Video ended for:', this.song.name);
-		this.player.media.pluginApi.stopVideo();
 		this.mainPlayer.playNext();
 	}
 
@@ -56,11 +60,11 @@ export class YouTubePlayer {
 					success: (media) => {
 						this.player.play();
 
-						// this is fake events, must add at success callback
+						// this is simulated events, must add at success callback
 						media.addEventListener('ended', () => {
 							//avoid player flick during transition to next song
-							media.pause();
-							this._onVideoEnded();
+							this.player.media.pluginApi.stopVideo();
+							// a cue events will trigger later which we'll use to start next song
 						});
 					}
 				});
