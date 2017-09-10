@@ -15,7 +15,7 @@ import { SongOrigin } from './imports/constants.js';
 // it is backed by a MongoDB collection named 'songs'.
 Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
-Users = new Meteor.Collection('users');
+Users = Meteor.users;
 
 if (Meteor.isClient) {
 	var nickname = localStorage.getItem('nickname') || '';
