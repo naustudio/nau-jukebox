@@ -33,3 +33,7 @@ fourseven:scss@3.8.0_1
 ecmascript@0.8.2
 shell-server@0.2.4
 dynamic-import
+accounts-google
+accounts-facebook
+service-configuration
+accounts-ui
