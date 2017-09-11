@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "eslint-plugin-promise": "^3.3.0"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0"
+  }
+}

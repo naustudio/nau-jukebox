@@ -15,16 +15,14 @@ import { SongOrigin } from './imports/constants.js';
 // it is backed by a MongoDB collection named 'songs'.
 Songs = new Meteor.Collection('songs');
 AppStates = new Meteor.Collection('appstates');
-Users = new Meteor.Collection('users');
+Users = Meteor.users;
 
 if (Meteor.isClient) {
-	var nickname = localStorage.getItem('nickname') || '';
+	Meteor.subscribe('userData'); // needed to get other fields
 	Session.setDefault('urlFetching', false);
 	Session.setDefault('showAll', false);
 	Session.setDefault('tab', 'tab--play-list');
-	Session.setDefault('nickname', nickname);
 	Session.setDefault('selectedIndex', '0');
-	Session.setDefault('isHost', false);
 	Session.setDefault('USER_LIST', []);
 	Session.setDefault('IS_HOST', false);
 
@@ -52,17 +50,15 @@ if (Meteor.isClient) {
 
 	var showRequireMessage = function() {
 		var $playlistNav = $('.js-playlist-section');
-		var $nicknameHolder = $('.js-nickname-holder');
 
 		$playlistNav.addClass('_focus').css('top', 69);
-		$nicknameHolder.focus().closest('.input-control').addClass('_error');
+		$('.js-login-control').addClass('_error');
 	};
 
 	var hideRequireMessage = function() {
 		var $playlistNav = $('.js-playlist-section');
-		var $nicknameHolder = $('.js-nickname-holder');
 		$playlistNav.removeClass('_focus');
-		$nicknameHolder.closest('.input-control').removeClass('_error');
+		$('.js-login-control').removeClass('_error');
 
 		var songurl = $('[name="songurl"]').val().trim();
 		if (songurl) {
@@ -72,15 +68,16 @@ if (Meteor.isClient) {
 	};
 
 	var submitSong = function(songurl) {
-		var nickname = Session.get('nickname').trim();
-		if (!nickname) {
+		const userId = Meteor.userId();
+		console.log('Submit song', userId);
+		if (!userId) {
 			showRequireMessage();
 			return;
 		}
 
-		Users.addOrUpdate(nickname);
+		Users.updateStatus(userId);
 
-		Meteor.call('getSongInfo', songurl, nickname, function(error/*, result*/) {
+		Meteor.call('getSongInfo', songurl, userId, function(error/*, result*/) {
 			if (error) {
 				alert('Cannot add the song at:\n' + songurl + '\nReason: ' + error.reason);
 				$('[name="songurl"]').val('');
@@ -98,14 +95,13 @@ if (Meteor.isClient) {
 		var newUserList;
 
 		newUserList = userList.map(function(item) {
-			var t = _.find(userDataList, function(i) {
-				return i.userName === item.author;
+			var user = _.find(userDataList, function(i) {
+				return i._id === item.author;
 			});
-			if (t !== undefined) {
-				t.books = item.books;
-				t.author = item.author;
+			if (user !== undefined) {
+				user.books = item.books;
 			}
-			return t;
+			return user;
 		});
 
 		newUserList = _.sortBy(newUserList, function(i) {
@@ -166,6 +162,10 @@ if (Meteor.isClient) {
 	});
 
 	Template.song.helpers({
+		authorInfo: function() {
+			return Users.findOne(this.author);
+		},
+
 		selected: function() {
 			return Session.equals('selectedSong', this._id) ? '_selected' : '';
 		},
@@ -216,6 +216,10 @@ if (Meteor.isClient) {
 	});
 
 	Template.naustormauthoritem.helpers({
+		authorInfo: function () {
+			return Users.findOne(this.author);
+		},
+
 		getStatus: function() {
 			return (this.isOnline ? '_active' : '');
 		}
@@ -332,7 +336,7 @@ if (Meteor.isClient) {
 	});
 	Template.naucoin.events({
 		'submit .js-naucoin-submit-btn': function(e) {
-			var userName = $(e.currentTarget).find('[name=userName]').val();
+			var userId = $(e.currentTarget).find('[name=userName]').val();
 			var amount = $(e.currentTarget).find('[name=amount]').val();
 
 			if (!amount || isNaN(amount)) {
@@ -342,7 +346,7 @@ if (Meteor.isClient) {
 				return;
 			}
 
-			Meteor.call('naucoinPay', userName, amount, function(err, result) {
+			Meteor.call('naucoinPay', userId, amount, function(err, result) {
 				$(e.currentTarget).find('[name=amount]').val('');
 			});
 		}
@@ -371,17 +375,13 @@ if (Meteor.isClient) {
 
 	Template.body.onCreated(function() {
 		var userDataChanged = function(id) {
-			var u = Users.findOne({_id: id});
-			var nickname = Session.get('nickname').trim();
-			var $loader = $('.js-dot').closest('.loader');
+			var u = Users.findOne(id);
 
-			if (u.userName === nickname) {
+			if (u._id === Meteor.userId()) {
 				if (u.isHost) {
 					Session.set('IS_HOST', true);
-					$loader.addClass('_active');
 				} else {
 					Session.set('IS_HOST', false);
-					$loader.removeClass('_active');
 				}
 			}
 		};
@@ -392,13 +392,27 @@ if (Meteor.isClient) {
 				userDataChanged(id);
 			},
 			changed: function(id, data) {
+				console.log('user changed', id, data);
 				userDataChanged(id);
 			}
 		});
+		// update host status
 	});
+
+	Template.body.onRendered(() => {
+		// watch login state
+		Tracker.autorun(function () {
+			if (Meteor.userId()) {
+				// user logged in
+				console.log('User just logged in');
+				hideRequireMessage();
+			}
+		});
+	});
+
 	Template.body.helpers({
-		getNickname: function() {
-			return Session.get('nickname');
+		isHost: function() {
+			return Session.get('IS_HOST');
 		},
 
 		searchResult: function() {
@@ -434,9 +448,10 @@ if (Meteor.isClient) {
 		},
 
 		'click .js-show-book-user': function(e) {
+			const isUpToggled = !this.isUp;
 			Songs.update(this._id, {
 				$set: {
-					isUp: true
+					isUp: isUpToggled
 				}
 			});
 		},
@@ -519,6 +534,7 @@ if (Meteor.isClient) {
 			$this.addClass('_active');
 		},
 
+		/* TODO: Remove this, we're using oauth */
 		'keydown .js-nickname-holder': function(e) {
 			if (e.keyCode !== 13) { return; }
 
@@ -527,12 +543,13 @@ if (Meteor.isClient) {
 
 			localStorage.setItem('nickname', value);
 			Session.set('nickname', value);
-			Users.addOrUpdate(value);
+			Users.addOrUpdate(value); // deprecated
 
 			$target.blur();
 			hideRequireMessage();
 		},
 
+		/* TODO: Remove this, we're using oauth */
 		'focusout .js-nickname-holder': function(e) {
 			var $target = $(e.currentTarget);
 			var value = $target.val().trim();
@@ -615,8 +632,8 @@ if (Meteor.isClient) {
 				}
 			};
 
-			if (value.indexOf('sc') === 0) {
-				var newq = value.substr(2, value.length);
+			if (value.indexOf('sc:') === 0) {
+				var newq = value.substr(3);
 
 				SC.get('/tracks', {
 					q: newq,
@@ -685,9 +702,9 @@ if (Meteor.isClient) {
 		Meteor.setInterval(navbarBackground, 60000);
 		// update online status every minutes
 		var updateOnlineStatus = function() {
-			var nickname = Session.get('nickname').trim();
-			Meteor.call('updateStatus', nickname, function(err, result) {
-				console.log('updateStatus', nickname, err, result);
+			var userId = Meteor.userId();
+			Meteor.call('updateStatus', userId, function(err, result) {
+				console.log('updateStatus', userId, err, result);
 			});
 		};
 		updateOnlineStatus();
@@ -728,7 +745,7 @@ if (Meteor.isClient) {
 
 		// on scrolling
 		var oldScrollTop = 0;
-		var headerHeight = 69;
+		var headerHeight = 70;
 		var playlistHeight = 55;
 		var $playlist = $('.playlist-nav');
 
@@ -756,26 +773,34 @@ if (Meteor.isClient) {
 			oldScrollTop = newScrollTop;
 		});
 
+		// Host register
 		$('.js-dot').on('click', function(e) {
 			var $loader = $(this).closest('.loader');
 			if ($loader.hasClass('_active')) {
 				$loader.removeClass('_active');
+				// remove all host
+				Meteor.call('changeHost', null, function(err) {
+					// handle error here
+					console.log('all host removed, errs:', err);
+				});
 			} else {
-				var passcode = prompt('Please enter passcode: nau110114', '');
-				if (passcode.toLowerCase() === 'nau110114') {
-					var nickname = Session.get('nickname').trim();
-					if (!nickname) {
+				var passcode = prompt('Passcode for host is: Nau\'s birthday (6 digits)', '');
+				if (passcode.toLowerCase() === '110114') {
+					var userId = Meteor.userId();
+					if (!userId) {
 						showRequireMessage();
 						return;
 					}
 					$loader.addClass('_active');
-					Meteor.call('changeHost', nickname, function(err) {
+					Meteor.call('changeHost', userId, function(err) {
 						// handle error here
+						console.log('changeHost done, errs:', err);
 					});
 				}
 			}
 		});
-	});
+	}); // end Meteor.startup
+
 }
 
 if (Meteor.isServer) {
@@ -839,19 +864,22 @@ if (Meteor.isServer) {
 			return fut.wait();
 		},
 
-		changeHost: function(userName) {
-			// var u = Users.findOne({userName: userName});
-			Users.update({}, {$set: {isHost: false}}, {multi: true});
-			Users.update({userName: userName}, {
-				$set: {
-					isHost: true,
-					lastModified: new Date()
-				}
+		changeHost: function(userId) {
+			console.log('changeHost', userId);
+			// switch all users isHost off
+			Users.update({}, {$set: {isHost: false}}, {multi: true}, () => {
+				// then switch sHost
+				Users.update(userId, {
+					$set: {
+						isHost: true,
+						lastModified: new Date()
+					}
+				});
 			});
 		},
 
-		updateStatus: function(userName) {
-			return Users.update({userName: userName}, {
+		updateStatus: function(userId) {
+			return Users.update(userId, {
 				$set: {
 					isOnline: true,
 					lastModified: new Date()
@@ -859,8 +887,8 @@ if (Meteor.isServer) {
 			});
 		},
 
-		naucoinPay: function(userName, amount) {
-			var u = Users.findOne({userName: userName});
+		naucoinPay: function(userId, amount) {
+			var u = Users.findOne(userId);
 			var oldBalance = u.balance || 0;
 			var newBalance = oldBalance + parseFloat(amount);
 
@@ -870,7 +898,16 @@ if (Meteor.isServer) {
 				}
 			});
 		}
+	});
 
+	Meteor.publish('userData', function () {
+		if (this.userId) {
+			return Meteor.users.find({ _id: this.userId }, {
+				fields: { isHost: 1, isOnline: 1, balance: 1 }
+			});
+		} else {
+			this.ready();
+		}
 	});
 }
 // ============================================================================
@@ -926,6 +963,8 @@ AppStates.updatePlayingSongs = function(played, stopped) {
  * User Model, managing all users
  * @param {String} userName [description]
  * @return {void}
+ * @deprecated
+ * FIXME: remove me
  */
 Users.addOrUpdate = function(userName) {
 	if (Users.find({userName: userName}).count() === 0) {
@@ -944,4 +983,13 @@ Users.addOrUpdate = function(userName) {
 			}
 		});
 	}
+};
+
+Users.updateStatus = function (userId) {
+	Users.update(userId, {
+		$set: {
+			isOnline: true,
+			lastModified: new Date()
+		}
+	});
 };

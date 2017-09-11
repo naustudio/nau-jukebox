@@ -42,13 +42,14 @@
 	</a>
 
 	<nav class="navbar" id="js-navbar">
-		<div class="loader">
+		<div class="loader {{#if isHost}}_active{{/if}}">
 			<div class="dot js-dot"></div>
 		</div>
 		<div class="container">
 			<ul class="navbar--list">
 				<li class="navbar--item navbar--item__icon">
-					<a href="https://naustud.io" target="_blank">Nâu Jukebox</a>
+					<a href="https://naustud.io" target="_blank"><img src="/nau-icon.svg" alt="Nau Logo"></a>
+					<span>JUKEBOX</span>
 				</li>
 				<li class="navbar--item navbar--item__input">
 
@@ -90,26 +91,25 @@
 			<div class="container">
 				<ul class="playlist-nav--list">
 					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
-						<a href="javascript:;">play list</a>
+						<a href="javascript:;">Play List</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
-						<a href="javascript:;">yesterday</a>
+						<a href="javascript:;">Yesterday</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
-						<a href="javascript:;">past 7 days</a>
+						<a href="javascript:;">Last 7 Days</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
-						<a href="javascript:;">naustorm</a>
+						<a href="javascript:;">Top Lists</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naucoin" data-target="js-naucoin">
 						<a href="javascript:;">₦aucoin</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
-						<div class="input-control">
-							<input type="text" placeholder="@ enter your name" class="js-nickname-holder"
-								value="{{getNickname}}" />
+						<div class="js-login-control input-control">
+							{{> loginButtons}}
 							<div class="input-control--error">
-								<p>Your name is required !</p>
+								<p>Please login to book songs!</p>
 							</div>
 						</div>
 					</li>
@@ -154,10 +154,10 @@
 			<h4 class="lyric-modal-header">Lyric</h4>
 			<div class="lyric-modal-content">
 				<strong class="js-lyric-modal-song-title">
-					Test
+					Song title
 				</strong><br>
 				<p class="js-lyric-modal-song-lyric">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br> Possimus perspiciatis qui repellat, aperiam amet dignissimos soluta inventore exercitationem impedit excepturi vero et ea dolore voluptas enim suscipit id quo hic.
+					Song lyrics...
 				</p>
 			</div>
 		</div>
@@ -180,7 +180,7 @@
 		{{#each songs}}
 			{{> song}}
 		{{else}}
-			Waiting for storms...
+			Fetching for songs...
 		{{/each}}
 	</ul>
 </template>
@@ -189,7 +189,7 @@
 <template name="song">
 	<li class="playlist--item {{selected}} {{playing}}">
 		<span class="playlist--item--active">&rtri;</span>
-		<span class="playlist--item--author">{{#if isUp}} {{{author}}} {{/if}}</span>
+		<span class="playlist--item--author">{{#if isUp}} {{{authorInfo.profile.name}}} {{/if}}</span>
 		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
 			{{#if thumbURL}}
 				<img src="{{thumbURL}}">
@@ -214,7 +214,7 @@
 
 <template name="naustorm">
 	<div class="naustorm-section">
-		<h5>naustorm\<small> {{dateString}}</small></h5>
+		<h5>Top Songs <small>{{dateString}}</small></h5>
 
 		<div class="row naustorm">
 			{{#each storms}}
@@ -225,7 +225,7 @@
 		</div>
 
 		<div class="group-author {{getDisplayStatus}}">
-			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
+			<h5>Users\ <small>got {{total}} bookings this week.</small></h5>
 			<ul class="g-author--list">
 				{{#each groupByAuthorData}}
 					{{> naustormauthoritem}}
@@ -249,7 +249,7 @@
 </template>
 
 <template name="naustormauthoritem">
-	<li class="g-author--item {{getStatus}}">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
+	<li class="g-author--item {{getStatus}}">{{profile.name}} <span class="g-author--storm">{{books}} storms</span></li>
 </template>
 
 <template name="naucoin">
@@ -263,7 +263,7 @@
 						<label for="">select user</label>
 						<select name="userName" id="naucoin-username" class="u-full-width">
 							{{#each dataContext}}
-								<option value="{{userName}}">{{userName}}</option>
+								<option value="{{_id}}">{{profile.name}}</option>
 							{{/each}}
 						</select>
 					</div>
@@ -291,6 +291,6 @@
 </template>
 
 <template name="naucoinitem">
-	<li class="g-author--item {{getStatus}}">{{userName}}<span class="g-author--ncoin">{{getBalance}}</span>
+	<li class="g-author--item {{getStatus}}">{{profile.name}}<span class="g-author--ncoin">{{getBalance}}</span>
 	</li>
 </template>
