@@ -8,9 +8,16 @@ The songs URL is currently parsable from nhaccuatui.com, ~~mp3.zing.com~~, sound
 Changelog:
 ----------
 
+### 2017-09-12
+- Upgrade to Meteor 1.5.1
+- Move to use Meteor built-in Accounts collection
+- Implement OAuth login with Facebook and Google
+- Change logo and text labels
+- Tweak search results
+
 ### Release 2016-08-21
 - Refactor parsers to use new ES6 module format
-- Completely refactor the player to allow to play more type of source 
+- Completely refactor the player to allow to play more type of source
 - Implement Youtube parser and player (using MediaElementJS wrapper with YouTube iFrame player API)
 
 ### Release 2016-08-14
@@ -28,7 +35,7 @@ Changelog:
 
 ### Release 2016-06-20
 - New __NauStorm__ section
-- New dynamic header background 
+- New dynamic header background
 
 ### Release 2016-05-22
 - Upgrade to Meteor 1.3.2.4
@@ -44,8 +51,8 @@ Changelog:
 Colophon:
 ---------
 - Meteor JS - http://meteor.com
-- MediaElementJS - http://mediaelementjs.com/ 
+- MediaElementJS - http://mediaelementjs.com/
 - Other Meteor packages: see .meteor/packages
 
 ---
-© 2016 Nâu Studio and contributors. Licensed under MIT license.
+© 2017 Nâu Studio and contributors. Licensed under MIT license.
