@@ -621,7 +621,7 @@ if (Meteor.isClient) {
 						data = _.uniq(data, false, function(song) {
 							return song.searchPattern;
 						});
-						data = _.first(data, 10);
+						data = _.first(data, 20);
 					}
 
 					Session.set('searchResult', data);
@@ -637,7 +637,7 @@ if (Meteor.isClient) {
 
 				SC.get('/tracks', {
 					q: newq,
-					limit: 7,
+					limit: 10,
 				}).then(function(tracks) {
 					data = tracks.map(function(item) {
 						return {
