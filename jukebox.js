@@ -95,14 +95,13 @@ if (Meteor.isClient) {
 		var newUserList;
 
 		newUserList = userList.map(function(item) {
-			var t = _.find(userDataList, function(i) {
+			var user = _.find(userDataList, function(i) {
 				return i._id === item.author;
 			});
-			if (t !== undefined) {
-				t.books = item.books;
-				t.author = item.author;
+			if (user !== undefined) {
+				user.books = item.books;
 			}
-			return t;
+			return user;
 		});
 
 		newUserList = _.sortBy(newUserList, function(i) {
@@ -217,6 +216,10 @@ if (Meteor.isClient) {
 	});
 
 	Template.naustormauthoritem.helpers({
+		authorInfo: function () {
+			return Users.findOne(this.author);
+		},
+
 		getStatus: function() {
 			return (this.isOnline ? '_active' : '');
 		}
@@ -333,7 +336,7 @@ if (Meteor.isClient) {
 	});
 	Template.naucoin.events({
 		'submit .js-naucoin-submit-btn': function(e) {
-			var userName = $(e.currentTarget).find('[name=userName]').val();
+			var userId = $(e.currentTarget).find('[name=userName]').val();
 			var amount = $(e.currentTarget).find('[name=amount]').val();
 
 			if (!amount || isNaN(amount)) {
@@ -343,7 +346,7 @@ if (Meteor.isClient) {
 				return;
 			}
 
-			Meteor.call('naucoinPay', userName, amount, function(err, result) {
+			Meteor.call('naucoinPay', userId, amount, function(err, result) {
 				$(e.currentTarget).find('[name=amount]').val('');
 			});
 		}
@@ -353,7 +356,6 @@ if (Meteor.isClient) {
 
 		userDataContext.observeChanges({
 			changed: function(id, data) {
-				console.log('Template.naucoin Users.changed', id, data);
 				mergeData();
 			},
 			added: function(id, data) {
@@ -782,8 +784,8 @@ if (Meteor.isClient) {
 					console.log('all host removed, errs:', err);
 				});
 			} else {
-				var passcode = prompt('Please enter passcode: nau110114', '');
-				if (passcode.toLowerCase() === 'nau110114') {
+				var passcode = prompt('Passcode for host is: Nau\'s birthday (6 digits)', '');
+				if (passcode.toLowerCase() === '110114') {
 					var userId = Meteor.userId();
 					if (!userId) {
 						showRequireMessage();
@@ -901,7 +903,7 @@ if (Meteor.isServer) {
 	Meteor.publish('userData', function () {
 		if (this.userId) {
 			return Meteor.users.find({ _id: this.userId }, {
-				fields: { isHost: 1, isOnline: 1 }
+				fields: { isHost: 1, isOnline: 1, balance: 1 }
 			});
 		} else {
 			this.ready();

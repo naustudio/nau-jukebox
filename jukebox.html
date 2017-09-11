@@ -90,16 +90,16 @@
 			<div class="container">
 				<ul class="playlist-nav--list">
 					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
-						<a href="javascript:;">play list</a>
+						<a href="javascript:;">Play List</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
-						<a href="javascript:;">yesterday</a>
+						<a href="javascript:;">Yesterday</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
-						<a href="javascript:;">past 7 days</a>
+						<a href="javascript:;">Last 7 Days</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
-						<a href="javascript:;">naustorm</a>
+						<a href="javascript:;">Top Lists</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naucoin" data-target="js-naucoin">
 						<a href="javascript:;">₦aucoin</a>
@@ -153,10 +153,10 @@
 			<h4 class="lyric-modal-header">Lyric</h4>
 			<div class="lyric-modal-content">
 				<strong class="js-lyric-modal-song-title">
-					Test
+					Song title
 				</strong><br>
 				<p class="js-lyric-modal-song-lyric">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br> Possimus perspiciatis qui repellat, aperiam amet dignissimos soluta inventore exercitationem impedit excepturi vero et ea dolore voluptas enim suscipit id quo hic.
+					Song lyrics...
 				</p>
 			</div>
 		</div>
@@ -213,7 +213,7 @@
 
 <template name="naustorm">
 	<div class="naustorm-section">
-		<h5>naustorm\<small> {{dateString}}</small></h5>
+		<h5>Top Songs <small>{{dateString}}</small></h5>
 
 		<div class="row naustorm">
 			{{#each storms}}
@@ -224,7 +224,7 @@
 		</div>
 
 		<div class="group-author {{getDisplayStatus}}">
-			<h5>nauzoo\<small> got {{total}} storms this week.</small></h5>
+			<h5>Users\ <small>got {{total}} bookings this week.</small></h5>
 			<ul class="g-author--list">
 				{{#each groupByAuthorData}}
 					{{> naustormauthoritem}}
@@ -248,7 +248,7 @@
 </template>
 
 <template name="naustormauthoritem">
-	<li class="g-author--item {{getStatus}}">{{author}} <span class="g-author--storm">{{books}} storms</span></li>
+	<li class="g-author--item {{getStatus}}">{{profile.name}} <span class="g-author--storm">{{books}} storms</span></li>
 </template>
 
 <template name="naucoin">
@@ -290,6 +290,6 @@
 </template>
 
 <template name="naucoinitem">
-	<li class="g-author--item {{getStatus}}">{{userName}}<span class="g-author--ncoin">{{getBalance}}</span>
+	<li class="g-author--item {{getStatus}}">{{profile.name}}<span class="g-author--ncoin">{{getBalance}}</span>
 	</li>
 </template>
