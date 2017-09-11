@@ -9,7 +9,7 @@
 $gutter: 15px;
 $playbutton-h: 40px;
 $playbutton-w: 6px;
-$header-h: 69px;
+$header-h: 70px;
 $playlist-h: 55px;
 $dot-w: 24px;
 $dot-color: white;
@@ -25,6 +25,7 @@ $color-08: #F7EEBB;
 $color-06: rgba(255,255,255,0.2);
 $color-07: rgba(223,201,178,0.4);
 $color-09: rgba(211,211,211,1);
+$color-nau: #977857;
 
 * {
 	box-sizing: border-box;
@@ -183,17 +184,15 @@ h5 small {
 		margin: 0;
 
 		a {
-			padding: 1.5*$gutter;
-			display: inline-block;
+			display: block;
 			text-decoration: none;
-			color: $color-01;
-			font-weight: 100;
+			margin-bottom: 4px;
 		}
 
 		&__icon,
 		&__tool {
 			width: 20%;
-			color: $color-09;
+			color: $color-nau;
 		}
 		&__input {
 			width: 60%;
@@ -203,9 +202,14 @@ h5 small {
 
 		&__icon {
 			float: left;
+			padding: 16px 0;
+			font-size: 12px;
+			line-height: 1;
+			letter-spacing: 2.5px;
+			font-weight: 600;
 
-			a {
-				margin-left: -1.5*$gutter;
+			img {
+				height: 20px;
 			}
 		}
 		&__tool {
@@ -220,7 +224,7 @@ h5 small {
 	width: 100%;
 	border-radius: 4px;
 	border: 1px solid $color-06;
-	margin-top: 0.5*$gutter;
+	margin-top: 4px;
 	overflow: hidden;
 	background-color: rgba(255,255,255,0.5);
 

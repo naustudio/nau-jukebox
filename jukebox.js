@@ -745,7 +745,7 @@ if (Meteor.isClient) {
 
 		// on scrolling
 		var oldScrollTop = 0;
-		var headerHeight = 69;
+		var headerHeight = 70;
 		var playlistHeight = 55;
 		var $playlist = $('.playlist-nav');
 
