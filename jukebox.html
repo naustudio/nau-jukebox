@@ -42,7 +42,7 @@
 	</a>
 
 	<nav class="navbar" id="js-navbar">
-		<div class="loader">
+		<div class="loader {{#if isHost}}_active{{/if}}">
 			<div class="dot js-dot"></div>
 		</div>
 		<div class="container">
@@ -105,12 +105,10 @@
 						<a href="javascript:;">₦aucoin</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
-						<div class="input-control">
+						<div class="js-login-control input-control">
 							{{> loginButtons}}
-							<input type="text" placeholder="@ enter your name" class="js-nickname-holder"
-								value="{{getNickname}}" />
 							<div class="input-control--error">
-								<p>Your name is required !</p>
+								<p>Please login to book songs!</p>
 							</div>
 						</div>
 					</li>
@@ -181,7 +179,7 @@
 		{{#each songs}}
 			{{> song}}
 		{{else}}
-			Waiting for storms...
+			Fetching for songs...
 		{{/each}}
 	</ul>
 </template>
@@ -190,7 +188,7 @@
 <template name="song">
 	<li class="playlist--item {{selected}} {{playing}}">
 		<span class="playlist--item--active">&rtri;</span>
-		<span class="playlist--item--author">{{#if isUp}} {{{author}}} {{/if}}</span>
+		<span class="playlist--item--author">{{#if isUp}} {{{authorInfo.profile.name}}} {{/if}}</span>
 		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
 			{{#if thumbURL}}
 				<img src="{{thumbURL}}">
@@ -264,7 +262,7 @@
 						<label for="">select user</label>
 						<select name="userName" id="naucoin-username" class="u-full-width">
 							{{#each dataContext}}
-								<option value="{{userName}}">{{userName}}</option>
+								<option value="{{_id}}">{{profile.name}}</option>
 							{{/each}}
 						</select>
 					</div>

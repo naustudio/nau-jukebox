@@ -87,7 +87,6 @@ h5 small {
 
 .input-control {
 	position: relative;
-	padding-bottom: 0.5*$gutter;
 
 	&--error {
 		position: absolute;
@@ -120,6 +119,11 @@ h5 small {
 		.input-control--error {
 			display: block;
 		}
+	}
+
+	/* fix login buttons padding */
+	#login-buttons {
+		line-height: 1.6;
 	}
 }
 
