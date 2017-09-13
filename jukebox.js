@@ -18,7 +18,8 @@ AppStates = new Meteor.Collection('appstates');
 Users = Meteor.users;
 
 if (Meteor.isClient) {
-	Meteor.subscribe('userData'); // needed to get other fields
+	Meteor.subscribe('userData'); // needed to get other fields of current user
+	Meteor.subscribe('Meteor.users.public'); // needed to get public fields of Users
 	Session.setDefault('urlFetching', false);
 	Session.setDefault('showAll', false);
 	Session.setDefault('tab', 'tab--play-list');
@@ -327,7 +328,7 @@ if (Meteor.isClient) {
 
 	Template.naucoin.helpers({
 		dataContext: function() {
-			return Session.get('USER_LIST');
+			return Users.find({}, { sort: { balance: -1 } });
 		},
 		getDisplayStatus: function() {
 			var isHost = Session.get('IS_HOST');
@@ -350,18 +351,6 @@ if (Meteor.isClient) {
 				$(e.currentTarget).find('[name=amount]').val('');
 			});
 		}
-	});
-	Template.naucoin.onCreated(function() {
-		var userDataContext = Users.find();
-
-		userDataContext.observeChanges({
-			changed: function(id, data) {
-				mergeData();
-			},
-			added: function(id, data) {
-				mergeData();
-			}
-		});
 	});
 
 	Template.naucoinitem.helpers({
@@ -898,6 +887,13 @@ if (Meteor.isServer) {
 				}
 			});
 		}
+	});
+
+	Meteor.publish('Meteor.users.public', function () {
+		const options = {
+			fields: { isHost: 1, isOnline: 1, balance: 1 }
+		};
+		return Meteor.users.find({}, options);
 	});
 
 	Meteor.publish('userData', function () {
