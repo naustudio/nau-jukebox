@@ -2,12 +2,11 @@
  * Zing MP3 URL parser module
  */
 import { SongOrigin } from '../constants.js';
-import { xml2js } from 'meteor/vjau:xml2js';
 import { getGzipURL } from './getGzipURL';
 
-var xmlURLReg = /http:\/\/mp3.zing.vn\/html5xml\/song-xml\/(\w+)/;
-var avatarURLReg = /thumb-art.*?"(http:\/\/[^"]*)/;
-var lyricReg = /<p class=\"fn-wlyrics fn-content\"(.*?)<\/p>/;
+var jsonURLReg = /\/json\/song\/get-source\/(\w+)/;
+var avatarURLReg = /thumb-art.*?"(https?:\/\/[^"]*)/;
+var lyricReg = /<p class="fn-wlyrics fn-content".*?>([\s\S]*?)<\/p>/;
 //sample avatar image from Zing HTML page: <img class="thumb-art" width="110" src="http://image.mp3.zdn.vn/thumb/165_165/avatars/6/2/62b05bf415a3736e551cae7ed1ce90f2_1450237124.jpg" alt="Min">
 
 /**
@@ -17,7 +16,7 @@ var lyricReg = /<p class=\"fn-wlyrics fn-content\"(.*?)<\/p>/;
  * @return {[type]}         [description]
  */
 export const getSongInfoZing = function(songurl) {
-	var linkRes, xmlURLResults, lyricResults, xmlURL, thumb, lyric;
+	var linkRes, jsonURLResults, lyricResults, jsonURL, thumb, lyric;
 
 	// First Step: parse the HTML page to get the XML data URL for the flash-based player
 
@@ -30,15 +29,15 @@ export const getSongInfoZing = function(songurl) {
 	linkRes = (linkRes.content) ? linkRes.content : '';
 	// console.log('linkRes:', linkRes);
 
-	// run the html against regexp to get XML URL
-	xmlURLResults = xmlURLReg.exec(linkRes);
+	// run the html against regexp to get JSON URL
+	jsonURLResults = jsonURLReg.exec(linkRes);
 
 
-	if (xmlURLResults) {
-		xmlURL = xmlURLResults[0].replace('html5', '');
-		console.log('xmlURLResults:', xmlURL);
+	if (jsonURLResults) {
+		jsonURL = 'http://mp3.zing.vn' + jsonURLResults[0];
+		console.log('jsonURLResults:', jsonURL);
 	} else {
-		console.log('xmlURL parse failed');
+		console.log('jsonURL parse failed');
 		return null;
 	}
 
@@ -51,34 +50,24 @@ export const getSongInfoZing = function(songurl) {
 
 	lyricResults = lyricReg.exec(linkRes);
 	if (lyricResults) {
-		lyric = lyricResults[0];
-		console.log('lyricResult: ', lyricResults[0]);
+		lyric = lyricResults[1];
+		console.log('lyricResult: ', lyricResults[1]);
 	} else {
 		console.log('lyric get failed');
 	}
 
 	// Second Step: get the XML data file for the sone
 
-	var xmlRes, json;
-
-	// Note: Manually install the node package in server folder
-	var parser = new xml2js.Parser({
-		trim: true
-	});
-
-	// console.log('XML2JS:', XML2JS);
+	var jsonRes, json;
 
 	try {
-		xmlRes = getGzipURL(xmlURL);
-		xmlRes = xmlRes.content;
-		// console.log('Response:', xmlRes);
+		jsonRes = getGzipURL(jsonURL);
+		jsonRes = jsonRes.content;
+		console.log('Response:', jsonRes);
 
-		// Third Step: parse and convert the XML string to JSON object
+		// Third Step: parse and convert the resp string to JSON object
 
-		parser.parseString(xmlRes, function(error, result) {
-			json = result;
-		});
-		console.log('==> ' + JSON.stringify(json));
+		json = JSON.parse(jsonRes);
 		// see sample JSON below
 
 	} catch (err) {
@@ -87,28 +76,27 @@ export const getSongInfoZing = function(songurl) {
 
 	// Fourth Step: normalize the JSON object to a song record
 
-	if (json && json.data && json.data.item[0]) {
-		console.log('Checking the XML data');
-		var jsonItem = json.data.item[0];
+	if (json && json.data && json.data[0]) {
+		var jsonItem = json.data[0];
 
 		//Not so soon, some Zing URL are blocked due to copyright issue
-		if (jsonItem.source[0] && String(jsonItem.errorcode[0]) === '0') {
+		if (jsonItem.source_list[0] && String(json.msg) === '0') {
 			console.log('URL is valid. Adding new song.');
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
 				origin: SongOrigin.ZING,
-				name: jsonItem.title[0],
-				artist: jsonItem.performer[0],
-				streamURL: jsonItem.source[0],
+				name: jsonItem.name,
+				artist: jsonItem.artist,
+				streamURL: jsonItem.source_list[0],
 				thumbURL: thumb,
 				lyric: lyric,
 				play: 0
 			};
-		} else if (jsonItem.errormessage[0]) {
-			console.log('Error received: ' + jsonItem.errormessage[0]);
+		} else if (jsonItem.msg) {
+			console.log('Error received: ' + jsonItem.msg);
 			return {
-				error: jsonItem.errormessage[0]
+				error: jsonItem.msg
 			};
 		} else {
 			console.log('Unknown errors');
@@ -127,40 +115,25 @@ export const getSongInfoZing = function(songurl) {
 
 // sample JSON response:
 // {
-//   "data": {
-//     "$": {
-//       "page": "http://mp3.zing.vn/bai-hat/Nhu-Nhung-Phut-Ban-Dau-Hoai-Lam/ZW6D0IBA.html"
-//     },
-//     "item": [
-//       {
-//         "$": {
-//           "type": "mp3"
-//         },
-//         "title": [
-//           "Như Những Phút Ban Đầu"
-//         ],
-//         "performer": [
-//           "Hoài Lâm"
-//         ],
-//         "link": [
-//           "http://mp3.zing.vn/tim-kiem/bai-hat.html?q=Hoai+Lam"
-//         ],
-//         "source": [
-//           "http://mp3.zing.vn/xml/load-song/MjAxNCUyRjA4JTJGMDUlMkZhJTJGMSUyRmExZjIxMDNhZDNiOWRkZGJiNmQxZWI2ZGM3ZjQwMGE2Lm1wMyU3QzI="
-//         ],
-//         "hq": [
-//           "require vip"
-//         ],
-//         "duration": [
-//           "335"
-//         ],
-//         "errorcode": [
-//           "0"
-//         ],
-//         "errormessage": [
-//           ""
-//         ]
-//       }
-//     ]
-//   }
+//   "msg": 0,
+//   "data": [
+//     {
+//       "id": "ZWZBZCIF",
+//       "name": "Vì Yêu",
+//       "artist": "Kasim Hoàng Vũ",
+//       "link": "/bai-hat/Vi-Yeu-Kasim-Hoang-Vu/ZWZBZCIF.html",
+//       "cover": "http://zmp3-photo-td.zadn.vn/cover3_artist/1/3/13e5a66f038b4430a2bd5c0caccd52cc_1412907209.jpg",
+//       "msg": "Do vấn đề kết nối, trình duyệt tạm thời không load được. Bạn vui lòng gửi phản hồi về Zing MP3 để nhận được hỗ trợ tốt nhất.",
+//       "qualities": [
+//         "128",
+//         "320"
+//       ],
+//       "source_list": [
+//         "http://zmp3-mp3-s1.zadn.vn/96d8db584f1ca642ff0d/2100605261626217079?authen=exp=1505431395~acl=/96d8db584f1ca642ff0d/*~hmac=f692eccda42ebc3e7752260d81b241ca",
+//         ""
+//       ],
+//       "source_base": "http://",
+//       "lyric": "http://static.mp3.zdn.vn/lyrics/2017/c/9/c948e64f07b04db3a44f13052c128033.txt"
+//     }
+//   ]
 // }

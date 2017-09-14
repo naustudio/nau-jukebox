@@ -641,8 +641,6 @@ if (Meteor.isClient) {
 				if (value.length >= 3) {
 					data = Songs.find({
 						searchPattern: {$regex: value.toLowerCase() + '*'},
-						// FIXME: ignore Zing for now since its URL are not parsable
-						origin: { $nin: [ SongOrigin.ZING ] }
 					}, {
 						limit: 50, // we remove duplicated result and limit further
 						reactive: false
