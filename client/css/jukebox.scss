@@ -4,7 +4,7 @@
  * -- element
  * __ modifier
  */
-
+// stylelint-disable color-named, color-no-hex, selector-class-pattern, selector-max-id
 // variables
 $gutter: 15px;
 $playbutton-h: 40px;
@@ -13,18 +13,18 @@ $header-h: 70px;
 $playlist-h: 55px;
 $dot-w: 24px;
 $dot-color: white;
-$dot-color--active: #A9C52F;
+$dot-color--active: #a9c52f;
 
 // color pattern http://www.color-hex.com/color-palette/16458
-$color-01: #ffffff;
+$color-01: #fff;
 $color-02: #eadbcb;
 $color-03: #dfc9b2;
 $color-04: #49413f;
 $color-05: #060201;
-$color-08: #F7EEBB;
-$color-06: rgba(255,255,255,0.2);
-$color-07: rgba(223,201,178,0.4);
-$color-09: rgba(211,211,211,1);
+$color-08: #f7eebb;
+$color-06: rgba(255, 255, 255, 0.2);
+$color-07: rgba(223, 201, 178, 0.4);
+$color-09: rgba(211, 211, 211, 1);
 $color-nau: #977857;
 
 * {
@@ -67,19 +67,20 @@ form {
 
 input, select {
 	font-size: 14px;
+
 	&:focus {
 		border-color: $color-03;
 	}
 }
 
-input[type="text"]:focus {
+input[type='text']:focus {
 	border-color: $color-03;
 }
 
 h5 small {
-  font-size: 14px;
-  font-weight: 100;
-  margin-left: 7.5px;
+	font-size: 14px;
+	font-weight: 100;
+	margin-left: 7.5px;
 }
 
 .u-hide {
@@ -100,7 +101,7 @@ h5 small {
 			margin-bottom: 0;
 		}
 
-		&:after {
+		&::after {
 			position: absolute;
 			content: '';
 			display: block;
@@ -141,7 +142,6 @@ h5 small {
 	.mejs-audio {
 		visibility: hidden;
 	}
-
 }
 
 .bg-layer {
@@ -152,12 +152,14 @@ h5 small {
 	right: 0;
 	height: 100%;
 }
+
 .bg-layer--img-wrapper {
 	position: absolute;
 	right: 0;
 	bottom: 0;
 	width: 200px;
 }
+
 .bg-layer--img-wrapper img {
 	width: 100%;
 }
@@ -170,8 +172,8 @@ h5 small {
 	top: 0;
 	z-index: 300;
 	background-size: cover;
-	border-bottom: 1px solid rgba(0,0,0,0.2);
-	box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 	transition: all 0.5s;
 
 	&--list {
@@ -193,9 +195,10 @@ h5 small {
 			width: 20%;
 			color: $color-nau;
 		}
+
 		&__input {
 			width: 60%;
-			padding: 0.5*$gutter 0;
+			padding: 0.5 * $gutter 0;
 			position: relative;
 		}
 
@@ -213,6 +216,7 @@ h5 small {
 				mix-blend-mode: multiply;
 			}
 		}
+
 		&__tool {
 			float: right;
 		}
@@ -221,13 +225,14 @@ h5 small {
 
 .search-box {
 	$search-w: 90px;
+
 	position: absolute;
 	width: 100%;
 	border-radius: 4px;
 	border: 1px solid $color-06;
 	margin-top: 4px;
 	overflow: hidden;
-	background-color: rgba(255,255,255,0.5);
+	background-color: rgba(255, 255, 255, 0.5);
 
 	&._focus {
 		background-color: rgba(255, 255, 255, 0.8);
@@ -235,8 +240,8 @@ h5 small {
 	}
 
 	&._active {
-		background-color: rgba(255,255,255,0.95);
-		border-color: rgba(0,0,0,0.4);
+		background-color: rgba(255, 255, 255, 0.95);
+		border-color: rgba(0, 0, 0, 0.4);
 
 		.search-box--result-wrapper {
 			display: block;
@@ -261,7 +266,7 @@ h5 small {
 	}
 
 	&--submit {
-		color: rgba(0,0,0,0.5);
+		color: rgba(0, 0, 0, 0.5);
 		background-color: $color-06;
 		margin-left: -4px;
 		width: $search-w;
@@ -273,7 +278,7 @@ h5 small {
 		border: 0;
 		border-radius: 0;
 
-		&:before {
+		&::before {
 			content: 'Search';
 		}
 
@@ -284,9 +289,9 @@ h5 small {
 		}
 
 		&._active {
-			&:before {
+			&::before {
 				content: '...';
-				animation: submit-moving .75s linear infinite;
+				animation: submit-moving 0.75s linear infinite;
 			}
 		}
 	}
@@ -300,7 +305,6 @@ h5 small {
 	.search-box--input {
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
-		border-radius: 0;
 		border: 0;
 		background-color: transparent;
 
@@ -308,6 +312,7 @@ h5 small {
 			border: 0;
 		}
 	}
+
 	.search-box--submit {
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
@@ -322,7 +327,7 @@ h5 small {
 	}
 
 	&--item {
-		padding: 0.5*$gutter $gutter;
+		padding: 0.5 * $gutter $gutter;
 		margin-bottom: 0;
 		border-top: 1px solid whitesmoke;
 
@@ -342,8 +347,8 @@ h5 small {
 	position: relative;
 	width: $playbutton-h;
 	height: $playbutton-h;
-	margin-top: 1*$gutter;
-	margin-left: 4*$gutter;
+	margin-top: 1 * $gutter;
+	margin-left: 4 * $gutter;
 	cursor: pointer;
 
 	&:hover {
@@ -355,7 +360,7 @@ h5 small {
 	&--element {
 		border-radius: $playbutton-w / 2;
 		background: $color-01;
-		transition: .5s;
+		transition: 0.5s;
 		position: absolute;
 	}
 
@@ -365,18 +370,21 @@ h5 small {
 		top: 0;
 		left: 0;
 	}
+
 	&--elm-right {
 		width: $playbutton-w;
 		height: $playbutton-h;
 		top: 0;
 		left: $playbutton-h - $playbutton-w;
 	}
+
 	&--elm-bottom {
 		width: $playbutton-h;
 		height: $playbutton-w;
 		top: $playbutton-h - $playbutton-w;
 		left: 0;
 	}
+
 	&--elm-left {
 		width: $playbutton-w;
 		height: $playbutton-h;
@@ -397,28 +405,34 @@ h5 small {
 			transform-origin: center top;
 			transform: rotate(29deg) translate($playbutton-w/4, $playbutton-w/8) scaleY(1);
 		}
+
 		.play-button--elm-bottom {
 			display: none;
 		}
+
 		.play-button--elm-left {
-			transform-origin:center top;
-			transform:rotate(-29deg) translate(-$playbutton-w/4, $playbutton-w/8) scaleY(1);
+			transform-origin: center top;
+			transform: rotate(-29deg) translate(-$playbutton-w/4, $playbutton-w/8) scaleY(1);
 		}
 	}
+
 	&._pause {
 		transform: rotate(0deg);
 
 		.play-button--elm-top {
 			opacity: 0;
 		}
+
 		.play-button--elm-right {
-			transform: translateX(-$playbutton-w) scaleY(.8);
+			transform: translateX(-$playbutton-w) scaleY(0.8);
 		}
+
 		.play-button--elm-bottom {
 			opacity: 0;
 		}
+
 		.play-button--elm-left {
-			transform: translateX($playbutton-w) scaleY(.8);
+			transform: translateX($playbutton-w) scaleY(0.8);
 		}
 	}
 }
@@ -434,7 +448,7 @@ h5 small {
 	width: 100%;
 	top: $header-h;
 	background-color: white;
-	border-bottom: 1px solid rgba(0,0,0,0.1);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	z-index: 99;
 
 	&._focus {
@@ -468,7 +482,7 @@ h5 small {
 
 		input {
 			border-color: white;
-			margin-top: 0.5*$gutter;
+			margin-top: 0.5 * $gutter;
 			margin-bottom: 0;
 			text-align: right;
 		}
@@ -483,11 +497,12 @@ h5 small {
 
 		&._active {
 			position: relative;
+
 			a {
 				opacity: 1;
 			}
 
-			&:after {
+			&::after {
 				content: '_';
 				position: absolute;
 				bottom: 0;
@@ -499,7 +514,7 @@ h5 small {
 			}
 
 			&.playlist-nav--item__right {
-				&:after {
+				&::after {
 					content: none;
 				}
 			}
@@ -508,8 +523,8 @@ h5 small {
 }
 
 .main-content {
-	padding-top: 2*$gutter;
-	padding-bottom: 2*$gutter;
+	padding-top: 2 * $gutter;
+	padding-bottom: 2 * $gutter;
 }
 
 .playlist {
@@ -537,7 +552,7 @@ h5 small {
 			}
 		}
 
-    	&--origin::after {
+		&--origin::after {
 			content: '';
 			position: absolute;
 			bottom: 1px;
@@ -622,7 +637,7 @@ h5 small {
 		}
 
 		&:hover {
-			background-color: rgba(245,245,245,0.3);
+			background-color: rgba(245, 245, 245, 0.3);
 		}
 	}
 }
@@ -630,6 +645,7 @@ h5 small {
 .playlist--item._selected .playlist--item--active {
 	opacity: 0.5;
 }
+
 .playlist--item._playing .playlist--item--active {
 	opacity: 1;
 	color: brown;
@@ -643,11 +659,13 @@ h5 small {
 		margin-left: 7.5px;
 	}
 }
+
 .naustorm {
 	.columns:nth-child(4n + 1) {
 		margin-left: 0;
 	}
 }
+
 .naustorm-elm {
 	margin-top: $gutter;
 
@@ -672,7 +690,7 @@ h5 small {
 			-webkit-transform: rotate(3deg) scale(1.1, 1.1);
 			transform: rotate(3deg) scale(1.1, 1.1);
 
-			~.naustorm-elm--listens {
+			~ .naustorm-elm--listens {
 				opacity: 1;
 			}
 		}
@@ -685,6 +703,7 @@ h5 small {
 		text-overflow: ellipsis;
 		overflow-x: hidden;
 	}
+
 	&--artist {
 		margin-top: -5px;
 		display: block;
@@ -693,12 +712,13 @@ h5 small {
 		text-overflow: ellipsis;
 		overflow-x: hidden;
 	}
+
 	&--listens {
 		position: absolute;
 		left: 15px;
 		bottom: 15px;
 		-webkit-transform: translateY(25%);
-						transform: translateY(25%);
+		transform: translateY(25%);
 		color: white;
 		z-index: 20;
 		font-weight: 100;
@@ -714,8 +734,8 @@ h5 small {
 }
 
 .g-author {
-	$status-default-color: #F6B61E;
-	$status-active-color: #347A2A;
+	$status-default-color: #f6b61e;
+	$status-active-color: #347a2a;
 
 	&--list {
 		list-style-type: none;
@@ -726,8 +746,8 @@ h5 small {
 		margin-left: $gutter;
 		position: relative;
 
-		&:after,
-		&:before {
+		&::after,
+		&::before {
 			position: absolute;
 			left: -$gutter;
 			width: 7.5px;
@@ -741,21 +761,21 @@ h5 small {
 		}
 
 		&._active {
-			&:after {
+			&::after {
 				background-color: $status-active-color;
 			}
 		}
 
 		&._admin {
-      &:before {
-        background-color: pink;
-        left: -$gutter - 2px;
-        width: 0.5*$gutter;
-        height: 0.5*$gutter;
-        transform: translate(0, -50%);
-        border: 2px solid lighten($status-active-color, 17%);
-      }
-    }
+			&::before {
+				background-color: pink;
+				left: -$gutter - 2px;
+				width: 0.5 * $gutter;
+				height: 0.5 * $gutter;
+				transform: translate(0, -50%);
+				border: 2px solid lighten($status-active-color, 17%);
+			}
+		}
 	}
 
 	&--item:last-child {
@@ -764,74 +784,75 @@ h5 small {
 
 	&--storm,
 	&--ncoin {
-		padding: 2px 0.5*$gutter;
+		padding: 2px 0.5 * $gutter;
 		background-color: whitesmoke;
 		border-radius: 2px;
-		margin-left: 0.5*$gutter;
+		margin-left: 0.5 * $gutter;
 	}
 
 	&--ncoin {
-    background-color: #A8896C;
-    color: white;
-    &:before {
-      content: '₦';
-      margin-right: 4px;
-    }
-  }
+		background-color: #a8896c;
+		color: white;
+
+		&::before {
+			content: '₦';
+			margin-right: 4px;
+		}
+	}
 }
 
 .loader {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  margin-left: 15px;
-  transform: translate3d(50%, -50%, 0);
+	position: absolute;
+	top: 50%;
+	left: 0;
+	margin-left: 15px;
+	transform: translate3d(50%, -50%, 0);
 }
 
 .dot {
-  width: $dot-w;
-  height: $dot-w;
-  background: $dot-color;
-  border-radius: 100%;
-  display: inline-block;
-  position: relative;
-  opacity: 0.3;
-  transition: all 0.3s;
+	width: $dot-w;
+	height: $dot-w;
+	background: $dot-color;
+	border-radius: 100%;
+	display: inline-block;
+	position: relative;
+	opacity: 0.3;
+	transition: all 0.3s;
 
-  &:after {
-    color: $dot-color;
-    content: 'host';
-    position: absolute;
-    left: $dot-w + $gutter;
-    top: 50%;
-    transform: translate(-100%,-50%);
-    opacity: 0;
-    transition: all 0.3s;
-  }
+	&::after {
+		color: $dot-color;
+		content: 'host';
+		position: absolute;
+		left: $dot-w + $gutter;
+		top: 50%;
+		transform: translate(-100%, -50%);
+		opacity: 0;
+		transition: all 0.3s;
+	}
 
-  &:hover {
-    opacity: 1;
+	&:hover {
+		opacity: 1;
 
-    &:after {
-      opacity: 1;
-      transform: translate(0, -50%);
-    }
-  }
+		&::after {
+			opacity: 1;
+			transform: translate(0, -50%);
+		}
+	}
 }
 
 .loader._active {
-  .dot {
-    opacity: 1;
-    animation: slide 1s infinite;
-    background: $dot-color--active;
+	.dot {
+		opacity: 1;
+		animation: slide 1s infinite;
+		background: $dot-color--active;
 
-    &:hover {
-    	&:after {
-    		content: 'guest';
-    		color: $dot-color--active;
-    	}
-    }
-  }
+		&:hover {
+			&::after {
+				content: 'guest';
+				color: $dot-color--active;
+			}
+		}
+	}
 }
 
 
@@ -839,45 +860,45 @@ h5 small {
  * Naucoin css
  */
 .input-coin {
-  position: relative;
+	position: relative;
 
-  input {
-    margin-bottom: 0;
-  }
+	input {
+		margin-bottom: 0;
+	}
 
-  &:after {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translate(-100%, -50%);
-    content: '₦';
-    color: black;
-    opacity: 0.5;
-  }
+	&::after {
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translate(-100%, -50%);
+		content: '₦';
+		color: black;
+		opacity: 0.5;
+	}
 }
 
 .naucoin-section {
-  h5 small {
-    float: right;
-    margin-right: $gutter;
-    margin-top: 15px;
-  }
+	h5 small {
+		float: right;
+		margin-right: $gutter;
+		margin-top: 15px;
+	}
 }
 
 .payment-block {
-  margin-top: $gutter;
-  margin-bottom: $gutter;
+	margin-top: $gutter;
+	margin-bottom: $gutter;
 
-  label {
-    font-weight: 100;
-    text-transform: uppercase;
-    font-size: 11px;
-  }
+	label {
+		font-weight: 100;
+		text-transform: uppercase;
+		font-size: 11px;
+	}
 }
 
 // $btn-color: #A75265;
 $btn-color: #c08e52;
-$btn-color-active: #A65E09;
+$btn-color-active: #a65e09;
 
 button.button-naucoin {
 	background-color: $btn-color;
@@ -892,16 +913,18 @@ button.button-naucoin {
 }
 
 @keyframes slide {
-  0% {
-    transform: scale(1);
-  }
-  80% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1);
-  }
+	0% {
+		transform: scale(1);
+	}
+
+	80% {
+		opacity: 0.7;
+		transform: scale(1);
+	}
+
+	100% {
+		transform: scale(1);
+	}
 }
 
 @keyframes moving {
@@ -909,6 +932,7 @@ button.button-naucoin {
 		transform: translateX(-35%);
 		letter-spacing: 2px;
 	}
+
 	80% {
 		transform: translateX(-65%);
 	}
@@ -919,6 +943,7 @@ button.button-naucoin {
 		letter-spacing: 2px;
 		margin-left: -4px;
 	}
+
 	80% {
 		transform: translateX(-65%);
 		margin-left: 4px;
