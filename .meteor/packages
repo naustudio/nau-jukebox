@@ -37,3 +37,4 @@ accounts-google
 accounts-facebook
 service-configuration
 accounts-ui
+percolate:migrations

@@ -381,7 +381,7 @@ if (Meteor.isClient) {
 				userDataChanged(id);
 			},
 			changed: function(id, data) {
-				console.log('user changed', id, data);
+				// console.log('user changed', id, data);
 				userDataChanged(id);
 			}
 		});
@@ -794,6 +794,8 @@ if (Meteor.isServer) {
 	var Future = Npm.require('fibers/future');
 
 	Meteor.startup(function() {
+		// migrate database
+		Migrations.migrateTo('latest');
 
 		// On server startup, create initial appstates if the database is empty.
 		if (AppStates.find({key: 'playingSongs'}).count() === 0) {

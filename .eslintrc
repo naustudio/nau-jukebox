@@ -41,7 +41,7 @@
 
 	},
 	"globals": {
-
+		"Migrations": true
 	},
 	"env": {
 		"browser": true,
