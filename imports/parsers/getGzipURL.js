@@ -1,4 +1,6 @@
-/*Deprecated, to remove*/
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ */
 import { HTTP } from 'meteor/http';
 
 /**
@@ -9,7 +11,7 @@ import { HTTP } from 'meteor/http';
  */
 export const getGzipURL = Meteor.wrapAsync(function(url, callback) {
 	// Learn this synchronous wrapper technique in http package source
-	var reqOptions = {
+	const reqOptions = {
 		url: url,
 		method: 'GET',
 		encoding: null,

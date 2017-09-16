@@ -1,5 +1,5 @@
 /* © 2017 NauStud.io
- * @author Thanh Tran
+ * @author Thanh Tran, Tung Tran, Tw
  */
 /*global Songs:true, AppStates:true, Users:true, moment*/
 import { getSongInfoNct } from '../imports/parsers/getSongInfoNct.js';
@@ -7,9 +7,7 @@ import { getSongInfoZing } from '../imports/parsers/getSongInfoZing.js';
 import { getSongInfoSoundcloud } from '../imports/parsers/getSongInfoSoundcloud.js';
 import { getSongInfoYouTube } from '../imports/parsers/getSongInfoYouTube.js';
 
-var Future = Npm.require('fibers/future');
-
-Meteor.startup(function() {
+Meteor.startup(() => {
 	// migrate database
 	Migrations.migrateTo('latest');
 
@@ -23,8 +21,8 @@ Meteor.startup(function() {
 		console.log('Insert AppStates.playingSongs key');
 	}
 
-	Meteor.setInterval(function() {
-		var passAMinute = moment().add(-90, 'seconds').toDate();
+	Meteor.setInterval(() => {
+		const passAMinute = moment().add(-90, 'seconds').toDate();
 		Users.update({lastModified: {$lt: passAMinute}}, {
 			$set: {
 				isOnline: false
@@ -36,44 +34,39 @@ Meteor.startup(function() {
 
 Meteor.methods({
 
-	getSongInfo: function(songurl, authorId) {
+	getSongInfo(songurl, authorId) {
 		// Set up a future for async callback sending to clients
-		var songInfo;
-		var fut = new Future();
+		let songInfo;
 
-		if (String(songurl).contains('nhaccuatui')) {
+		if (String(songurl).includes('nhaccuatui')) {
 			console.log('Getting NCT song info');
 			songInfo = getSongInfoNct(songurl);
-		} else if (String(songurl).contains('mp3.zing')) {
+		} else if (String(songurl).includes('mp3.zing')) {
 			console.log('Getting Zing song info');
 			songInfo = getSongInfoZing(songurl);
-		} else if (String(songurl).contains('soundcloud')) {
+		} else if (String(songurl).includes('soundcloud')) {
 			console.log('Getting Soundclound song info');
 			songInfo = getSongInfoSoundcloud(songurl);
-		} else if (String(songurl).contains('youtube')) {
+		} else if (String(songurl).includes('youtube')) {
 			console.log('Getting YouTube song info');
 			songInfo = getSongInfoYouTube(songurl);
 		}
 
-		songInfo.author = authorId;
-
-		if (songInfo.streamURL) {
-			songInfo.searchPattern = songInfo.name.toLowerCase() + ' - ' + songInfo.artist.toLowerCase();
-			fut['return'](Songs.insert(songInfo));
-		} else {
-			fut['return'](null);
-			//songInfo is error object
-			throw new Meteor.Error(403, songInfo.error);
-		}
-
-		Meteor.call('updateStatus', authorId, function(err, result) {
+		Meteor.call('updateStatus', authorId, (err, result) => {
 			console.log('updateStatus', authorId, err, result);
 		});
 
-		return fut.wait();
+		if (songInfo && songInfo.streamURL) {
+			songInfo.author = authorId;
+			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
+			return Songs.insert(songInfo);
+		} else {
+			//songInfo is error object
+			throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
+		}
 	},
 
-	changeHost: function(userId) {
+	changeHost(userId) {
 		console.log('changeHost', userId);
 		// switch all users isHost off
 		Users.update({}, {$set: {isHost: false}}, {multi: true}, () => {
@@ -87,7 +80,7 @@ Meteor.methods({
 		});
 	},
 
-	updateStatus: function(userId) {
+	updateStatus(userId) {
 		return Users.update(userId, {
 			$set: {
 				isOnline: true,
@@ -96,10 +89,10 @@ Meteor.methods({
 		});
 	},
 
-	naucoinPay: function(userId, amount) {
-		var u = Users.findOne(userId);
-		var oldBalance = u.balance || 0;
-		var newBalance = oldBalance + parseFloat(amount);
+	naucoinPay(userId, amount) {
+		const u = Users.findOne(userId);
+		const oldBalance = u.balance || 0;
+		const newBalance = oldBalance + parseFloat(amount);
 
 		return Users.update(u._id, {
 			$set: {
@@ -109,7 +102,7 @@ Meteor.methods({
 	}
 });
 
-Meteor.publish('Meteor.users.public', function () {
+Meteor.publish('Meteor.users.public', () => {
 	const options = {
 		fields: { isHost: 1, isOnline: 1, balance: 1 }
 	};
