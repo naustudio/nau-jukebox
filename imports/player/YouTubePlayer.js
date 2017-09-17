@@ -1,3 +1,6 @@
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ */
 /*global MediaElementPlayer*/
 
 /**
@@ -11,12 +14,7 @@ export class YouTubePlayer {
 		this.type = 'YouTubePlayer';
 		this.song = null;
 		this.mainPlayer = mainPlayer;
-		this.$player = $('#youtube-player');
-		$(document).on('playercued', event => {
-			// this is a misterious event triggered from mediaelement and some how pause the AudioPlayer
-			// We wait until this to play next
-			this._onVideoEnded();
-		});
+		this.videoEl = document.getElementById('youtube-player');
 	}
 
 	getYTVideoId(url) {
@@ -41,13 +39,13 @@ export class YouTubePlayer {
 
 			if (this.player) {
 				// youtube player already created, reuse by calling its api
-				let videoId = this.getYTVideoId(song.streamURL);
-				this.player.media.pluginApi.loadVideoById(videoId, 0);
+				// let videoId = this.getYTVideoId(song.streamURL);
+				// this.player.media.pluginApi.loadVideoById(videoId, 0);
+				this.player.media.setSrc(song.streamURL);
 			} else {
-
 				// play new song
-				this.$player.find('source').attr('src', song.streamURL);
-				this.player = new MediaElementPlayer(this.$player, {
+				this.videoEl.src = song.streamURL;
+				this.player = new MediaElementPlayer(this.videoEl, {
 					features: [
 						// 'playpause',
 						// 'progress',
@@ -57,31 +55,31 @@ export class YouTubePlayer {
 						// 'volume',
 						'fullscreen',
 					],
-					success: (media) => {
-						this.player.play();
+					success: (mediaElement, originalNode, player) => {
+						// console.log('youtubeplayer init success:', mediaElement, originalNode, player);
+						// player.play();
 
 						// this is simulated events, must add at success callback
-						media.addEventListener('ended', () => {
+						mediaElement.addEventListener('ended', () => {
 							//avoid player flick during transition to next song
-							this.player.media.pluginApi.stopVideo();
+							// player.media.pluginApi.stopVideo();
 							// a cue events will trigger later which we'll use to start next song
+							this._onVideoEnded();
 						});
 					}
 				});
 
 				// for debugging
-				// window.mePlayer = this.player;
+				// window.ytPlayer = this.player;
 			}
-		} else {
-			this.player.play();
 		}
 
-		this.$player.closest('.mejs-video').css('visibility', 'visible');
-
+		this.player.play();
+		this.videoEl.closest('.mejs__video').style.visibility = 'visible';
 	}
 
 	pause() {
-		this.$player.closest('.mejs-video').css('visibility', 'hidden');
+		this.videoEl.closest('.mejs__video').style.visibility = 'hidden';
 		this.player.pause();
 	}
 

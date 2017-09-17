@@ -1,3 +1,6 @@
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ */
 /*global AppStates, Songs*/
 import { SongOrigin } from '../constants.js';
 import { SCPlayer } from './SCPlayer.js';
