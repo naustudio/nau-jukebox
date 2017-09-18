@@ -16,6 +16,7 @@
 		"new-cap"                     :[2, { "capIsNew": false } ],
 		"no-bitwise"                  : 2,
 		"no-caller"                   : 2,
+		"no-case-declarations"        : 0,
 		"no-console"                  : 0,
 		"no-eval"                     : 2,
 		"no-invalid-this"             : 0,

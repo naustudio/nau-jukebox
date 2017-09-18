@@ -173,6 +173,11 @@ Template.song.helpers({
 		return Template.instance().addDateFromNow.get();
 	},
 
+	visible() {
+		// this variable will tick every minute and hide old entries when player runs to new day
+		return Template.instance().visible.get() ? '' : 'u-hide';
+	},
+
 	originBadgeColor() {
 		let className = 'black';
 		switch (this.origin) {
@@ -214,9 +219,15 @@ Template.song.created = function() {
 
 	this.momentTime = moment(this.data.timeAdded);
 	this.addDateFromNow = ReactiveVar(this.momentTime.fromNow());
+	this.visible = ReactiveVar(true);
 
 	this.handle = Meteor.setInterval((() => {
 		self.addDateFromNow.set(self.momentTime.fromNow());
+		if (!self.momentTime.isSameOrAfter(new Date(), 'day')) {
+			// not today?, hide self
+			this.visible.set(false);
+		}
+
 	}), 1000 * 60);
 };
 

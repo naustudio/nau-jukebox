@@ -183,7 +183,7 @@
 <!-- /songlist -->
 
 <template name="song">
-	<li class="playlist--item {{selected}} {{playing}}">
+	<li class="playlist--item {{selected}} {{playing}} {{visible}}">
 		<span class="playlist--item--active">&rtri;</span>
 		<span class="playlist--item--author">{{#if isUp}} {{{authorInfo.profile.name}}} {{/if}}</span>
 		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
