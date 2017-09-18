@@ -1,12 +1,14 @@
-/**
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ *
  * Zing MP3 URL parser module
  */
 import { SongOrigin } from '../constants.js';
 import { getGzipURL } from './getGzipURL';
 
-var jsonURLReg = /\/json\/song\/get-source\/(\w+)/;
-var avatarURLReg = /thumb-art.*?"(https?:\/\/[^"]*)/;
-var lyricReg = /<p class="fn-wlyrics fn-content".*?>([\s\S]*?)<\/p>/;
+const jsonURLReg = /\/json\/song\/get-source\/(\w+)/;
+const avatarURLReg = /thumb-art.*?"(https?:\/\/[^"]*)/;
+const lyricReg = /<p class="fn-wlyrics fn-content".*?>([\s\S]*?)<\/p>/;
 //sample avatar image from Zing HTML page: <img class="thumb-art" width="110" src="http://image.mp3.zdn.vn/thumb/165_165/avatars/6/2/62b05bf415a3736e551cae7ed1ce90f2_1450237124.jpg" alt="Min">
 
 /**
@@ -15,8 +17,13 @@ var lyricReg = /<p class="fn-wlyrics fn-content".*?>([\s\S]*?)<\/p>/;
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-export const getSongInfoZing = function(songurl) {
-	var linkRes, jsonURLResults, lyricResults, jsonURL, thumb, lyric;
+export const getSongInfoZing = songurl => {
+	let linkRes;
+	let jsonURLResults;
+	let lyricResults;
+	let jsonURL;
+	let thumb;
+	let lyric;
 
 	// First Step: parse the HTML page to get the XML data URL for the flash-based player
 
@@ -34,7 +41,7 @@ export const getSongInfoZing = function(songurl) {
 
 
 	if (jsonURLResults) {
-		jsonURL = 'http://mp3.zing.vn' + jsonURLResults[0];
+		jsonURL = `http://mp3.zing.vn${jsonURLResults[0]}`;
 		console.log('jsonURLResults:', jsonURL);
 	} else {
 		console.log('jsonURL parse failed');
@@ -58,7 +65,8 @@ export const getSongInfoZing = function(songurl) {
 
 	// Second Step: get the XML data file for the sone
 
-	var jsonRes, json;
+	let jsonRes;
+	let json;
 
 	try {
 		jsonRes = getGzipURL(jsonURL);
@@ -77,7 +85,7 @@ export const getSongInfoZing = function(songurl) {
 	// Fourth Step: normalize the JSON object to a song record
 
 	if (json && json.data && json.data[0]) {
-		var jsonItem = json.data[0];
+		const jsonItem = json.data[0];
 
 		//Not so soon, some Zing URL are blocked due to copyright issue
 		if (jsonItem.source_list[0] && String(json.msg) === '0') {
@@ -90,11 +98,11 @@ export const getSongInfoZing = function(songurl) {
 				artist: jsonItem.artist,
 				streamURL: jsonItem.source_list[0],
 				thumbURL: thumb,
-				lyric: lyric,
+				lyric,
 				play: 0
 			};
 		} else if (jsonItem.msg) {
-			console.log('Error received: ' + jsonItem.msg);
+			console.log(`Error received: ${jsonItem.msg}`);
 			return {
 				error: jsonItem.msg
 			};

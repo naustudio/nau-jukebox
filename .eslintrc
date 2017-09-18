@@ -16,6 +16,7 @@
 		"new-cap"                     :[2, { "capIsNew": false } ],
 		"no-bitwise"                  : 2,
 		"no-caller"                   : 2,
+		"no-case-declarations"        : 0,
 		"no-console"                  : 0,
 		"no-eval"                     : 2,
 		"no-invalid-this"             : 0,
@@ -41,7 +42,7 @@
 
 	},
 	"globals": {
-
+		"Migrations": true
 	},
 	"env": {
 		"browser": true,
@@ -50,7 +51,7 @@
 	},
 	"plugins": [],
 	"parserOptions": {
-		"ecmaVersion": 6,
+		"ecmaVersion": 8,
 		"sourceType": "module",
 		"ecmaFeatures": {
 			"impliedStrict": true,

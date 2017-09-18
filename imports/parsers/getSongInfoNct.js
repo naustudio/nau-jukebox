@@ -1,4 +1,6 @@
-/**
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ *
  * NCT URL parser module
  */
 import { SongOrigin } from '../constants.js';
@@ -6,8 +8,8 @@ import { xml2js } from 'meteor/vjau:xml2js';
 import { getGzipURL } from './getGzipURL';
 
 // Utility / Private functions
-var xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;
-var lyricReg = /<p id=\"divLyric\"[\s\S]+ <\/p>/;
+const xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;
+const lyricReg = /<p id="divLyric"[\s\S]+ <\/p>/;
 // sample xml url: "http://www.nhaccuatui.com/flash/xml?key1=99decd7306277634419b987bed859265"
 
 
@@ -17,8 +19,12 @@ var lyricReg = /<p id=\"divLyric\"[\s\S]+ <\/p>/;
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-export const getSongInfoNct = function(songurl) {
-	var linkRes, xmlURLResults, lyricResults, xmlURL, lyric;
+export const getSongInfoNct = songurl => {
+	let linkRes;
+	let xmlURLResults;
+	let lyricResults;
+	let xmlURL;
+	let lyric;
 
 	// First Step: parse the HTML page to get the XML data URL for the flash-based player
 
@@ -44,7 +50,7 @@ export const getSongInfoNct = function(songurl) {
 	}
 
 	if (lyricResults) {
-		if (lyricResults[0].indexOf('javascript:;') > -1) {
+		if (lyricResults[0].includes('javascript:;')) {
 			lyric = null;
 		} else {
 			lyric = lyricResults[0];
@@ -56,10 +62,12 @@ export const getSongInfoNct = function(songurl) {
 
 	// Second Step: get the XML data file for the sone
 
-	var xmlRes, json;
+	let xmlRes;
+
+	let json;
 
 	// Note: Manually install the node package in server folder
-	var parser = new xml2js.Parser({
+	const parser = new xml2js.Parser({
 		trim: true
 	});
 
@@ -72,10 +80,10 @@ export const getSongInfoNct = function(songurl) {
 
 		// Third Step: parse and convert the XML string to JSON object
 
-		parser.parseString(xmlRes, function(error, result) {
+		parser.parseString(xmlRes, (error, result) => {
 			json = result;
 		});
-		console.log('==> ' + JSON.stringify(json));
+		console.log(`==> ${JSON.stringify(json)}`);
 		// see sample JSON below
 
 	} catch (err) {
@@ -86,7 +94,7 @@ export const getSongInfoNct = function(songurl) {
 
 	if (json && json.tracklist && json.tracklist.track[0]) {
 		console.log('Checking the XML data');
-		var track = json.tracklist.track[0];
+		const track = json.tracklist.track[0];
 
 		//TODO: need to check if we ever got error with copyright checker like Zing
 		if (track.location[0] /*&& String(track.errorcode[0]) === '0'*/) {
@@ -100,11 +108,11 @@ export const getSongInfoNct = function(songurl) {
 				artist: track.creator[0],
 				streamURL: track.location[0],
 				thumbURL: track.avatar[0],
-				lyric: lyric,
+				lyric,
 				play: 0
 			};
 		} else if (track.errormessage[0]) {
-			console.log('Error received: ' + track.errormessage[0]);
+			console.log(`Error received: ${track.errormessage[0]}`);
 			return {
 				error: track.errormessage[0]
 			};

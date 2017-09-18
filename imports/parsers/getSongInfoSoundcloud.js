@@ -1,4 +1,6 @@
-/**
+/* © 2017 NauStud.io
+ * @author Tung Tran
+ *
  * Soudcloud URL parser module
  */
 import { SongOrigin } from '../constants.js';
@@ -9,12 +11,12 @@ import { SongOrigin } from '../constants.js';
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-export const getSongInfoSoundcloud = function(songurl) {
-	var json;
+export const getSongInfoSoundcloud = songurl => {
+	let json;
 	// First Step: Initialize Soundcloud API
 
 	// Second Step: Resolve Soundcloud URL
-	json = HTTP.call('GET', 'http://api.soundcloud.com/resolve.json?url=' + songurl + '&client_id=f6dbfb46c6b75cb6b5cd84aeb50d79e3');
+	json = HTTP.call('GET', `http://api.soundcloud.com/resolve.json?url=${songurl}&client_id=f6dbfb46c6b75cb6b5cd84aeb50d79e3`);
 	console.log(json);
 
 	if (json && json.data) {
@@ -26,7 +28,7 @@ export const getSongInfoSoundcloud = function(songurl) {
 				origin: SongOrigin.SOUNDCLOUD,
 				name: json.data.title,
 				artist: json.data.user.username,
-				streamURL: '/tracks/' + json.data.id,
+				streamURL: `/tracks/${json.data.id}`,
 				thumbURL: json.data.user.avatar_url,
 				play: 0
 			};

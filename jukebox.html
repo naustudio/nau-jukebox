@@ -90,19 +90,19 @@
 			<div class="container">
 				<ul class="playlist-nav--list">
 					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
-						<a href="javascript:;">Play List</a>
+						<a href="#play-list">Play List</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
-						<a href="javascript:;">Yesterday</a>
+						<a href="#yesterday">Yesterday</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
-						<a href="javascript:;">Last 7 Days</a>
+						<a href="#last-7-days">Last 7 Days</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
-						<a href="javascript:;">Top Lists</a>
+						<a href="#top-lists">Top Lists</a>
 					</li><!--
 					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naucoin" data-target="js-naucoin">
-						<a href="javascript:;">₦aucoin</a>
+						<a href="#users">Users</a>
 					</li>
 					<li class="playlist-nav--item playlist-nav--item__right">
 						<div class="js-login-control input-control">
@@ -166,10 +166,7 @@
 <template name="player">
 	<div class="player-panel">
 		<audio id="audio-player" src="song.mp3" preload="none" width="300"></audio>
-
-		<video id="youtube-player" preload="none" width="300" height="200">
-			<source type="video/youtube" src="" />
-		</video>
+		<video id="youtube-player" preload="none" width="300" height="200" src=""></video>
 	</div>
 </template>
 <!-- /player -->
@@ -186,7 +183,7 @@
 <!-- /songlist -->
 
 <template name="song">
-	<li class="playlist--item {{selected}} {{playing}}">
+	<li class="playlist--item {{selected}} {{playing}} {{visible}}">
 		<span class="playlist--item--active">&rtri;</span>
 		<span class="playlist--item--author">{{#if isUp}} {{{authorInfo.profile.name}}} {{/if}}</span>
 		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
@@ -196,16 +193,16 @@
 				<img src="http://stc.id.nixcdn.com/v11/images/df-singer-300x300.jpg">
 			{{/if}}
 		</a>
-		<a href="javascript:;" class="playlist--item--link js-song-item"
+		<a href="#" class="playlist--item--link js-song-item"
 			title="{{name}} - {{artist}}">{{{name}}}&nbsp; • &nbsp;{{{artist}}}</a>
 		<div class="playlist--item--tools">
 			<small>{{addDate}}</small>
-			<a href="javascript:;" class="js-show-book-user {{getDisplayStatus}}"><i class="fa fa-eye"></i></a>
-			<a href="javascript:;" class="lyric-modal-toggle"><i class="fa fa-file-text"></i></a>
-			<a href="javascript:;" class="loading-block rebook-btn">
+			<a href="#" class="js-show-book-user {{getDisplayStatus}}"><i class="fa fa-eye"></i></a>
+			<a href="#" class="lyric-modal-toggle"><i class="fa fa-file-text"></i></a>
+			<a href="#" class="loading-block rebook-btn">
 				<span class="loading-block--stable"><i class="fa fa-retweet"></i></span>
 			</a>
-			<a href="javascript:;" class="remove-btn"><i class="fa fa-times"></i></a>
+			<a href="#" class="remove-btn {{getDisplayStatus}}"><i class="fa fa-times"></i></a>
 		</div>
 	</li>
 </template>
@@ -219,12 +216,12 @@
 			{{#each storms}}
 				{{> naustormitem}}
 			{{else}}
-				Waiting for storms...
+				Fetching top songs...
 			{{/each}}
 		</div>
 
 		<div class="group-author {{getDisplayStatus}}">
-			<h5>Users\ <small>got {{total}} bookings this week.</small></h5>
+			<h5>Top Users <small>got {{total}} bookings this week.</small></h5>
 			<ul class="g-author--list">
 				{{#each groupByAuthorData}}
 					{{> naustormauthoritem}}
@@ -240,20 +237,20 @@
 	<div class="columns three naustorm-elm">
 		<div class="naustorm-elm--wrapper">
 			<img class="naustorm-elm--cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
-			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">stormed</small></div>
+			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">listings</small></div>
 		</div>
-		<h6 class="naustorm-elm--title">{{name}}</h6>
+		<h6 class="naustorm-elm--title">{{{name}}}</h6>
 		<small class="naustorm-elm--artist">{{artist}}</small>
 	</div>
 </template>
 
 <template name="naustormauthoritem">
-	<li class="g-author--item {{getStatus}}">{{profile.name}} <span class="g-author--storm">{{books}} storms</span></li>
+	<li class="g-author--item {{getStatus}}">{{profile.name}} <span class="g-author--storm">{{books}} bookings</span></li>
 </template>
 
 <template name="naucoin">
 	<div class="naucoin-section">
-		<h5>₦aucoin\<small>₦1.00 = 1000VND</small></h5>
+		<h5>Users<small>₦: Naucoin, ₦1.00 = 1000VND</small></h5>
 
 		<div class="payment-block {{getDisplayStatus}}">
 			<form action="#" onsubmit="return false;" class="js-naucoin-submit-btn">

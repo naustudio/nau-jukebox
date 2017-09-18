@@ -1,3 +1,6 @@
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ */
 import { HTTP } from 'meteor/http';
 import { SongOrigin } from '../constants.js';
 
@@ -7,7 +10,7 @@ import { SongOrigin } from '../constants.js';
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-export const getSongInfoYouTube = function(songurl) {
+export const getSongInfoYouTube = (songurl) => {
 	console.log('getting youtube link:', songurl);
 	let http = HTTP.call('GET', songurl);
 

@@ -1,3 +1,6 @@
+/* © 2017 NauStud.io
+ * @author Tung Tran
+ */
 /*global SC*/
 
 /**

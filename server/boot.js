@@ -1,4 +1,6 @@
-
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ */
 ServiceConfiguration.configurations.upsert({
 	service: 'facebook'
 }, {
@@ -17,3 +19,5 @@ ServiceConfiguration.configurations.upsert({
 		secret: 'wJQUTj6TohUYLiS_PUy_-LHe', //Meteor.settings.google.secret
 	}
 });
+
+

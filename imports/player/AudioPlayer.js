@@ -1,3 +1,6 @@
+/* © 2017 NauStud.io
+ * @author Thanh Tran
+ */
 /*global MediaElementPlayer*/
 
 /**
@@ -7,11 +10,11 @@ export class AudioPlayer {
 
 	constructor(mainPlayer) {
 		this.type = 'AudioPlayer';
-		this.player = new MediaElementPlayer('#audio-player');
+		this.player = new MediaElementPlayer('audio-player');
 		this.song = null;
 
 
-		$('#audio-player').on('ended', function() {
+		this.player.media.addEventListener('ended', () => {
 			console.log('Audio ended for:', mainPlayer.currentSong.name);
 			mainPlayer.playNext();
 		});
