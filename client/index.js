@@ -495,6 +495,7 @@ Template.body.events({
 	},
 
 	'click .js-playlist-nav'(event) {
+		event.preventDefault();
 		const $this = $(event.currentTarget);
 		const tab = $this.attr('data-tab');
 
