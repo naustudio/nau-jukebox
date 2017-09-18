@@ -2,11 +2,20 @@ NAU JUKEBOX
 ===========
 This is a fun, side project to allow our team to collectively suggest and play a continuously pending list of songs.
 
-The songs URL is currently parsable from nhaccuatui.com, ~~mp3.zing.com~~, soundcloud.com, youtube.com
+The songs URL is currently parsable from nhaccuatui.com, mp3.zing.com, soundcloud.com, youtube.com
+
+**NOTE: This code is under major migration to support OAuth login and multi-room. Stay tuned.** 
 
 
 Changelog:
 ----------
+
+### 2017-09-18
+- Re-organize code to separate client/server folders
+- Upgrade code to ES6
+- Upgrade MediaElementPlayer to 4.2.5 to fix several auto-continuation issues
+- Fix booking of Zing source URLs
+- Changes of labels and icons to more understandable UI
 
 ### 2017-09-12
 - Upgrade to Meteor 1.5.1
