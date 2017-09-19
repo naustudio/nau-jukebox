@@ -346,6 +346,23 @@ Template.naucoin.events({
 });
 
 Template.naucoinitem.helpers({
+	profileImage() {
+		let imageURL = '';
+		if (this.services) {
+			if (this.services.google) {
+				imageURL = this.services.google.picture;
+			} else if (this.services.facebook) {
+				imageURL = `https://graph.facebook.com/v2.10/${this.services.facebook.id}/picture?type=square`;
+			}
+		} else {
+			imageURL = 'https://api.adorable.io/avatar/' + this.profile.name;
+		}
+
+		return imageURL;
+	},
+	isLegacyAccount() {
+		return !this.services;
+	},
 	getBalance() {
 		return (this.balance || 0).toFixed(2);
 	},

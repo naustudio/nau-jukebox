@@ -782,6 +782,11 @@ h5 small {
 		margin-right: 0;
 	}
 
+	&--image {
+		width: 50px;
+		vertical-align: middle;
+	}
+
 	&--storm,
 	&--ncoin {
 		padding: 2px 0.5 * $gutter;

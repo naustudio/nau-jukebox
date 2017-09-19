@@ -8,12 +8,12 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 	<script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
-	<meta property="og:url"         content="http://jukebox.naustud.io" />"
-	<meta property="og:type"        content="website" />"
-	<meta property="og:title"       content="Nâu Jukebox" />"
+	<meta property="og:url"         content="http://jukebox.naustud.io" />
+	<meta property="og:type"        content="website" />
+	<meta property="og:title"       content="Nâu Jukebox" />
 	<meta name="description" content="This is a fun webapp to allow our team to collectively suggest and play a list of songs. The songs URL is currently parsable from nhaccuatui.com, mp3.zing.com, soundcloud.com, and youtube.com">
-	<meta property="og:description" content="This is a fun webapp to allow our team to collectively suggest and play a list of songs. The songs URL is currently parsable from nhaccuatui.com, mp3.zing.com, soundcloud.com, and youtube.com" />"
-	<meta property="og:image"       content="http://jukebox.naustud.io/nau-jukebox.png" />"
+	<meta property="og:description" content="This is a fun webapp to allow our team to collectively suggest and play a list of songs. The songs URL is currently parsable from nhaccuatui.com, mp3.zing.com, soundcloud.com, and youtube.com" />
+	<meta property="og:image"       content="http://jukebox.naustud.io/nau-jukebox.png" />
 
 	<style>
 		::-webkit-input-placeholder {
@@ -294,6 +294,6 @@
 </template>
 
 <template name="naucoinitem">
-	<li class="g-author--item {{getStatus}}">{{profile.name}}<span class="g-author--ncoin">{{getBalance}}</span>
+	<li class="g-author--item {{getStatus}}"><img class="g-author--image" src="{{profileImage}}" alt="profile.name"> {{profile.name}}{{#if isLegacyAccount }} - OLD{{/if}}<span class="g-author--ncoin">{{getBalance}}</span>
 	</li>
 </template>
