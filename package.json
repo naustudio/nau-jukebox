@@ -1,4 +1,15 @@
 {
+  "name": "nau-jukebox",
+  "version": "0.9",
+  "author": "Nau Studio",
+  "license": "MIT",
+  "repository": "https://github.com/naustudio/nau-jukebox",
+  "browserslist": [
+    "defaults",
+    "ie >= 10",
+    "android >= 4.0",
+    "ios >= 8"
+  ],
   "devDependencies": {
     "eslint-plugin-promise": "^3.3.0",
     "stylelint": "^8.1.1",
