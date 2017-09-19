@@ -48,8 +48,8 @@ export class YouTubePlayer {
 				this.player = new MediaElementPlayer(this.videoEl, {
 					features: [
 						// 'playpause',
-						// 'progress',
 						'current',
+						'progress',
 						'duration',
 						// 'tracks',
 						// 'volume',
@@ -57,7 +57,12 @@ export class YouTubePlayer {
 					],
 					success: (mediaElement, originalNode, player) => {
 						// console.log('youtubeplayer init success:', mediaElement, originalNode, player);
-						// player.play();
+						// store the container to show / hide
+						this.container = mediaElement.closest('.mejs__video');
+						if (!this.container) {
+							// just in case closest() not working
+							this.container = document.querySelector('.mejs__video');
+						}
 
 						// this is simulated events, must add at success callback
 						mediaElement.addEventListener('ended', () => {
@@ -75,11 +80,15 @@ export class YouTubePlayer {
 		}
 
 		this.player.play();
-		this.videoEl.closest('.mejs__video').style.visibility = 'visible';
+		if (this.container) {
+			this.container.style.display = 'block';
+		}
 	}
 
 	pause() {
-		this.videoEl.closest('.mejs__video').style.visibility = 'hidden';
+		if (this.container) {
+			this.container.style.display = 'none';
+		}
 		this.player.pause();
 	}
 
