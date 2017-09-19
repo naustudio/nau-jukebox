@@ -320,7 +320,7 @@ Template.naustorm.onCreated(() => {
 
 Template.naucoin.helpers({
 	dataContext() {
-		return Users.find({}, { sort: { balance: -1 } });
+		return Users.find({}, { sort: { isOnline: -1, balance: -1 } });
 	},
 	getDisplayStatus() {
 		const isHost = Session.get('IS_HOST');
