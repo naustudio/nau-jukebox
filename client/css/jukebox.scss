@@ -1,8 +1,5 @@
-/**
- * BEM--tw convention
- *    block
- * -- element
- * __ modifier
+/* © 2016 NauStud.io
+ * @author Tw
  */
 // stylelint-disable color-named, color-no-hex, selector-class-pattern, selector-max-id
 // variables
@@ -13,7 +10,7 @@ $header-h: 70px;
 $playlist-h: 55px;
 $dot-w: 24px;
 $dot-color: white;
-$dot-color--active: #a9c52f;
+$dot-color__active: #a9c52f;
 
 // color pattern http://www.color-hex.com/color-palette/16458
 $color-01: #fff;
@@ -90,7 +87,7 @@ h5 small {
 .input-control {
 	position: relative;
 
-	&--error {
+	&__error {
 		position: absolute;
 		right: -$gutter;
 		top: 50%;
@@ -118,7 +115,7 @@ h5 small {
 	}
 
 	&._error {
-		.input-control--error {
+		.input-control__error {
 			display: block;
 		}
 	}
@@ -153,14 +150,14 @@ h5 small {
 	height: 100%;
 }
 
-.bg-layer--img-wrapper {
+.bg-layer__img-wrapper {
 	position: absolute;
 	right: 0;
 	bottom: 0;
 	width: 200px;
 }
 
-.bg-layer--img-wrapper img {
+.bg-layer__img-wrapper img {
 	width: 100%;
 }
 
@@ -176,12 +173,12 @@ h5 small {
 	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 	transition: all 0.5s;
 
-	&--list {
+	&__list {
 		list-style-type: none;
 		margin: 0;
 	}
 
-	&--item {
+	&__item {
 		display: inline-block;
 		margin: 0;
 
@@ -190,19 +187,19 @@ h5 small {
 			text-decoration: none;
 		}
 
-		&__icon,
-		&__tool {
+		&--icon,
+		&--tool {
 			width: 20%;
 			color: $color-nau;
 		}
 
-		&__input {
+		&--input {
 			width: 60%;
 			padding: 0.5 * $gutter 0;
 			position: relative;
 		}
 
-		&__icon {
+		&--icon {
 			float: left;
 			padding: 15px 0;
 			font-size: 12px;
@@ -217,7 +214,7 @@ h5 small {
 			}
 		}
 
-		&__tool {
+		&--tool {
 			float: right;
 		}
 	}
@@ -243,29 +240,29 @@ h5 small {
 		background-color: rgba(255, 255, 255, 0.95);
 		border-color: rgba(0, 0, 0, 0.4);
 
-		.search-box--result-wrapper {
+		.search-box__result-wrapper {
 			display: block;
 		}
 
-		.search-box--control {
+		.search-box__control {
 			border-bottom: 1px solid gray;
 		}
 	}
 
-	&--control {
+	&__control {
 		position: relative;
 	}
 
-	&--input-wrapper {
+	&__input-wrapper {
 		margin-right: $search-w;
 		left: 0;
 	}
 
-	&--result-wrapper {
+	&__result-wrapper {
 		display: none;
 	}
 
-	&--submit {
+	&__submit {
 		color: rgba(0, 0, 0, 0.5);
 		background-color: $color-06;
 		margin-left: -4px;
@@ -296,13 +293,13 @@ h5 small {
 		}
 	}
 
-	&--input {
+	&__input {
 		margin-bottom: 0;
 		display: inline-block;
 		border-radius: 0;
 	}
 
-	.search-box--input {
+	.search-box__input {
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
 		border: 0;
@@ -313,7 +310,7 @@ h5 small {
 		}
 	}
 
-	.search-box--submit {
+	.search-box__submit {
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
 		border-left: 0;
@@ -321,12 +318,12 @@ h5 small {
 }
 
 .song-result {
-	&--list {
+	&__list {
 		list-style-type: none;
 		margin: 0;
 	}
 
-	&--item {
+	&__item {
 		padding: 0.5 * $gutter $gutter;
 		margin-bottom: 0;
 		border-top: 1px solid whitesmoke;
@@ -352,40 +349,40 @@ h5 small {
 	cursor: pointer;
 
 	&:hover {
-		.play-button--element {
+		.play-button__element {
 			background: $color-09;
 		}
 	}
 
-	&--element {
+	&__element {
 		border-radius: $playbutton-w / 2;
 		background: $color-01;
 		transition: 0.5s;
 		position: absolute;
 	}
 
-	&--elm-top {
+	&__elm-top {
 		width: $playbutton-h;
 		height: $playbutton-w;
 		top: 0;
 		left: 0;
 	}
 
-	&--elm-right {
+	&__elm-right {
 		width: $playbutton-w;
 		height: $playbutton-h;
 		top: 0;
 		left: $playbutton-h - $playbutton-w;
 	}
 
-	&--elm-bottom {
+	&__elm-bottom {
 		width: $playbutton-h;
 		height: $playbutton-w;
 		top: $playbutton-h - $playbutton-w;
 		left: 0;
 	}
 
-	&--elm-left {
+	&__elm-left {
 		width: $playbutton-w;
 		height: $playbutton-h;
 		top: 0;
@@ -401,16 +398,16 @@ h5 small {
 	&._play {
 		transform: rotate(270deg);
 
-		.play-button--elm-right {
+		.play-button__elm-right {
 			transform-origin: center top;
 			transform: rotate(29deg) translate($playbutton-w/4, $playbutton-w/8) scaleY(1);
 		}
 
-		.play-button--elm-bottom {
+		.play-button__elm-bottom {
 			display: none;
 		}
 
-		.play-button--elm-left {
+		.play-button__elm-left {
 			transform-origin: center top;
 			transform: rotate(-29deg) translate(-$playbutton-w/4, $playbutton-w/8) scaleY(1);
 		}
@@ -419,19 +416,19 @@ h5 small {
 	&._pause {
 		transform: rotate(0deg);
 
-		.play-button--elm-top {
+		.play-button__elm-top {
 			opacity: 0;
 		}
 
-		.play-button--elm-right {
+		.play-button__elm-right {
 			transform: translateX(-$playbutton-w) scaleY(0.8);
 		}
 
-		.play-button--elm-bottom {
+		.play-button__elm-bottom {
 			opacity: 0;
 		}
 
-		.play-button--elm-left {
+		.play-button__elm-left {
 			transform: translateX($playbutton-w) scaleY(0.8);
 		}
 	}
@@ -456,12 +453,12 @@ h5 small {
 		top: $header-h !important;
 	}
 
-	&--list {
+	&__list {
 		list-style-type: none;
 		margin-bottom: 0;
 	}
 
-	&--item {
+	&__item {
 		display: inline-block;
 		margin: 0;
 		transition: all 0.5s;
@@ -491,7 +488,7 @@ h5 small {
 			margin-left: -$gutter;
 		}
 
-		&__right {
+		&--right {
 			float: right;
 		}
 
@@ -513,7 +510,7 @@ h5 small {
 				color: $color-04;
 			}
 
-			&.playlist-nav--item__right {
+			&.playlist-nav__item__right {
 				&::after {
 					content: none;
 				}
@@ -530,16 +527,16 @@ h5 small {
 .playlist {
 	$item-h: 40px;
 
-	&--list {
+	&__list {
 		list-style-type: none;
 	}
 
-	&--item {
+	&__item {
 		margin-bottom: 0;
 		position: relative;
 		cursor: pointer;
 
-		&--origin {
+		&__origin {
 			width: $item-h;
 			height: $item-h;
 			left: 0;
@@ -552,7 +549,7 @@ h5 small {
 			}
 		}
 
-		&--origin::after {
+		&__origin::after {
 			content: '';
 			position: absolute;
 			bottom: 1px;
@@ -565,23 +562,23 @@ h5 small {
 			opacity: 0.8;
 		}
 
-		&--nct::after {
+		&__nct::after {
 			background-image: url(logo-nct.png);
 		}
 
-		&--zing::after {
+		&__zing::after {
 			background-image: url(logo-zing.png);
 		}
 
-		&--sc::after {
+		&__sc::after {
 			background-image: url(logo-soundcloud.png);
 		}
 
-		&--yt::after {
+		&__yt::after {
 			background-image: url(logo-youtube.png);
 		}
 
-		&--link {
+		&__link {
 			line-height: 40px;
 			margin-left: 55px;
 			text-decoration: none;
@@ -593,7 +590,7 @@ h5 small {
 			display: inherit;
 		}
 
-		&--tools {
+		&__tools {
 			position: absolute;
 			right: 0;
 			top: 0;
@@ -618,7 +615,7 @@ h5 small {
 			}
 		}
 
-		&--active {
+		&__active {
 			position: absolute;
 			left: 0;
 			top: 50%;
@@ -627,7 +624,7 @@ h5 small {
 			transform: translate(-100%, -50%);
 		}
 
-		&--author {
+		&__author {
 			position: absolute;
 			left: 0;
 			top: 50%;
@@ -642,11 +639,11 @@ h5 small {
 	}
 }
 
-.playlist--item._selected .playlist--item--active {
+.playlist__item._selected .playlist__item__active {
 	opacity: 0.5;
 }
 
-.playlist--item._playing .playlist--item--active {
+.playlist__item._playing .playlist__item__active {
 	opacity: 1;
 	color: brown;
 	font-weight: bold;
@@ -669,13 +666,13 @@ h5 small {
 .naustorm-elm {
 	margin-top: $gutter;
 
-	&--wrapper {
+	&__wrapper {
 		position: relative;
 		width: 100%;
 		overflow: hidden;
 	}
 
-	&--cover {
+	&__cover {
 		width: 100%;
 		margin-bottom: 0;
 		display: inherit;
@@ -690,13 +687,13 @@ h5 small {
 			-webkit-transform: rotate(3deg) scale(1.1, 1.1);
 			transform: rotate(3deg) scale(1.1, 1.1);
 
-			~ .naustorm-elm--listens {
+			~ .naustorm-elm__listens {
 				opacity: 1;
 			}
 		}
 	}
 
-	&--title {
+	&__title {
 		margin-bottom: 0;
 		margin-top: 7.5px;
 		white-space: nowrap;
@@ -704,7 +701,7 @@ h5 small {
 		overflow-x: hidden;
 	}
 
-	&--artist {
+	&__artist {
 		margin-top: -5px;
 		display: block;
 		opacity: 0.7;
@@ -713,7 +710,7 @@ h5 small {
 		overflow-x: hidden;
 	}
 
-	&--listens {
+	&__listens {
 		position: absolute;
 		left: 15px;
 		bottom: 15px;
@@ -737,11 +734,11 @@ h5 small {
 	$status-default-color: #f6b61e;
 	$status-active-color: #347a2a;
 
-	&--list {
+	&__list {
 		list-style-type: none;
 	}
 
-	&--item {
+	&__item {
 		margin-right: 30px;
 		margin-left: $gutter;
 		position: relative;
@@ -778,24 +775,24 @@ h5 small {
 		}
 	}
 
-	&--item:last-child {
+	&__item:last-child {
 		margin-right: 0;
 	}
 
-	&--image {
+	&__image {
 		width: 50px;
 		vertical-align: middle;
 	}
 
-	&--storm,
-	&--ncoin {
+	&__storm,
+	&__ncoin {
 		padding: 2px 0.5 * $gutter;
 		background-color: whitesmoke;
 		border-radius: 2px;
 		margin-left: 0.5 * $gutter;
 	}
 
-	&--ncoin {
+	&__ncoin {
 		background-color: #a8896c;
 		color: white;
 
@@ -849,12 +846,12 @@ h5 small {
 	.dot {
 		opacity: 1;
 		animation: slide 1s infinite;
-		background: $dot-color--active;
+		background: $dot-color__active;
 
 		&:hover {
 			&::after {
 				content: 'guest';
-				color: $dot-color--active;
+				color: $dot-color__active;
 			}
 		}
 	}

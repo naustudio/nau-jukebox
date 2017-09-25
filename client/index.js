@@ -529,7 +529,7 @@ Template.body.events({
 
 		Session.set('tab', tab);
 		showTab($this.attr('data-target'));
-		$this.closest('.playlist-nav--list').find('.playlist-nav--item').removeClass('_active');
+		$this.closest('.playlist-nav__list').find('.playlist-nav__item').removeClass('_active');
 		$this.addClass('_active');
 	},
 
@@ -631,7 +631,7 @@ Template.body.events({
 		}
 	},
 
-	'click .js-song-result--item'(e) {
+	'click .js-song-result__item'(e) {
 		const $target = $(e.currentTarget);
 		const $form = $target.closest('.js-add-song-form');
 		const songurl = $target.attr('data-href');

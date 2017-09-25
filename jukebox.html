@@ -53,39 +53,39 @@
 			<div class="dot js-dot"></div>
 		</div>
 		<div class="container">
-			<ul class="navbar--list">
-				<li class="navbar--item navbar--item__icon">
+			<ul class="navbar__list">
+				<li class="navbar__item navbar__item--icon">
 					<a href="https://naustud.io" target="_blank"><img src="/nau-jukebox.svg" alt="Nau Jukebox logo"></a>
 				</li>
-				<li class="navbar--item navbar--item__input">
+				<li class="navbar__item navbar__item--input">
 
 					<form action="#" onsubmit="return false;" class="search-box js-add-song-form" id="js-add-song-form">
-						<div class="search-box--control">
-							<div class="search-box--input-wrapper">
+						<div class="search-box__control">
+							<div class="search-box__input-wrapper">
 								<input type="text" id="songurl" name="songurl"
-									class="search-box--input u-full-width js-search-box"
+									class="search-box__input u-full-width js-search-box"
 									placeholder="Search old song or add new NCT, Zing, YouTube, SoundClound URL"
 									autocomplete="off" />
 							</div>
-							<button type="submit" class="search-box--submit js-search-box--submit"></button>
+							<button type="submit" class="search-box__submit js-search-box__submit"></button>
 						</div>
 
-						<div class="search-box--result-wrapper">
-							<ul class="song-result--list">
+						<div class="search-box__result-wrapper">
+							<ul class="song-result__list">
 								{{#each searchResult}}
-									<li class="song-result--item js-song-result--item {{_active}}"
+									<li class="song-result__item js-song-result__item {{_active}}"
 										data-href="{{originalURL}}">{{{name}}} • {{artist}} • {{origin}}</li>
 								{{/each}}
 							</ul>
 						</div>
 					</form>
 				</li>
-				<li class="navbar--item navbar--item__tool">
+				<li class="navbar__item navbar__item--tool">
 					<div class="js-play-button play-button _play">
-						<div class="play-button--element play-button--elm-top"></div>
-						<div class="play-button--element play-button--elm-right"></div>
-						<div class="play-button--element play-button--elm-bottom"></div>
-						<div class="play-button--element play-button--elm-left"></div>
+						<div class="play-button__element play-button__elm-top"></div>
+						<div class="play-button__element play-button__elm-right"></div>
+						<div class="play-button__element play-button__elm-bottom"></div>
+						<div class="play-button__element play-button__elm-left"></div>
 					</div>
 				</li>
 			</ul>
@@ -95,26 +95,26 @@
 	<div class="scroll-content">
 		<nav class="playlist-nav js-playlist-section">
 			<div class="container">
-				<ul class="playlist-nav--list">
-					<li class="playlist-nav--item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
+				<ul class="playlist-nav__list">
+					<li class="playlist-nav__item _active js-playlist-nav" data-tab="tab--play-list" data-target="js-playblock">
 						<a href="#play-list">Play List</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
+					 --><li class="playlist-nav__item js-playlist-nav" data-tab="tab--yesterday" data-target="js-playblock">
 						<a href="#yesterday">Yesterday</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
+					 --><li class="playlist-nav__item js-playlist-nav" data-tab="tab--past-7-days" data-target="js-playblock">
 						<a href="#last-7-days">Last 7 Days</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
+					 --><li class="playlist-nav__item js-playlist-nav" data-tab="tab--naustorm" data-target="js-naustorm">
 						<a href="#top-lists">Top Lists</a>
 					</li><!--
-					 --><li class="playlist-nav--item js-playlist-nav" data-tab="tab--naucoin" data-target="js-naucoin">
+					 --><li class="playlist-nav__item js-playlist-nav" data-tab="tab--naucoin" data-target="js-naucoin">
 						<a href="#users">Users</a>
 					</li>
-					<li class="playlist-nav--item playlist-nav--item__right">
+					<li class="playlist-nav__item playlist-nav__item--right">
 						<div class="js-login-control input-control">
 							{{> loginButtons}}
-							<div class="input-control--error">
+							<div class="input-control__error">
 								<p>Please login to book songs!</p>
 							</div>
 						</div>
@@ -179,7 +179,7 @@
 <!-- /player -->
 
 <template name="songlist">
-	<ul class="playlist--list">
+	<ul class="playlist__list">
 		{{#each songs}}
 			{{> song}}
 		{{else}}
@@ -190,24 +190,24 @@
 <!-- /songlist -->
 
 <template name="song">
-	<li class="playlist--item {{selected}} {{playing}} {{visible}}">
-		<span class="playlist--item--active">&rtri;</span>
-		<span class="playlist--item--author">{{#if isUp}} {{{authorInfo.profile.name}}} {{/if}}</span>
-		<a href="{{originalURL}}" class="playlist--item--origin playlist--item--{{originBadgeColor}}" target="_blank">
+	<li class="playlist__item {{selected}} {{playing}} {{visible}}">
+		<span class="playlist__item__active">&rtri;</span>
+		<span class="playlist__item__author">{{#if isUp}} {{{authorInfo.profile.name}}} {{/if}}</span>
+		<a href="{{originalURL}}" class="playlist__item__origin playlist__item__{{originBadgeColor}}" target="_blank">
 			{{#if thumbURL}}
 				<img src="{{thumbURL}}">
 			{{else}}
 				<img src="http://stc.id.nixcdn.com/v11/images/df-singer-300x300.jpg">
 			{{/if}}
 		</a>
-		<a href="#" class="playlist--item--link js-song-item"
+		<a href="#" class="playlist__item__link js-song-item"
 			title="{{name}} - {{artist}}">{{{name}}}&nbsp; • &nbsp;{{{artist}}}</a>
-		<div class="playlist--item--tools">
+		<div class="playlist__item__tools">
 			<small>{{addDate}}</small>
 			<a href="#" class="js-show-book-user {{getDisplayStatus}}"><i class="fa fa-eye"></i></a>
 			<a href="#" class="lyric-modal-toggle"><i class="fa fa-file-text"></i></a>
 			<a href="#" class="loading-block rebook-btn">
-				<span class="loading-block--stable"><i class="fa fa-retweet"></i></span>
+				<span class="loading-block__stable"><i class="fa fa-retweet"></i></span>
 			</a>
 			<a href="#" class="remove-btn {{getDisplayStatus}}"><i class="fa fa-times"></i></a>
 		</div>
@@ -229,11 +229,11 @@
 
 		<div class="group-author {{getDisplayStatus}}">
 			<h5>Top Users <small>got {{total}} bookings this week.</small></h5>
-			<ul class="g-author--list">
+			<ul class="g-author__list">
 				{{#each groupByAuthorData}}
 					{{> naustormauthoritem}}
 				{{else}}
-					<li class="g-author--item">Waiting for data...</li>
+					<li class="g-author__item">Waiting for data...</li>
 				{{/each}}
 			</ul>
 		</div>
@@ -242,17 +242,17 @@
 
 <template name="naustormitem">
 	<div class="columns three naustorm-elm">
-		<div class="naustorm-elm--wrapper">
-			<img class="naustorm-elm--cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
-			<div class="naustorm-elm--listens">{{listens}} <small style="font-weight:100">listings</small></div>
+		<div class="naustorm-elm__wrapper">
+			<img class="naustorm-elm__cover" src="{{thumbURL}}" alt="{{name}} - {{artist}}" />
+			<div class="naustorm-elm__listens">{{listens}} <small style="font-weight:100">listings</small></div>
 		</div>
-		<h6 class="naustorm-elm--title">{{{name}}}</h6>
-		<small class="naustorm-elm--artist">{{artist}}</small>
+		<h6 class="naustorm-elm__title">{{{name}}}</h6>
+		<small class="naustorm-elm__artist">{{artist}}</small>
 	</div>
 </template>
 
 <template name="naustormauthoritem">
-	<li class="g-author--item {{getStatus}}">{{profile.name}} <span class="g-author--storm">{{books}} bookings</span></li>
+	<li class="g-author__item {{getStatus}}">{{profile.name}} <span class="g-author__storm">{{books}} bookings</span></li>
 </template>
 
 <template name="naucoin">
@@ -283,7 +283,7 @@
 				</div>
 			</form>
 		</div>
-		<ul class="g-author--list g-author--list__naucoin">
+		<ul class="g-author__list g-author__list--naucoin">
 			{{#each dataContext}}
 				{{> naucoinitem}}
 			{{else}}
@@ -294,6 +294,6 @@
 </template>
 
 <template name="naucoinitem">
-	<li class="g-author--item {{getStatus}}"><img class="g-author--image" src="{{profileImage}}" alt="profile.name"> {{profile.name}}{{#if isLegacyAccount }} - OLD{{/if}}<span class="g-author--ncoin">{{getBalance}}</span>
+	<li class="g-author__item {{getStatus}}"><img class="g-author__image" src="{{profileImage}}" alt="profile.name"> {{profile.name}}{{#if isLegacyAccount }} - OLD{{/if}}<span class="g-author__ncoin">{{getBalance}}</span>
 	</li>
 </template>
