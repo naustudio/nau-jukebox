@@ -6,7 +6,7 @@
 import { SongOrigin } from '../constants.js';
 import { getGzipURL } from './getGzipURL';
 
-const jsonURLReg = /\/json\/song\/get-source\/(\w+)/;
+const jsonURLReg = /\/media\/get-source\?[A-z0-9?=&]+/;
 const avatarURLReg = /thumb-art.*?"(https?:\/\/[^"]*)/;
 const lyricReg = /<p class="fn-wlyrics fn-content".*?>([\s\S]*?)<\/p>/;
 //sample avatar image from Zing HTML page: <img class="thumb-art" width="110" src="http://image.mp3.zdn.vn/thumb/165_165/avatars/6/2/62b05bf415a3736e551cae7ed1ce90f2_1450237124.jpg" alt="Min">
@@ -41,7 +41,7 @@ export const getSongInfoZing = songurl => {
 
 
 	if (jsonURLResults) {
-		jsonURL = `http://mp3.zing.vn${jsonURLResults[0]}`;
+		jsonURL = `http://mp3.zing.vn/xhr${jsonURLResults[0]}`;
 		console.log('jsonURLResults:', jsonURL);
 	} else {
 		console.log('jsonURL parse failed');
@@ -84,19 +84,19 @@ export const getSongInfoZing = songurl => {
 
 	// Fourth Step: normalize the JSON object to a song record
 
-	if (json && json.data && json.data[0]) {
-		const jsonItem = json.data[0];
+	if (json && json.data) {
+		const jsonItem = json.data;
 
 		//Not so soon, some Zing URL are blocked due to copyright issue
-		if (jsonItem.source_list[0] && String(json.msg) === '0') {
+		if (jsonItem.source['128'] && String(json.err) === '0') {
 			console.log('URL is valid. Adding new song.');
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
 				origin: SongOrigin.ZING,
 				name: jsonItem.name,
-				artist: jsonItem.artist,
-				streamURL: jsonItem.source_list[0],
+				artist: jsonItem.artist ? jsonItem.artist.name : jsonItem.performer,
+				streamURL: jsonItem.source['128'],
 				thumbURL: thumb,
 				lyric,
 				play: 0
@@ -123,25 +123,41 @@ export const getSongInfoZing = songurl => {
 
 // sample JSON response:
 // {
-//   "msg": 0,
-//   "data": [
-//     {
-//       "id": "ZWZBZCIF",
-//       "name": "Vì Yêu",
-//       "artist": "Kasim Hoàng Vũ",
-//       "link": "/bai-hat/Vi-Yeu-Kasim-Hoang-Vu/ZWZBZCIF.html",
-//       "cover": "http://zmp3-photo-td.zadn.vn/cover3_artist/1/3/13e5a66f038b4430a2bd5c0caccd52cc_1412907209.jpg",
-//       "msg": "Do vấn đề kết nối, trình duyệt tạm thời không load được. Bạn vui lòng gửi phản hồi về Zing MP3 để nhận được hỗ trợ tốt nhất.",
-//       "qualities": [
-//         "128",
-//         "320"
-//       ],
-//       "source_list": [
-//         "http://zmp3-mp3-s1.zadn.vn/96d8db584f1ca642ff0d/2100605261626217079?authen=exp=1505431395~acl=/96d8db584f1ca642ff0d/*~hmac=f692eccda42ebc3e7752260d81b241ca",
-//         ""
-//       ],
-//       "source_base": "http://",
-//       "lyric": "http://static.mp3.zdn.vn/lyrics/2017/c/9/c948e64f07b04db3a44f13052c128033.txt"
-//     }
-//   ]
+//   "err": 0,
+//   "msg": "Success",
+//   "data": {
+//     "id": "ZW8IAFB7",
+//     "name": "Hãy Về Với Em",
+//     "title": "Hãy Về Với Em",
+//     "code": "LGxGTZHsXVJaCBRtGyDmLm",
+//     "artists_names": "Tiêu Châu Như Quỳnh",
+//     "artists": [
+//       {
+//         "name": "Tiêu Châu Như Quỳnh",
+//         "link": "/nghe-si/Tieu-Chau-Nhu-Quynh"
+//       },
+//       {
+//         "name": " Lam Trường",
+//         "link": "/nghe-si/Lam-Truong"
+//       }
+//     ],
+//     "performer": "Tiêu Châu Như Quỳnh",
+//     "type": "audio",
+//     "link": "/bai-hat/Hay-Ve-Voi-Em-Tieu-Chau-Nhu-Quynh-Lam-Truong/ZW8IAFB7.html",
+//     "lyric": "http://static.mp3.zdn.vn/lyrics/2017/8/c/8ca8ab3759f88577dc159c93576361ec.lrc",
+//     "thumbnail": "https://zmp3-photo-td.zadn.vn/thumb/94_94/covers/c/b/cbc93367d52a046fa172d93feae723c3_1506096854.jpg",
+//     "source": {
+//       "128": "http://zmp3-mp3-s1-tr.zadn.vn/e05ce2a039e4d0ba89f5/4530298469223166646?key=92P456LfkBKH1OCT0nt7Ew&expires=1506416908",
+//       "320": ""
+//     },
+//     "artist": {
+//       "id": "IWZ968Z8",
+//       "name": "Tiêu Châu Như Quỳnh",
+//       "link": "/nghe-si/Tieu-Chau-Nhu-Quynh",
+//       "cover": "https://zmp3-photo-td.zadn.vn/cover_artist/e/a/eaa047b33faa720e6ba4bfefa8fbb5c5_1506308126.jpg",
+//       "thumbnail": "https://zmp3-photo-td.zadn.vn/thumb/240_240/avatars/e/7/e7409888a3386108fbf2fac30c075209_1482896982.jpg"
+//     },
+//     "is_vip": false
+//   },
+//   "timestamp": 1506330508398
 // }
