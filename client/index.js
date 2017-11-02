@@ -20,17 +20,16 @@ let player; // the jukebox player, will be init when clientStartup
 
 /*global Trianglify*/
 const navbarBackground = () => {
-	const rn = Math.floor((Math.random() * 150) + 60);
-	const rs = Math.floor((Math.random() * 11) + 4);
+	const rn = Math.floor(Math.random() * 150 + 60);
+	const rs = Math.floor(Math.random() * 11 + 4);
 	const t = new Trianglify({
 		x_gradient: Trianglify.colorbrewer.Spectral[rs],
 		noiseIntensity: 0,
-		cellsize: rn
+		cellsize: rn,
 	});
 
 	const pattern = t.generate(window.innerWidth, 269);
-	document.getElementById('js-navbar')
-		.setAttribute('style', `background-image: ${pattern.dataUrl}`);
+	document.getElementById('js-navbar').setAttribute('style', `background-image: ${pattern.dataUrl}`);
 };
 
 const showTab = tabId => {
@@ -50,7 +49,9 @@ const hideRequireMessage = () => {
 	$playlistNav.removeClass('_focus');
 	$('.js-login-control').removeClass('_error');
 
-	const songurl = $('[name="songurl"]').val().trim();
+	const songurl = $('[name="songurl"]')
+		.val()
+		.trim();
 	if (songurl) {
 		submitSong(songurl);
 		$('[name="songurl"]').val('');
@@ -65,7 +66,7 @@ var submitSong = songurl => {
 		return;
 	}
 
-	Meteor.call('getSongInfo', songurl, userId, error/*, result*/ => {
+	Meteor.call('getSongInfo', songurl, userId, (error /*, result*/) => {
 		if (error) {
 			alert(`Cannot add the song at:\n${songurl}\nReason: ${error.reason}`);
 			$('[name="songurl"]').val('');
@@ -107,24 +108,28 @@ Template.songlist.helpers({
 			case 'tab--play-list':
 				const today = new Date();
 				today.setHours(0, 0, 0, 0); //reset to start of day
-				songList = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+				songList = Songs.find({ timeAdded: { $gt: today.getTime() } }, { sort: { timeAdded: 1 } });
 				break;
 
 			case 'tab--yesterday':
-				const yesterday = moment().add(-1, 'days').toDate();
+				const yesterday = moment()
+					.add(-1, 'days')
+					.toDate();
 				yesterday.setHours(0, 0, 0, 0);
 				songList = Songs.find(
-					{timeAdded: {$gt: yesterday.getTime(), $lt: earlyOfToday.getTime()}},
-					{sort: {timeAdded: 1}}
+					{ timeAdded: { $gt: yesterday.getTime(), $lt: earlyOfToday.getTime() } },
+					{ sort: { timeAdded: 1 } }
 				);
 				break;
 
 			case 'tab--past-7-days':
-				const last7Days = moment().add(-7, 'days').toDate();
+				const last7Days = moment()
+					.add(-7, 'days')
+					.toDate();
 				last7Days.setHours(0, 0, 0, 0);
 				songList = Songs.find(
-					{timeAdded: {$gt: last7Days.getTime(), $lt: earlyOfToday.getTime()}},
-					{sort: {timeAdded: 1}}
+					{ timeAdded: { $gt: last7Days.getTime(), $lt: earlyOfToday.getTime() } },
+					{ sort: { timeAdded: 1 } }
 				);
 				break;
 
@@ -142,7 +147,7 @@ Template.songlist.helpers({
 
 	loadingHidden() {
 		return Session.get('urlFetching') ? '' : 'hidden';
-	}
+	},
 });
 
 Template.song.helpers({
@@ -156,14 +161,14 @@ Template.song.helpers({
 
 	getDisplayStatus() {
 		const isHost = Session.get('IS_HOST');
-		return (isHost ? '' : 'u-hide');
+		return isHost ? '' : 'u-hide';
 	},
 
 	playing() {
-		const playingSongs = AppStates.findOne({key: 'playingSongs'});
+		const playingSongs = AppStates.findOne({ key: 'playingSongs' });
 
 		if (playingSongs && Array.isArray(playingSongs.songs)) {
-			return (playingSongs.songs.includes(this._id)) ? '_playing' : '';
+			return playingSongs.songs.includes(this._id) ? '_playing' : '';
 		} else {
 			return '';
 		}
@@ -195,13 +200,13 @@ Template.song.helpers({
 				break;
 		}
 		return className;
-	}
+	},
 });
 
 Template.naustormitem.helpers({
 	getStatus() {
-		return (this.isOnline ? '_active' : '');
-	}
+		return this.isOnline ? '_active' : '';
+	},
 });
 
 Template.naustormauthoritem.helpers({
@@ -210,8 +215,8 @@ Template.naustormauthoritem.helpers({
 	},
 
 	getStatus() {
-		return (this.isOnline ? '_active' : '');
-	}
+		return this.isOnline ? '_active' : '';
+	},
 });
 
 Template.song.created = function() {
@@ -221,14 +226,13 @@ Template.song.created = function() {
 	this.addDateFromNow = ReactiveVar(this.momentTime.fromNow());
 	this.visible = ReactiveVar(true);
 
-	this.handle = Meteor.setInterval((() => {
+	this.handle = Meteor.setInterval(() => {
 		self.addDateFromNow.set(self.momentTime.fromNow());
-		if (!self.momentTime.isSameOrAfter(new Date(), 'day')) {
+		if (!self.momentTime.isSameOrAfter(new Date(), 'day') && Session.get('tab') === 'tab--play-list') {
 			// not today?, hide self
 			this.visible.set(false);
 		}
-
-	}), 1000 * 60);
+	}, 1000 * 60);
 };
 
 Template.song.destroyed = function() {
@@ -242,7 +246,7 @@ Template.naustorm.helpers({
 
 	getDisplayStatus() {
 		const isHost = Session.get('IS_HOST');
-		return (isHost ? '' : 'u-hide');
+		return isHost ? '' : 'u-hide';
 	},
 
 	groupByAuthorData() {
@@ -258,14 +262,18 @@ Template.naustorm.helpers({
 		const endOfWeek = moment().endOf('isoWeek');
 		const dateStr = `${startOfWeek.format('MMM Do')} - ${endOfWeek.format('MMM Do')}`;
 		return dateStr;
-	}
+	},
 });
 Template.naustorm.created = () => {};
 Template.naustorm.destroyed = () => {};
 Template.naustorm.onCreated(() => {
 	function getNaustormData() {
-		const startOfWeek = moment().startOf('isoWeek').toDate();
-		const endOfWeek = moment().endOf('isoWeek').toDate();
+		const startOfWeek = moment()
+			.startOf('isoWeek')
+			.toDate();
+		const endOfWeek = moment()
+			.endOf('isoWeek')
+			.toDate();
 		let songList;
 		const naustorm = [];
 		let group;
@@ -273,8 +281,8 @@ Template.naustorm.onCreated(() => {
 		const groupByAuthorData = [];
 
 		songList = Songs.find(
-			{timeAdded: {$gt: startOfWeek.getTime(), $lt: endOfWeek.getTime()}},
-			{sort: {timeAdded: 1}}
+			{ timeAdded: { $gt: startOfWeek.getTime(), $lt: endOfWeek.getTime() } },
+			{ sort: { timeAdded: 1 } }
 		).fetch();
 
 		group = _.chain(songList)
@@ -295,7 +303,7 @@ Template.naustorm.onCreated(() => {
 			let g = groupByAuthor._wrapped[item];
 			let t = {
 				author: g[0].author.length === 0 ? 'The Many-Faced' : g[0].author,
-				books: g.length
+				books: g.length,
 			};
 
 			groupByAuthorData.push(t);
@@ -309,12 +317,12 @@ Template.naustorm.onCreated(() => {
 	// waiting new records from Song collection
 	const today = new Date();
 	today.setHours(0, 0, 0, 0); //reset to start of day
-	const listenderForNaustorm = Songs.find({timeAdded: {$gt: today.getTime()}}, {sort: {timeAdded: 1}});
+	const listenderForNaustorm = Songs.find({ timeAdded: { $gt: today.getTime() } }, { sort: { timeAdded: 1 } });
 	listenderForNaustorm.observeChanges({
 		added(id, docs) {
 			getNaustormData();
 			mergeData();
-		}
+		},
 	});
 });
 
@@ -324,25 +332,33 @@ Template.naucoin.helpers({
 	},
 	getDisplayStatus() {
 		const isHost = Session.get('IS_HOST');
-		return (isHost ? '' : 'u-hide');
-	}
+		return isHost ? '' : 'u-hide';
+	},
 });
 Template.naucoin.events({
 	'submit .js-naucoin-submit-btn'(e) {
-		const userId = $(e.currentTarget).find('[name=userName]').val();
-		const amount = $(e.currentTarget).find('[name=amount]').val();
+		const userId = $(e.currentTarget)
+			.find('[name=userName]')
+			.val();
+		const amount = $(e.currentTarget)
+			.find('[name=amount]')
+			.val();
 
 		if (!amount || isNaN(amount)) {
 			alert('Input value is invalid !');
-			$(e.currentTarget).find('[name=amount]').val('');
+			$(e.currentTarget)
+				.find('[name=amount]')
+				.val('');
 			console.log('amount', amount);
 			return;
 		}
 
 		Meteor.call('naucoinPay', userId, amount, (err, result) => {
-			$(e.currentTarget).find('[name=amount]').val('');
+			$(e.currentTarget)
+				.find('[name=amount]')
+				.val('');
 		});
-	}
+	},
 });
 
 Template.naucoinitem.helpers({
@@ -367,8 +383,8 @@ Template.naucoinitem.helpers({
 		return (this.balance || 0).toFixed(2);
 	},
 	getStatus() {
-		return (this.isOnline ? '_active' : '');
-	}
+		return this.isOnline ? '_active' : '';
+	},
 });
 
 Template.body.onCreated(() => {
@@ -392,7 +408,7 @@ Template.body.onCreated(() => {
 		changed(id, data) {
 			// console.log('user changed', id, data);
 			userDataChanged(id);
-		}
+		},
 	});
 	// update host status
 });
@@ -422,18 +438,19 @@ Template.body.helpers({
 		}
 
 		return searchResult;
-	}
+	},
 });
 
 Template.songlist.events({
 	'click #songurl'(event) {
 		event.currentTarget.select();
-	}
+	},
 });
 
 Template.song.events({
-	'click .js-song-item'() {
+	'click .js-song-item'(e) {
 		player.selectSong(this);
+		e.preventDefault();
 	},
 
 	'click .remove-btn'(e) {
@@ -443,15 +460,17 @@ Template.song.events({
 			player.pause();
 		}
 		e.stopPropagation();
+		e.preventDefault();
 	},
 
 	'click .js-show-book-user'(e) {
 		const isUpToggled = !this.isUp;
 		Songs.update(this._id, {
 			$set: {
-				isUp: isUpToggled
-			}
+				isUp: isUpToggled,
+			},
 		});
+		e.preventDefault();
 	},
 
 	'click .rebook-btn'(e) {
@@ -462,6 +481,7 @@ Template.song.events({
 		//call server
 		submitSong(this.originalURL);
 		e.stopPropagation();
+		e.preventDefault();
 	},
 
 	'click .lyric-modal-toggle'(e) {
@@ -472,7 +492,8 @@ Template.song.events({
 			$('.js-lyric-modal-song-lyric').html('Sorry there is no lyric for this song');
 		}
 		$('.lyric-modal').addClass('active');
-	}
+		e.preventDefault();
+	},
 });
 
 Template.body.events({
@@ -483,10 +504,15 @@ Template.body.events({
 		} else {
 			Session.set('showAll', false);
 		}
+		event.preventDefault();
 	},
 
 	'submit #js-add-song-form'(event) {
-		if (!$('[name="songurl"]').val().trim()) {
+		if (
+			!$('[name="songurl"]')
+				.val()
+				.trim()
+		) {
 			return;
 		}
 
@@ -520,6 +546,7 @@ Template.body.events({
 		} else {
 			player.pause();
 		}
+		event.preventDefault();
 	},
 
 	'click .js-playlist-nav'(event) {
@@ -529,8 +556,12 @@ Template.body.events({
 
 		Session.set('tab', tab);
 		showTab($this.attr('data-target'));
-		$this.closest('.playlist-nav__list').find('.playlist-nav__item').removeClass('_active');
+		$this
+			.closest('.playlist-nav__list')
+			.find('.playlist-nav__item')
+			.removeClass('_active');
 		$this.addClass('_active');
+		event.preventDefault();
 	},
 
 	'keyup .js-search-box'(e) {
@@ -542,12 +573,13 @@ Template.body.events({
 		const value = $target.val();
 		const searchResult = Session.get('searchResult') || [];
 		let selectedIndex = Session.get('selectedIndex');
-		if (selectedIndex > (searchResult.length - 1)) {
+		if (selectedIndex > searchResult.length - 1) {
 			selectedIndex = searchResult.length - 1;
 			Session.set('selectedIndex', selectedIndex.toString());
 		}
 
-		if (e.keyCode === 38) { // up arrow
+		if (e.keyCode === 38) {
+			// up arrow
 			if (selectedIndex > 0) {
 				selectedIndex--;
 				Session.set('selectedIndex', selectedIndex.toString());
@@ -555,15 +587,17 @@ Template.body.events({
 			}
 		}
 
-		if (e.keyCode === 40) { // down arrow
-			if (selectedIndex < (searchResult.length - 1)) {
+		if (e.keyCode === 40) {
+			// down arrow
+			if (selectedIndex < searchResult.length - 1) {
 				selectedIndex++;
 				Session.set('selectedIndex', selectedIndex.toString());
 				return;
 			}
 		}
 
-		if (e.keyCode === 27) { // esc
+		if (e.keyCode === 27) {
+			// esc
 			$target.val('');
 			$form.removeClass('_active');
 
@@ -573,7 +607,8 @@ Template.body.events({
 			return;
 		}
 
-		if (e.keyCode === 13) { // enter
+		if (e.keyCode === 13) {
+			// enter
 			const selectedSong = searchResult[selectedIndex];
 			if (selectedSong) {
 				$form.find('#songurl').val(selectedSong.originalURL);
@@ -612,18 +647,21 @@ Template.body.events({
 				data = tracks.map(item => ({
 					originalURL: item.permalink_url,
 					name: item.title,
-					artist: item.genre
+					artist: item.genre,
 				}));
 				activeSearchResult(true);
 			});
 		} else {
 			if (value.length >= 3) {
-				data = Songs.find({
-					searchPattern: {$regex: `${value.toLowerCase()}*`},
-				}, {
-					limit: 50, // we remove duplicated result and limit further
-					reactive: false
-				}).fetch();
+				data = Songs.find(
+					{
+						searchPattern: { $regex: `${value.toLowerCase()}*` },
+					},
+					{
+						limit: 50, // we remove duplicated result and limit further
+						reactive: false,
+					}
+				).fetch();
 				activeSearchResult();
 			} else {
 				$form.removeClass('_active');
@@ -641,10 +679,12 @@ Template.body.events({
 
 		//call server
 		submitSong(songurl);
+		event.preventDefault();
 	},
 
 	'click .js-lyric-modal-close'(e) {
 		$('.lyric-modal').removeClass('active');
+		event.preventDefault();
 	},
 
 	'click .js-lyric-modal'(e) {
@@ -652,11 +692,11 @@ Template.body.events({
 		if ($target.closest('.lyric-modal-inner').length === 0) {
 			$target.removeClass('active');
 		}
+		event.preventDefault();
 	},
 });
 
 Meteor.startup(() => {
-
 	player = new JukeboxPlayer();
 
 	const selected = Songs.findOne(Session.get('selectedSong'));
@@ -722,7 +762,7 @@ Meteor.startup(() => {
 
 		if (newScrollTop > oldScrollTop) {
 			// scrolling down
-			if (pos - delta < (headerHeight - playlistHeight)) {
+			if (pos - delta < headerHeight - playlistHeight) {
 				$playlist.css('top', headerHeight - playlistHeight);
 			} else {
 				$playlist.css('top', pos - delta);
@@ -750,7 +790,7 @@ Meteor.startup(() => {
 				console.log('all host removed, errs:', err);
 			});
 		} else {
-			const passcode = prompt('Passcode for host is: Nau\'s birthday (6 digits)', '');
+			const passcode = prompt("Passcode for host is: Nau's birthday (6 digits)", '');
 			if (passcode.toLowerCase() === '110114') {
 				const userId = Meteor.userId();
 				if (!userId) {
