@@ -9,7 +9,7 @@ import { getGzipURL } from './getGzipURL';
 const jsonURLReg = /\/media\/get-source\?[A-z0-9?=&]+/;
 const avatarURLReg = /thumb-art.*?"(https?:\/\/[^"]*)/;
 const lyricReg = /<p class="fn-wlyrics fn-content".*?>([\s\S]*?)<\/p>/;
-//sample avatar image from Zing HTML page: <img class="thumb-art" width="110" src="http://image.mp3.zdn.vn/thumb/165_165/avatars/6/2/62b05bf415a3736e551cae7ed1ce90f2_1450237124.jpg" alt="Min">
+//sample avatar image from Zing HTML page: <img class="thumb-art" width="110" src="https://image.mp3.zdn.vn/thumb/165_165/avatars/6/2/62b05bf415a3736e551cae7ed1ce90f2_1450237124.jpg" alt="Min">
 
 /**
  * Get Zing stream URL and other info
@@ -33,15 +33,14 @@ export const getSongInfoZing = songurl => {
 		console.error('Get Zing MP3 URL Error', err);
 	}
 
-	linkRes = (linkRes.content) ? linkRes.content : '';
+	linkRes = linkRes.content ? linkRes.content : '';
 	// console.log('linkRes:', linkRes);
 
 	// run the html against regexp to get JSON URL
 	jsonURLResults = jsonURLReg.exec(linkRes);
 
-
 	if (jsonURLResults) {
-		jsonURL = `http://mp3.zing.vn/xhr${jsonURLResults[0]}`;
+		jsonURL = `https://mp3.zing.vn/xhr${jsonURLResults[0]}`;
 		console.log('jsonURLResults:', jsonURL);
 	} else {
 		console.log('jsonURL parse failed');
@@ -77,7 +76,6 @@ export const getSongInfoZing = songurl => {
 
 		json = JSON.parse(jsonRes);
 		// see sample JSON below
-
 	} catch (err) {
 		console.error('Get Zing stream Error', err);
 	}
@@ -99,24 +97,23 @@ export const getSongInfoZing = songurl => {
 				streamURL: jsonItem.source['128'],
 				thumbURL: thumb,
 				lyric,
-				play: 0
+				play: 0,
 			};
 		} else if (jsonItem.msg) {
 			console.log(`Error received: ${jsonItem.msg}`);
 			return {
-				error: jsonItem.msg
+				error: jsonItem.msg,
 			};
 		} else {
 			console.log('Unknown errors');
 			return {
-				error: 'Errors unknown.'
+				error: 'Errors unknown.',
 			};
 		}
-
 	} else {
 		console.log('Can\'t parse link');
 		return {
-			error: 'Can\'t parse and get song info from link'
+			error: 'Can\'t parse and get song info from link',
 		};
 	}
 };
@@ -144,10 +141,10 @@ export const getSongInfoZing = songurl => {
 //     "performer": "Tiêu Châu Như Quỳnh",
 //     "type": "audio",
 //     "link": "/bai-hat/Hay-Ve-Voi-Em-Tieu-Chau-Nhu-Quynh-Lam-Truong/ZW8IAFB7.html",
-//     "lyric": "http://static.mp3.zdn.vn/lyrics/2017/8/c/8ca8ab3759f88577dc159c93576361ec.lrc",
+//     "lyric": "https://static.mp3.zdn.vn/lyrics/2017/8/c/8ca8ab3759f88577dc159c93576361ec.lrc",
 //     "thumbnail": "https://zmp3-photo-td.zadn.vn/thumb/94_94/covers/c/b/cbc93367d52a046fa172d93feae723c3_1506096854.jpg",
 //     "source": {
-//       "128": "http://zmp3-mp3-s1-tr.zadn.vn/e05ce2a039e4d0ba89f5/4530298469223166646?key=92P456LfkBKH1OCT0nt7Ew&expires=1506416908",
+//       "128": "https://zmp3-mp3-s1-tr.zadn.vn/e05ce2a039e4d0ba89f5/4530298469223166646?key=92P456LfkBKH1OCT0nt7Ew&expires=1506416908",
 //       "320": ""
 //     },
 //     "artist": {

@@ -16,7 +16,10 @@ export const getSongInfoSoundcloud = songurl => {
 	// First Step: Initialize Soundcloud API
 
 	// Second Step: Resolve Soundcloud URL
-	json = HTTP.call('GET', `http://api.soundcloud.com/resolve.json?url=${songurl}&client_id=f6dbfb46c6b75cb6b5cd84aeb50d79e3`);
+	json = HTTP.call(
+		'GET',
+		`https://api.soundcloud.com/resolve.json?url=${songurl}&client_id=f6dbfb46c6b75cb6b5cd84aeb50d79e3`
+	);
 	console.log(json);
 
 	if (json && json.data) {
@@ -30,18 +33,17 @@ export const getSongInfoSoundcloud = songurl => {
 				artist: json.data.user.username,
 				streamURL: `/tracks/${json.data.id}`,
 				thumbURL: json.data.user.avatar_url,
-				play: 0
+				play: 0,
 			};
 		} else {
 			return {
-				error: 'This Soundcloud is not streamable'
+				error: 'This Soundcloud is not streamable',
 			};
 		}
-
 	} else {
 		console.log('Can\'t parse link');
 		return {
-			error: 'Can\'t parse and get song info from link'
+			error: 'Can\'t parse and get song info from link',
 		};
 	}
 };
