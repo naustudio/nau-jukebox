@@ -8,10 +8,9 @@ import { xml2js } from 'meteor/vjau:xml2js';
 import { getGzipURL } from './getGzipURL';
 
 // Utility / Private functions
-const xmlURLReg = /http:\/\/www.nhaccuatui.com\/flash\/xml\?key1=(\w+)/;
+const xmlURLReg = /https?:\/\/(?:www)?.nhaccuatui.com\/flash\/xml\?.*?key1=(\w+)/;
 const lyricReg = /<p id="divLyric"[\s\S]+ <\/p>/;
 // sample xml url: "http://www.nhaccuatui.com/flash/xml?key1=99decd7306277634419b987bed859265"
-
 
 /**
  * Get NCT stream URL and other info
@@ -34,7 +33,7 @@ export const getSongInfoNct = songurl => {
 		console.error('Get NCT MP3 URL Error', err);
 	}
 
-	linkRes = (linkRes.content) ? linkRes.content : '';
+	linkRes = linkRes.content ? linkRes.content : '';
 	// console.log('linkRes:', linkRes);
 
 	// run the html against regexp to get XML URL
@@ -68,7 +67,7 @@ export const getSongInfoNct = songurl => {
 
 	// Note: Manually install the node package in server folder
 	const parser = new xml2js.Parser({
-		trim: true
+		trim: true,
 	});
 
 	// console.log('XML2JS:', XML2JS);
@@ -85,7 +84,6 @@ export const getSongInfoNct = songurl => {
 		});
 		console.log(`==> ${JSON.stringify(json)}`);
 		// see sample JSON below
-
 	} catch (err) {
 		console.error('Get NCT stream Error', err);
 	}
@@ -109,24 +107,23 @@ export const getSongInfoNct = songurl => {
 				streamURL: track.location[0],
 				thumbURL: track.avatar[0],
 				lyric,
-				play: 0
+				play: 0,
 			};
 		} else if (track.errormessage[0]) {
 			console.log(`Error received: ${track.errormessage[0]}`);
 			return {
-				error: track.errormessage[0]
+				error: track.errormessage[0],
 			};
 		} else {
 			console.log('Unknown errors');
 			return {
-				error: 'Errors unknown.'
+				error: 'Errors unknown.',
 			};
 		}
-
 	} else {
 		console.log('Can\'t parse link');
 		return {
-			error: 'Can\'t parse and get song info from link'
+			error: 'Can\'t parse and get song info from link',
 		};
 	}
 };
