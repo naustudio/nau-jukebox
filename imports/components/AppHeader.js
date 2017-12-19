@@ -4,7 +4,7 @@
 
 
 import React, { Component } from 'react';
-import Navbar from './NavBar';
+import Navbar from './Navbar';
 
 export default class AppHeader extends Component {
 	state = { activeClasses: false };

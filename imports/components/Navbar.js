@@ -9,9 +9,14 @@ import ButtonPlay from './ButtonPlay';
 
 class NavBar extends Component {
 
+	componentDidMount() {
+		this.navbarBackground();
+		Meteor.setInterval(this.navbarBackground, 60000);
+	}
+
 	navbarBackground = () => {
-		const rn = Math.floor(Math.random() * 150 + 60);
-		const rs = Math.floor(Math.random() * 11 + 4);
+		const rn = Math.floor((Math.random() * 150) + 60);
+		const rs = Math.floor((Math.random() * 11) + 4);
 		const t = new Trianglify({
 			x_gradient: Trianglify.colorbrewer.Spectral[rs],
 			noiseIntensity: 0,
@@ -19,17 +24,23 @@ class NavBar extends Component {
 		});
 
 		const pattern = t.generate(window.innerWidth, 269);
-		document.getElementById('js-navbar').setAttribute('style', `background-image: ${pattern.dataUrl}`);
+		if (this.navBar) {
+			this.navBar.setAttribute('style', `background-image: ${pattern.dataUrl}`);
+		}
 	};
+
+	refNav = (ref) => {
+		this.navBar = ref;
+	}
 
 	render() {
 		return (
-			<nav className="navbar">
+			<nav className="navbar" ref={this.refNav}>
 				<Host />
 				<div className="container">
-					<ul className={`navbar__list ${this.props.openNav} ? 'navbar__list--open' : ''`}>
+					<ul className="navbar__list">
 						<li className="navbar__item navbar__item-logo">
-							<a href="https://naustud.io" target="_blank">
+							<a href="https://naustud.io" target="_blank" rel="noopener noreferrer">
 								<img
 									className="navbar__img"
 									src="/nau-jukebox.svg"

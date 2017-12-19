@@ -43,7 +43,9 @@
 		"react/prefer-stateless-function": 0
 	},
 	"globals": {
-		"Migrations": true
+		"Migrations": true,
+		"Trianglify": true,
+		"Songs": true
 	},
 	"env": {
 		"browser": true,

@@ -20,7 +20,7 @@ export const REPEAT_SONG = 'REPEAT_SONG';
 
 export const ACTIVE_HOST = 'ACTIVE_HOST';
 
-export const ADD_SONG = 'ADD_SONG';
+export const SEARCH_SONG = 'SEARCH_SONG';
 
 export const FOCUS_SEARCH_BOX = 'FOCUS_SEARCH_BOX';
 
@@ -85,11 +85,12 @@ export function repeatSong(id) {
 }
 
 /**
- * @param {Number} hostId of song
+ * @param {Boolean} isActive
  * @return {void}
  */
-export function activeHost(hostId) {
-	dispatch({ type: ACTIVE_HOST, hostId });
+
+export function activeHost(isActive) {
+	dispatch({ type: ACTIVE_HOST, isActive });
 }
 
 /**
@@ -97,8 +98,8 @@ export function activeHost(hostId) {
  * @return {void}
  */
 
-export function addSong(link) {
-	dispatch({ type: ADD_SONG, link });
+export function searchSong(searchString) {
+	dispatch({ type: SEARCH_SONG, searchString });
 }
 
 /**
