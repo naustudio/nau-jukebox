@@ -16,7 +16,7 @@
 
 .navbar__list {
 	display: flex;
-	/* padding-top: 15px; */
+	padding: 15px 0;
 }
 
 @media screen and (max-width: 480px) {
@@ -28,7 +28,7 @@
 
 .navbar__item--input {
 	margin-left: 64px;
-	margin-bottom: 5px;
+	/* margin-bottom: 5px; */
 }
 
 @media screen and (max-width: 480px) {
@@ -39,6 +39,7 @@
 }
 
 .navbar__img {
+	mix-blend-mode: multiply;
 	height: 40px;
 }
 
@@ -108,6 +109,7 @@
 	width: 40px;
 	height: 40px;
 	margin-left: 60px;
+	margin-bottom: 0;
 	cursor: pointer;
 }
 
@@ -194,4 +196,61 @@
 
 .play-button--pause .play-button__left {
 	transform: translateX(6px) scaleY(0.8);
+}
+
+.host {
+	position: absolute;
+	top: 20px;
+	left: 25px;
+	z-index: 1000;
+	cursor: pointer;
+}
+
+.host .dot {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.3);
+	position: relative;
+	transition: all 0.3s;
+}
+
+.host .dot::after {
+	content: 'host';
+	position: absolute;
+	top: 0;
+	left: 40px;
+	color: #fff;
+	transform: translate(-100%) scaleX(-1);
+	opacity: 0;
+	transition: all 0.3s;
+	font-size: 15px;
+}
+
+.host .dot:hover {
+	background-color: #fff;
+}
+
+.host .dot:hover::after {
+	opacity: 1;
+	transform: translate(0) scaleX(1);
+}
+
+.host--active {
+	cursor: default;
+}
+
+.host--active .dot {
+	background-color: #a9c52f;
+	transition: all 0.3s;
+	animation: ani-dot 1s infinite;
+}
+
+.host--active .dot:hover {
+	background-color: #a9c52f;
+}
+
+.host--active .dot:hover::after {
+	content: 'guest';
+	color: #a9c52f;
 }

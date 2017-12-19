@@ -183,7 +183,8 @@ h5 small {
 		margin: 0;
 
 		a {
-			display: block;
+			display: flex;
+			align-items: center;
 			text-decoration: none;
 		}
 
@@ -195,13 +196,13 @@ h5 small {
 
 		&--input {
 			width: 60%;
-			padding: 0.5 * $gutter 0;
+			// padding: 0.5 * $gutter 0;
 			position: relative;
 		}
 
 		&--icon {
 			float: left;
-			padding: 15px 0;
+			// padding: 15px 0;
 			font-size: 12px;
 			line-height: 1;
 			letter-spacing: 2.5px;
@@ -227,7 +228,7 @@ h5 small {
 	width: 100%;
 	border-radius: 4px;
 	border: 1px solid $color-06;
-	margin-top: 4px;
+	// margin-top: 4px;
 	overflow: hidden;
 	background-color: rgba(255, 255, 255, 0.5);
 
@@ -344,7 +345,7 @@ h5 small {
 	position: relative;
 	width: $playbutton-h;
 	height: $playbutton-h;
-	margin-top: 1 * $gutter;
+	// margin-top: 1 * $gutter;
 	margin-left: 4 * $gutter;
 	cursor: pointer;
 
