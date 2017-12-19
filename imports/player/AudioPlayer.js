@@ -6,7 +6,7 @@
 /**
  * This wraps the basic media element player
  */
-export class AudioPlayer {
+export default class AudioPlayer {
 
 	constructor(mainPlayer) {
 		this.type = 'AudioPlayer';

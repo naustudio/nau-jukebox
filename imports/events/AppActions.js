@@ -71,6 +71,7 @@ export function toggleBtnPlay() {
  * @param
  * @return {void}
  */
+
 export function activeBtnPlay() {
 	dispatch({ type: ACTIVE_BTN_PLAY });
 }
@@ -95,6 +96,7 @@ export function activeHost(hostId) {
  * @param {Number} hostId of song
  * @return {void}
  */
+
 export function addSong(link) {
 	dispatch({ type: ADD_SONG, link });
 }
@@ -111,6 +113,7 @@ export function focusSearchBox(isFocus) {
  * @param
  * @return {void}
  */
+
 export function signInUser(info) {
 	dispatch({ type: SIGN_IN_USER, info });
 }
@@ -119,6 +122,7 @@ export function signInUser(info) {
  * @param
  * @return {void}
  */
+
 export function errorSignIn() {
 	dispatch({ type: ERROR_SIGN_IN });
 }
@@ -127,6 +131,7 @@ export function errorSignIn() {
  * @param
  * @return {void}
  */
+
 export function toggleBtnNav() {
 	dispatch({ type: TOGGLE_BTN_NAV });
 }
@@ -135,6 +140,7 @@ export function toggleBtnNav() {
  * @param
  * @return {void}
  */
+
 export function openPopUp(id) {
 	dispatch({ type: OPEN_POP_UP, id });
 }
@@ -143,6 +149,7 @@ export function openPopUp(id) {
  * @param
  * @return {void}
  */
+
 export function closePopUp() {
 	dispatch({ type: CLOSE_POP_UP });
 }

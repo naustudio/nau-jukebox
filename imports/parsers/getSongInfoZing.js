@@ -4,7 +4,7 @@
  * Zing MP3 URL parser module
  */
 import { SongOrigin } from '../constants.js';
-import { getGzipURL } from './getGzipURL';
+import getGzipURL from './getGzipURL';
 
 const jsonURLReg = /\/media\/get-source\?[A-z0-9?=&]+/;
 const avatarURLReg = /thumb-art.*?"(https?:\/\/[^"]*)/;
@@ -17,10 +17,8 @@ const lyricReg = /<p class="fn-wlyrics fn-content".*?>([\s\S]*?)<\/p>/;
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-export const getSongInfoZing = songurl => {
+const getSongInfoZing = songurl => {
 	let linkRes;
-	let jsonURLResults;
-	let lyricResults;
 	let jsonURL;
 	let thumb;
 	let lyric;
@@ -37,13 +35,14 @@ export const getSongInfoZing = songurl => {
 	// console.log('linkRes:', linkRes);
 
 	// run the html against regexp to get JSON URL
-	jsonURLResults = jsonURLReg.exec(linkRes);
+	const jsonURLResults = jsonURLReg.exec(linkRes);
 
 	if (jsonURLResults) {
 		jsonURL = `https://mp3.zing.vn/xhr${jsonURLResults[0]}`;
 		console.log('jsonURLResults:', jsonURL);
 	} else {
 		console.log('jsonURL parse failed');
+
 		return null;
 	}
 
@@ -54,7 +53,7 @@ export const getSongInfoZing = songurl => {
 		console.log('Thumb URL', thumb);
 	}
 
-	lyricResults = lyricReg.exec(linkRes);
+	const lyricResults = lyricReg.exec(linkRes);
 	if (lyricResults) {
 		lyric = lyricResults[1];
 		console.log('lyricResult: ', lyricResults[1]);
@@ -88,6 +87,7 @@ export const getSongInfoZing = songurl => {
 		//Not so soon, some Zing URL are blocked due to copyright issue
 		if (jsonItem.source['128'] && String(json.err) === '0') {
 			console.log('URL is valid. Adding new song.');
+
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
@@ -101,22 +101,23 @@ export const getSongInfoZing = songurl => {
 			};
 		} else if (jsonItem.msg) {
 			console.log(`Error received: ${jsonItem.msg}`);
+
 			return {
 				error: jsonItem.msg,
 			};
-		} else {
-			console.log('Unknown errors');
-			return {
-				error: 'Errors unknown.',
-			};
 		}
-	} else {
-		console.log('Can\'t parse link');
+
 		return {
-			error: 'Can\'t parse and get song info from link',
+			error: 'Errors unknown.',
 		};
 	}
+
+	return {
+		error: 'Can\'t parse and get song info from link',
+	};
 };
+
+export default getSongInfoZing;
 
 // sample JSON response:
 // {
