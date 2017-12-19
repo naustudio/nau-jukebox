@@ -9,6 +9,19 @@ import ButtonPlay from './ButtonPlay';
 
 class NavBar extends Component {
 
+	navbarBackground = () => {
+		const rn = Math.floor(Math.random() * 150 + 60);
+		const rs = Math.floor(Math.random() * 11 + 4);
+		const t = new Trianglify({
+			x_gradient: Trianglify.colorbrewer.Spectral[rs],
+			noiseIntensity: 0,
+			cellsize: rn,
+		});
+
+		const pattern = t.generate(window.innerWidth, 269);
+		document.getElementById('js-navbar').setAttribute('style', `background-image: ${pattern.dataUrl}`);
+	};
+
 	render() {
 		return (
 			<nav className="navbar">

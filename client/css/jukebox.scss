@@ -161,6 +161,10 @@ h5 small {
 	width: 100%;
 }
 
+/* =============================================
+=          AppHeader                            =
+============================================= */
+
 .navbar {
 	width: 100%;
 	background-color: $color-08;
@@ -169,13 +173,24 @@ h5 small {
 	top: 0;
 	z-index: 300;
 	background-size: cover;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+	border-bottom: 1px solid $color-06;
+	box-shadow: 1px 1px 1px $color-06;
 	transition: all 0.5s;
+
+	background-image: url("https://static.vecteezy.com/system/resources/previews/000/113/010/non_2x/multicolor-geometric-low-poly-vector-background.jpg");
+	background-repeat: no-repeat;
 
 	&__list {
 		list-style-type: none;
 		margin: 0;
+		display: flex;
+		padding: 15px 0;
+	}
+
+
+	&__img {
+		mix-blend-mode: multiply;
+		height: 40px;
 	}
 
 	&__item {
@@ -198,6 +213,7 @@ h5 small {
 			width: 60%;
 			// padding: 0.5 * $gutter 0;
 			position: relative;
+			margin-left: 64px;
 		}
 
 		&--icon {
@@ -433,6 +449,322 @@ h5 small {
 			transform: translateX($playbutton-w) scaleY(0.8);
 		}
 	}
+}
+
+.search-box {
+	width: 100%;
+	background-color: rgba($color-01, 0.5);
+	border-radius: 4px;
+	overflow: hidden;
+	border: 1px solid $color-06;
+}
+
+.search-box--focus {
+	background-color: rgba(255, 255, 255, 0.8);
+	border-color: rgba(0, 0, 0, 0.4);
+}
+
+.search-box__wrap {
+	display: flex;
+}
+
+.search-box__input[type='text'],
+.search-box__submit {
+	border: 1px;
+	border-color: transparent;
+	margin-bottom: 0;
+	background-color: transparent;
+}
+
+.search-box__input[type='text']:focus,
+.search-box__submit:focus {
+	border: 0;
+}
+
+.search-box__input {
+	margin-right: 90px;
+	width: 100%;
+}
+
+.search-box__submit {
+	width: 90px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-box__submit:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #49413f;
+}
+
+.play-button {
+	position: relative;
+	width: 40px;
+	height: 40px;
+	margin-left: 60px;
+	margin-bottom: 0;
+	cursor: pointer;
+}
+
+.play-button:hover .play-button__item {
+	background-color: #d3d3d3;
+}
+
+.play-button--play,
+.play-button--pause {
+	transition: 1s;
+}
+
+.play-button__item {
+	border-radius: 3px;
+	background: #fff;
+	position: absolute;
+	transition: all 0.3s;
+}
+
+.play-button__top {
+	width: 40px;
+	height: 6px;
+	top: 0;
+	left: 0;
+}
+
+.play-button__right {
+	width: 6px;
+	height: 40px;
+	top: 0;
+	left: 34px;
+}
+
+.play-button__bottom {
+	width: 40px;
+	height: 6px;
+	top: 34px;
+	left: 0;
+}
+
+.play-button__left {
+	width: 6px;
+	height: 40px;
+	top: 0;
+	left: 0;
+}
+
+.play-button--play {
+	transform: rotate(-90deg);
+}
+
+.play-button--play .play-button__right {
+	transform-origin: center top;
+	transform: rotate(29deg) translate(1.5px, 0.75px) scaleY(1);
+}
+
+.play-button--play .play-button__bottom {
+	display: none;
+}
+
+.play-button--play .play-button__left {
+	transform-origin: center top;
+	transform: rotate(-29deg) translate(-1.5px, 0.75px) scaleY(1);
+}
+
+.play-button--pause {
+	transform: rotate(180deg);
+}
+
+.play-button--pause .play-button__top,
+.play-button--pause .play-button__bottom {
+	opacity: 0;
+}
+
+.play-button--pause .play-button__right {
+	transform: translateX(-6px) scaleY(0.8);
+}
+
+.play-button--pause .play-button__left {
+	transform: translateX(6px) scaleY(0.8);
+}
+
+.host {
+	position: absolute;
+	top: 20px;
+	left: 25px;
+	z-index: 1000;
+	cursor: pointer;
+}
+
+.host .dot {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.3);
+	position: relative;
+	transition: all 0.3s;
+}
+
+.host .dot::after {
+	content: 'host';
+	position: absolute;
+	top: 0;
+	left: 40px;
+	color: #fff;
+	transform: translate(-100%) scaleX(-1);
+	opacity: 0;
+	transition: all 0.3s;
+	font-size: 15px;
+}
+
+.host .dot:hover {
+	background-color: #fff;
+}
+
+.host .dot:hover::after {
+	opacity: 1;
+	transform: translate(0) scaleX(1);
+}
+
+.host--active {
+	cursor: default;
+}
+
+.host--active .dot {
+	background-color: #a9c52f;
+	transition: all 0.3s;
+	animation: ani-dot 1s infinite;
+}
+
+.host--active .dot:hover {
+	background-color: #a9c52f;
+}
+
+.host--active .dot:hover::after {
+	content: 'guest';
+	color: #a9c52f;
+}
+
+
+/* =============================================
+=          AppBody/TabNav                      =
+============================================= */
+
+.tab__nav {
+	position: fixed;
+	width: 100%;
+	z-index: 100;
+	background-color: $color-01;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	margin-top: 70px;
+
+	&__container {
+		display: flex;
+	}
+
+	&__playlist {
+		margin-bottom: 0;
+		display: flex;
+		flex-flow: wrap;
+		flex: 1;
+		transition: transform 0.3s;
+		list-style: none;
+	}
+
+	&__login-outter {
+		position: relative;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+	}
+
+	&__login-btn {
+		padding: 15px;
+		transition: all 0.5s;
+
+		& a {
+			color: #000;
+			opacity: 0.5;
+			text-decoration: underline;
+		}
+
+		&:hover {
+			background-color: #f5f5f5;
+
+			& a {
+				opacity: 1;
+			}
+		}
+	}
+
+	&__list-item {
+		padding: 15px;
+		margin-bottom: 0;
+		position: relative;
+		transition: all 0.5s;
+		cursor: pointer;
+
+		& a {
+			color: #000;
+			opacity: 0.5;
+			transition: all 0.5s;
+			text-decoration: none;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			font-weight: 600;
+			display: block;
+			left: 50%;
+			height: 2px;
+			width: 14px;
+			bottom: 7px;
+			opacity: 0;
+			transition: all 0.5s;
+			background-color: $color-04;
+			transform: translateX(-50%);
+		}
+
+		&:hover {
+			background-color: #f5f5f5;
+
+			& a {
+				opacity: 1;
+			}
+		}
+
+		&--active::after,
+		&--active a {
+			opacity: 1;
+		}
+	}
+}
+
+.tab__nav .login-block__error {
+	position: absolute;
+	margin-left: 20px;
+	transform: translateX(100%);
+	width: 100px;
+	display: none;
+}
+
+.tab__nav .login-block__error::before {
+	position: absolute;
+	content: '';
+	display: block;
+	width: 5px;
+	height: 5px;
+	border-radius: 100%;
+	background-color: #f00;
+	top: 50%;
+	opacity: 1;
+	margin-left: -15px;
+	animation: ani-error-login 1s infinite;
+}
+
+.tab__nav .login-block__error p {
+	margin-bottom: 0;
 }
 
 // the position of fixed elements should be out of scrolling-area to remove juddering when scroll, https://remysharp.com/2012/05/24/issues-with-position-fixed-scrolling-on-ios
