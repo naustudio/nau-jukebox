@@ -39,10 +39,6 @@ class UserStore extends ReduceStore {
 		return ({ isSignIn: true, errorSignIn: false, userName: 'lepham' });
 	}
 
-	activeHost(isActive) {
-		return isActive;
-	}
-
 	/**
 	 * Pure function, avoid mutate inputs
 	 * @param  {Object} state  Current state object
@@ -71,7 +67,7 @@ class UserStore extends ReduceStore {
 					};
 				} else {
 					reducedState = {
-						activeHost: this.activeHost(action.hostId),
+						activeHost: action.isActive,
 					};
 				}
 				break;

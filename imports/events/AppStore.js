@@ -34,6 +34,22 @@ class AppStore extends ReduceStore {
 		};
 	}
 
+	searchSong(searchString) {
+		if (searchString >= 2) {
+			return Songs.find(
+				{
+					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+				},
+				{
+					limit: 50, // we remove duplicated result and limit further
+					reactive: false,
+				}
+			).fetch();
+		}
+
+		return null;
+	}
+
 	/**
 	 * Pure function, avoid mutate inputs
 	 * @param  {Object} state  Current state object
@@ -66,6 +82,11 @@ class AppStore extends ReduceStore {
 			case AppActions.TOGGLE_BTN_NAV:
 				reducedState = {
 					toggleBtnNav: !state.toggleBtnNav,
+				};
+				break;
+			case AppActions.SEARCH_SONG:
+				reducedState = {
+					searchResult: this.searchSong(action.searchString),
 				};
 				break;
 			default:
