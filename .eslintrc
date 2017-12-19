@@ -43,7 +43,8 @@
 		"react/prefer-stateless-function": 0
 	},
 	"globals": {
-		"Migrations": true
+		"Migrations": true,
+		"Trianglify": true
 	},
 	"env": {
 		"browser": true,

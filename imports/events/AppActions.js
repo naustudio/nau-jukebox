@@ -85,11 +85,12 @@ export function repeatSong(id) {
 }
 
 /**
- * @param {Number} hostId of song
+ * @param {Boolean} isActive
  * @return {void}
  */
-export function activeHost(hostId) {
-	dispatch({ type: ACTIVE_HOST, hostId });
+
+export function activeHost(isActive) {
+	dispatch({ type: ACTIVE_HOST, isActive });
 }
 
 /**

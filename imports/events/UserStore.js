@@ -39,13 +39,8 @@ class UserStore extends ReduceStore {
 		return ({ isSignIn: true, errorSignIn: false, userName: 'lepham' });
 	}
 
-	activeHost(hostId) {
-		if (hostId === 110114) {
-
-			return true;
-		}
-
-		return false;
+	activeHost(isActive) {
+		return isActive;
 	}
 
 	/**
