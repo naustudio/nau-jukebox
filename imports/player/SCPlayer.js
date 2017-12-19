@@ -6,7 +6,7 @@
 /**
  * SoundClound Player
  */
-export class SCPlayer {
+export default class SCPlayer {
 
 	constructor(mainPlayer) {
 		this.type = 'SoundCloudPlayer';

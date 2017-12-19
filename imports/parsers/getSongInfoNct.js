@@ -3,9 +3,9 @@
  *
  * NCT URL parser module
  */
-import { SongOrigin } from '../constants.js';
 import { xml2js } from 'meteor/vjau:xml2js';
-import { getGzipURL } from './getGzipURL';
+import getGzipURL from './getGzipURL';
+import { SongOrigin } from '../constants.js';
 
 // Utility / Private functions
 const xmlURLReg = /https?:\/\/(?:www)?.nhaccuatui.com\/flash\/xml\?.*?key1=(\w+)/;
@@ -18,10 +18,8 @@ const lyricReg = /<p id="divLyric"[\s\S]+ <\/p>/;
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-export const getSongInfoNct = songurl => {
+const getSongInfoNct = songurl => {
 	let linkRes;
-	let xmlURLResults;
-	let lyricResults;
 	let xmlURL;
 	let lyric;
 
@@ -37,14 +35,15 @@ export const getSongInfoNct = songurl => {
 	// console.log('linkRes:', linkRes);
 
 	// run the html against regexp to get XML URL
-	xmlURLResults = xmlURLReg.exec(linkRes);
-	lyricResults = lyricReg.exec(linkRes);
+	const xmlURLResults = xmlURLReg.exec(linkRes);
+	const lyricResults = lyricReg.exec(linkRes);
 
 	if (xmlURLResults) {
 		xmlURL = xmlURLResults[0];
 		console.log('xmlURLResults:', xmlURLResults[0]);
 	} else {
 		console.log('xmlURL parse failed');
+
 		return null;
 	}
 
@@ -97,7 +96,7 @@ export const getSongInfoNct = songurl => {
 		//TODO: need to check if we ever got error with copyright checker like Zing
 		if (track.location[0] /*&& String(track.errorcode[0]) === '0'*/) {
 			console.log('URL is valid. Adding new song.');
-			// return { error: 'testing' }
+
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
@@ -111,22 +110,25 @@ export const getSongInfoNct = songurl => {
 			};
 		} else if (track.errormessage[0]) {
 			console.log(`Error received: ${track.errormessage[0]}`);
+
 			return {
 				error: track.errormessage[0],
 			};
-		} else {
-			console.log('Unknown errors');
-			return {
-				error: 'Errors unknown.',
-			};
 		}
-	} else {
-		console.log('Can\'t parse link');
+		console.log('Unknown errors');
+
 		return {
-			error: 'Can\'t parse and get song info from link',
+			error: 'Errors unknown.',
 		};
 	}
+	console.log('Can\'t parse link');
+
+	return {
+		error: 'Can\'t parse and get song info from link',
+	};
 };
+
+export default getSongInfoNct;
 
 //sample json:
 // {

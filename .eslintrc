@@ -37,6 +37,9 @@
 		"space-unary-ops"             :[2, { "words": true }],
 		"strict"                      : 0,
 		"valid-jsdoc"                 : 2,
+		"import/no-extraneous-dependencies": 0,
+		"import/no-unresolved"		  : 0,
+		"import/extensions"			  : 0,
 		"react/prefer-stateless-function": 0
 	},
 	"globals": {
@@ -45,7 +48,8 @@
 	"env": {
 		"browser": true,
 		"meteor": true,
-		"jquery": true
+		"jquery": true,
+		"es6": true
 	},
 	"plugins": ["react"],
 	"parserOptions": {
@@ -53,7 +57,8 @@
 		"sourceType": "module",
 		"ecmaFeatures": {
 			"impliedStrict": true,
-			"jsx": true
+			"jsx": true,
+			"classes": true
 		}
 	}
 }

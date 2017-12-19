@@ -26,13 +26,13 @@ Users = Meteor.users;
  * @return {void}
  */
 AppStates.updatePlayingSongs = function(played, stopped) {
-	var playingSongs = AppStates.findOne({key: 'playingSongs'});
-	var songs = playingSongs.songs;
+	const playingSongs = AppStates.findOne({ key: 'playingSongs' });
+	let songs = playingSongs.songs;
 	if (!Array.isArray(songs)) {
 		songs = playingSongs.songs = [];
 	}
 
-	var removedIdx = songs.indexOf(stopped);
+	const removedIdx = songs.indexOf(stopped);
 
 	if (removedIdx !== -1) {
 		songs.splice(removedIdx, 1);
@@ -43,5 +43,5 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 	}
 
 	// update the exact document in AppStates collection with new songs array
-	AppStates.update(playingSongs._id, {key: 'playingSongs', songs: songs});
+	AppStates.update(playingSongs._id, { key: 'playingSongs', songs });
 };

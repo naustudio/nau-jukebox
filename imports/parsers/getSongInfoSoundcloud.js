@@ -3,6 +3,7 @@
  *
  * Soudcloud URL parser module
  */
+import { HTTP } from 'meteor/http';
 import { SongOrigin } from '../constants.js';
 
 /**
@@ -11,12 +12,8 @@ import { SongOrigin } from '../constants.js';
  * @param  {[type]} songurl [description]
  * @return {[type]}         [description]
  */
-export const getSongInfoSoundcloud = songurl => {
-	let json;
-	// First Step: Initialize Soundcloud API
-
-	// Second Step: Resolve Soundcloud URL
-	json = HTTP.call(
+const getSongInfoSoundcloud = songurl => {
+	const json = HTTP.call(
 		'GET',
 		`https://api.soundcloud.com/resolve.json?url=${songurl}&client_id=f6dbfb46c6b75cb6b5cd84aeb50d79e3`
 	);
@@ -35,15 +32,16 @@ export const getSongInfoSoundcloud = songurl => {
 				thumbURL: json.data.user.avatar_url,
 				play: 0,
 			};
-		} else {
-			return {
-				error: 'This Soundcloud is not streamable',
-			};
 		}
-	} else {
-		console.log('Can\'t parse link');
+
 		return {
-			error: 'Can\'t parse and get song info from link',
+			error: 'This Soundcloud is not streamable',
 		};
 	}
+
+	return {
+		error: 'Can\'t parse and get song info from link',
+	};
 };
+
+export default getSongInfoSoundcloud;

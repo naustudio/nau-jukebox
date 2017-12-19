@@ -2,17 +2,17 @@
  * @author Thanh Tran
  */
 /*global AppStates, Songs*/
-import { SongOrigin } from '../constants.js';
-import { SCPlayer } from './SCPlayer.js';
-import { AudioPlayer } from './AudioPlayer.js';
-import { YouTubePlayer } from './YouTubePlayer.js';
+import { SongOrigin } from '../constants';
+import SCPlayer from './SCPlayer';
+import AudioPlayer from './AudioPlayer';
+import YouTubePlayer from './YouTubePlayer';
 
 /**
  * The main JukeboxPlayer which act as wrapper for different type of player inside
  *
  * Currently in the wrapper: AudioPlayer, SoundCloudPlayer, YouTubePlayer
  */
-export class JukeboxPlayer {
+export default class JukeboxPlayer {
 
 	constructor() {
 
@@ -66,7 +66,7 @@ export class JukeboxPlayer {
 				this.play();
 			}
 		}
-		document.title = 'NJ :: ' + song.origin + ' : ' + song.name;
+		document.title = `NJ :: ${song.origin} : ${song.name}`;
 	}
 
 	/**
@@ -79,7 +79,7 @@ export class JukeboxPlayer {
 		}
 		AppStates.updatePlayingSongs(this.currentSong._id, this.prevSong ? this.prevSong._id : '');
 
-		var $playButton = $('.js-play-button');
+		const $playButton = $('.js-play-button');
 		$playButton.removeClass('_play').addClass('_pause');
 
 		if (this._isNew) {
@@ -98,7 +98,7 @@ export class JukeboxPlayer {
 	pause() {
 		AppStates.updatePlayingSongs('', this.currentSong._id);
 
-		var $playButton = $('.js-play-button');
+		const $playButton = $('.js-play-button');
 		$playButton.removeClass('_pause').addClass('_play');
 
 		if (this.activePlayer) {
@@ -112,7 +112,7 @@ export class JukeboxPlayer {
 	 * @return {[type]} [description]
 	 */
 	playNext() {
-		var nextSong = Songs.findOne({timeAdded: {$gt: this.currentSong.timeAdded}});
+		const nextSong = Songs.findOne({ timeAdded: { $gt: this.currentSong.timeAdded } });
 		// console.log('Play next:', nextSong.name, nextSong.origin);
 
 		if (nextSong) {
@@ -124,5 +124,3 @@ export class JukeboxPlayer {
 	}
 
 }
-
-
