@@ -5,7 +5,9 @@
 /* eslint-disable react/no-array-index-key */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
+import { withTracker } from 'meteor/react-meteor-data';
 
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
@@ -13,6 +15,14 @@ import AccountsUIWrapper from './AccountUIWrapper';
 import { changeTab, /* closeBtnNav */ } from '../events/AppActions';
 
 class TabNav extends Component {
+
+	static propTypes = {
+		isSignedIn: PropTypes.bool,
+	}
+
+	static defaultProps = {
+		isSignedIn: false,
+	}
 
 	static getStores() {
 		return [AppStore, UserStore];
@@ -56,7 +66,7 @@ class TabNav extends Component {
 					<div className="tab__nav__login-outter login-block">
 						<AccountsUIWrapper />
 						{
-							(this.state.errorSignIn && !Meteor.userId()) ? (
+							(this.state.errorSignIn && !this.props.isSignedIn) ? (
 								<div className="login-block__error">
 									<p>Please login first!</p>
 								</div>
@@ -69,4 +79,6 @@ class TabNav extends Component {
 	}
 }
 
-export default Container.create(TabNav);
+export default withTracker(() => ({
+	isSignedIn: !!Meteor.userId(),
+}))(Container.create(TabNav));

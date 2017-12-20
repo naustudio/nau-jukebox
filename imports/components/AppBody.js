@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'proptypes';
+// import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import TabNav from './TabNav';
 import AppStore from '../events/AppStore';
@@ -12,16 +12,6 @@ import TabTopSongs from './TabTopSongs';
 class AppBody extends Component {
 	static getStores() {
 		return [AppStore, UserStore];
-	}
-
-	static propTypes = {
-		tabIndex: PropTypes.number,
-		toggleBtnNav: PropTypes.bool,
-	}
-
-	static defaultProps = {
-		tabIndex: 0,
-		toggleBtnNav: false,
 	}
 
 	static calculateState(prevState) {

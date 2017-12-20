@@ -31,7 +31,7 @@ class UserStore extends ReduceStore {
 			isSignIn: false,
 			errorSignIn: false,
 			userName: 'Sign in',
-			activeHost: false,
+			activeHost: false
 		};
 	}
 
@@ -46,19 +46,13 @@ class UserStore extends ReduceStore {
 		switch (action.type) {
 			case AppActions.ERROR_SIGN_IN:
 				reducedState = {
-					errorSignIn: true,
+					errorSignIn: true
 				};
 				break;
 			case AppActions.ACTIVE_HOST:
-				if (!state.isSignIn) {
-					reducedState = {
-						errorSignIn: true,
-					};
-				} else {
-					reducedState = {
-						activeHost: action.isActive,
-					};
-				}
+				reducedState = {
+					activeHost: action.isActive
+				};
 				break;
 			default:
 				console.log(action.type, 'does nothing');
@@ -67,7 +61,6 @@ class UserStore extends ReduceStore {
 		// return a new object, to immitate pure function
 		return Object.assign({}, state, reducedState);
 	}
-
 }
 
 // This will create a singleton AppStore and register events trigger from AppDispatcher
