@@ -6,15 +6,16 @@ import React, { Component } from 'react';
 import PropTypes from 'proptypes';
 import { withTracker } from 'meteor/react-meteor-data';
 import { subDays } from 'date-fns';
+import { Songs } from '../collections';
 import SongList from './SongList';
 
 class TabYesterday extends Component {
 	static propTypes = {
-		songs: PropTypes.arrayOf(PropTypes.object)
+		songs: PropTypes.arrayOf(PropTypes.object),
 	};
 
 	static defaultProps = {
-		songs: []
+		songs: [],
 	};
 
 	render() {
@@ -33,6 +34,6 @@ export default withTracker(() => {
 		songs: Songs.find(
 			{ timeAdded: { $gt: yesterday.getTime(), $lt: today.getTime() } },
 			{ sort: { timeAdded: 1 } }
-		).fetch()
+		).fetch(),
 	};
 })(TabYesterday);

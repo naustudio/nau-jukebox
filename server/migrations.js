@@ -1,7 +1,8 @@
 /* © 2017 NauStud.io
  * @author Thanh Tran
  */
-const Users = Meteor.users;
+import { Migrations } from 'meteor/percolate:migrations';
+import { Users } from '../imports/collections';
 
 Migrations.add({
 	version: 1,
