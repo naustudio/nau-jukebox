@@ -8,9 +8,9 @@ class ButtonPlay extends Component {
 		return [AppStore];
 	}
 
-	static calculateState(prevState) {
+	static calculateState(/*prevState*/) {
 		return {
-			activeBtnPlay: AppStore.getState()['activeBtnPlay']
+			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
 		};
 	}
 

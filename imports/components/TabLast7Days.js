@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'proptypes';
 import { withTracker } from 'meteor/react-meteor-data';
 import { subDays } from 'date-fns';
+import { Songs } from '../collections';
 import SongList from './SongList';
 
 class TabLast7Days extends Component {

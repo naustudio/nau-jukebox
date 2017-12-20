@@ -1,19 +1,12 @@
 {
-	"extends": ["nau-react"],
+	"extends": ["nau-react", "prettier"],
 	"rules": {
-		"comma-dangle"                      : 0,
 		"dot-notation"                      : 0,
-		"no-case-declarations"              : 0,
-		"no-console"                        : 0,
-		"no-invalid-this"                   : 0,
-		"no-script-url"                     : 0,
-		"strict"                            : 0,
 		"prefer-arrow-callback"             : 0,
-		"import/no-extraneous-dependencies" : 0,
-		"import/no-unresolved"              : 0,
 		"import/extensions"                 : 0,
-		"react/prefer-stateless-function"   : 0,
-		"import/prefer-default-export"      : 0
+		"import/no-extraneous-dependencies" : 0,
+		"import/prefer-default-export"      : 0,
+		"react/prefer-stateless-function"   : 0
 	},
 	"globals": {
 		"Trianglify": true
@@ -34,5 +27,8 @@
 			"jsx": true,
 			"classes": true
 		}
+	},
+	"settings": {
+		"import/resolver": "meteor"
 	}
 }

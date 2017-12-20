@@ -45,10 +45,10 @@ const songSchema = new SimpleSchema({
 	},
 });
 
-const Songs = new Meteor.Collection('songs');
+const Songs = new Mongo.Collection('songs');
 Songs.attachSchema(songSchema);
 
-const AppStates = new Meteor.Collection('appstates');
+const AppStates = new Mongo.Collection('appstates');
 const Users = Meteor.users;
 
 /**
