@@ -19,7 +19,16 @@ class SearchBox extends Component {
 
 	onFormSubmit = (e) => {
 		e.preventDefault();
-		this.submitSong();
+		if (this.searchInput && this.searchInput.value) {
+			this.submitSong(this.searchInput.value);
+		}
+	}
+
+	onSearchResultClick = (e) => {
+		const songUrl = e.currentTarget.dataset.href;
+		if (songUrl) {
+			this.submitSong(songUrl);
+		}
 	}
 
 	keyUpSearchSong = (e) => {
@@ -28,27 +37,25 @@ class SearchBox extends Component {
 		}
 	}
 
-	submitSong = () => {
-		if (Meteor.userId() && this.searchInput && this.searchInput.value) {
-			const userId = Meteor.userId();
+	submitSong = (songUrl) => {
+		const userId = Meteor.userId();
 
-			if (!userId) {
-				errorSignIn();
+		if (!userId) {
+			errorSignIn();
 
-				return;
-			}
-
-			console.log('Ready to add to db');
-
-			Meteor.call('getSongInfo', this.searchInput.value, userId, (error /*, result*/) => {
-				if (error) {
-					alert(`Cannot add the song at:\n${this.searchInput.value}\nReason: ${error.reason}`);
-				}
-
-				// clear input field after inserting has done
-				this.searchInput.value = '';
-			});
+			return;
 		}
+
+		Meteor.call('getSongInfo', songUrl, userId, (error /*, result*/) => {
+			if (error) {
+				alert(`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`);
+			}
+		});
+
+
+		// clear input field after inserting has done
+		this.searchInput.value = '';
+		searchSong('');
 	}
 
 	focusSearchBox = () => {
@@ -88,7 +95,7 @@ class SearchBox extends Component {
 						<div className="search-box__result-wrapper">
 							<ul className="song-result__list">
 								{this.state.searchResult.map((song) => (
-									<li key={song._id} className="song-result__item js-song-result__item {{_active}}" data-href={song.originalURL}>{song.name} • {song.artist} • {song.origin}</li>
+									<li key={song._id} className="song-result__item" onClick={this.onSearchResultClick} data-href={song.originalURL}>{song.name} • {song.artist} • {song.origin}</li>
 								))}
 							</ul>
 						</div>

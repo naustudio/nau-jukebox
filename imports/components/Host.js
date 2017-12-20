@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import UserStore from '../events/UserStore';
-import { activeHost } from '../events/AppActions';
+import { activeHost, errorSignIn } from '../events/AppActions';
 
 class Host extends Component {
 	static getStores() {
@@ -35,7 +35,7 @@ class Host extends Component {
 			if (passCode.toLowerCase() === '110114') {
 				const userId = Meteor.userId();
 				if (!userId) {
-					// showRequireMessage();
+					errorSignIn();
 
 					return;
 				}
