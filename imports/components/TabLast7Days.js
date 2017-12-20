@@ -10,11 +10,11 @@ import SongList from './SongList';
 
 class TabLast7Days extends Component {
 	static propTypes = {
-		songs: PropTypes.arrayOf(PropTypes.object)
+		songs: PropTypes.arrayOf(PropTypes.object),
 	};
 
 	static defaultProps = {
-		songs: []
+		songs: [],
 	};
 
 	render() {
@@ -33,6 +33,6 @@ export default withTracker(() => {
 		songs: Songs.find(
 			{ timeAdded: { $gt: sevenDaysAgo.getTime(), $lt: today.getTime() } },
 			{ sort: { timeAdded: 1 } }
-		).fetch()
+		).fetch(),
 	};
 })(TabLast7Days);

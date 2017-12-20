@@ -16,7 +16,7 @@ class AppBody extends Component {
 		return [AppStore, UserStore];
 	}
 
-	static calculateState(prevState) {
+	static calculateState(/*prevState*/) {
 		return {
 			tabIndex: AppStore.getState()['tabIndex'],
 		};
@@ -33,24 +33,22 @@ class AppBody extends Component {
 			case 2:
 				return <TabLast7Days />;
 			case 3:
-				return (<TabTopList />);
+				return <TabTopList />;
 			case 4:
-				return (<TabUsers />);
+				return <TabUsers />;
 			default:
 				break;
 		}
 
 		return 0;
-	}
+	};
 
 	render() {
 		return (
 			<main className="tab">
 				<TabNav />
 				{/* <PopUpLyric /> */}
-				<div className="app-body__container">
-					{ this._renderTabItem() }
-				</div>
+				<div className="app-body__container">{this._renderTabItem()}</div>
 			</main>
 		);
 	}

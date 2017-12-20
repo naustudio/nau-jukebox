@@ -12,7 +12,7 @@ class Host extends Component {
 		return [UserStore];
 	}
 
-	static calculateState(prevState) {
+	static calculateState(/*prevState*/) {
 		return {
 			activeHost: UserStore.getState()['activeHost'],
 		};
@@ -31,7 +31,8 @@ class Host extends Component {
 				}
 			});
 		} else {
-			const passCode = prompt('Passcode for host is: Nau\'s birthday (6 digits)', '110114');
+			// eslint-disable-next-line no-alert
+			const passCode = prompt("Passcode for host is: Nau's birthday (6 digits)", '110114');
 			if (passCode.toLowerCase() === '110114') {
 				const userId = Meteor.userId();
 				if (!userId) {
@@ -49,10 +50,9 @@ class Host extends Component {
 				});
 			}
 		}
-	}
+	};
 
 	render() {
-
 		return (
 			<div
 				className={`host ${this.state.activeHost ? 'host--active' : ''}`}
