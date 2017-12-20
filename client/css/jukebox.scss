@@ -161,6 +161,10 @@ h5 small {
 	width: 100%;
 }
 
+/* =============================================
+=          AppHeader                            =
+============================================= */
+
 .navbar {
 	width: 100%;
 	background-color: $color-08;
@@ -169,13 +173,22 @@ h5 small {
 	top: 0;
 	z-index: 300;
 	background-size: cover;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+	border-bottom: 1px solid $color-06;
+	box-shadow: 1px 1px 1px $color-06;
 	transition: all 0.5s;
+	background-repeat: no-repeat;
 
 	&__list {
 		list-style-type: none;
 		margin: 0;
+		display: flex;
+		padding: 15px 0;
+	}
+
+
+	&__img {
+		mix-blend-mode: multiply;
+		height: 40px;
 	}
 
 	&__item {
@@ -183,7 +196,8 @@ h5 small {
 		margin: 0;
 
 		a {
-			display: block;
+			display: flex;
+			align-items: center;
 			text-decoration: none;
 		}
 
@@ -195,13 +209,14 @@ h5 small {
 
 		&--input {
 			width: 60%;
-			padding: 0.5 * $gutter 0;
+			// padding: 0.5 * $gutter 0;
 			position: relative;
+			margin-left: 64px;
 		}
 
 		&--icon {
 			float: left;
-			padding: 15px 0;
+			// padding: 15px 0;
 			font-size: 12px;
 			line-height: 1;
 			letter-spacing: 2.5px;
@@ -227,16 +242,16 @@ h5 small {
 	width: 100%;
 	border-radius: 4px;
 	border: 1px solid $color-06;
-	margin-top: 4px;
+	// margin-top: 4px;
 	overflow: hidden;
 	background-color: rgba(255, 255, 255, 0.5);
 
-	&._focus {
+	&--focus {
 		background-color: rgba(255, 255, 255, 0.8);
 		border-color: rgba(0, 0, 0, 0.4);
 	}
 
-	&._active {
+	&--active {
 		background-color: rgba(255, 255, 255, 0.95);
 		border-color: rgba(0, 0, 0, 0.4);
 
@@ -327,6 +342,7 @@ h5 small {
 		padding: 0.5 * $gutter $gutter;
 		margin-bottom: 0;
 		border-top: 1px solid whitesmoke;
+		cursor: pointer;
 
 		&:first-child {
 			margin-top: $gutter;
@@ -344,7 +360,7 @@ h5 small {
 	position: relative;
 	width: $playbutton-h;
 	height: $playbutton-h;
-	margin-top: 1 * $gutter;
+	// margin-top: 1 * $gutter;
 	margin-left: 4 * $gutter;
 	cursor: pointer;
 
@@ -433,6 +449,404 @@ h5 small {
 		}
 	}
 }
+
+.search-box {
+	width: 100%;
+	background-color: rgba($color-01, 0.5);
+	border-radius: 4px;
+	overflow: hidden;
+	border: 1px solid $color-06;
+}
+
+.search-box--focus {
+	background-color: rgba(255, 255, 255, 0.8);
+	border-color: rgba(0, 0, 0, 0.4);
+}
+
+.search-box__wrap {
+	display: flex;
+}
+
+.search-box__input[type='text'],
+.search-box__submit {
+	border: 1px;
+	border-color: transparent;
+	margin-bottom: 0;
+	background-color: transparent;
+}
+
+.search-box__input[type='text']:focus,
+.search-box__submit:focus {
+	border: 0;
+}
+
+.search-box__input {
+	margin-right: 90px;
+	width: 100%;
+}
+
+.search-box__submit {
+	width: 90px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-box__submit:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #49413f;
+}
+
+.play-button {
+	position: relative;
+	width: 40px;
+	height: 40px;
+	margin-left: 60px;
+	margin-bottom: 0;
+	cursor: pointer;
+}
+
+.play-button:hover .play-button__item {
+	background-color: #d3d3d3;
+}
+
+.play-button--play,
+.play-button--pause {
+	transition: 1s;
+}
+
+.play-button__item {
+	border-radius: 3px;
+	background: #fff;
+	position: absolute;
+	transition: all 0.3s;
+}
+
+.play-button__top {
+	width: 40px;
+	height: 6px;
+	top: 0;
+	left: 0;
+}
+
+.play-button__right {
+	width: 6px;
+	height: 40px;
+	top: 0;
+	left: 34px;
+}
+
+.play-button__bottom {
+	width: 40px;
+	height: 6px;
+	top: 34px;
+	left: 0;
+}
+
+.play-button__left {
+	width: 6px;
+	height: 40px;
+	top: 0;
+	left: 0;
+}
+
+.play-button--play {
+	transform: rotate(-90deg);
+}
+
+.play-button--play .play-button__right {
+	transform-origin: center top;
+	transform: rotate(29deg) translate(1.5px, 0.75px) scaleY(1);
+}
+
+.play-button--play .play-button__bottom {
+	display: none;
+}
+
+.play-button--play .play-button__left {
+	transform-origin: center top;
+	transform: rotate(-29deg) translate(-1.5px, 0.75px) scaleY(1);
+}
+
+.play-button--pause {
+	transform: rotate(180deg);
+}
+
+.play-button--pause .play-button__top,
+.play-button--pause .play-button__bottom {
+	opacity: 0;
+}
+
+.play-button--pause .play-button__right {
+	transform: translateX(-6px) scaleY(0.8);
+}
+
+.play-button--pause .play-button__left {
+	transform: translateX(6px) scaleY(0.8);
+}
+
+.host {
+	position: absolute;
+	top: 20px;
+	left: 25px;
+	z-index: 1000;
+	cursor: pointer;
+}
+
+.host .dot {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.3);
+	position: relative;
+	transition: all 0.3s;
+}
+
+.host .dot::after {
+	content: 'host';
+	position: absolute;
+	top: 0;
+	left: 40px;
+	color: #fff;
+	transform: translate(-100%) scaleX(-1);
+	opacity: 0;
+	transition: all 0.3s;
+	font-size: 15px;
+}
+
+.host .dot:hover {
+	background-color: #fff;
+}
+
+.host .dot:hover::after {
+	opacity: 1;
+	transform: translate(0) scaleX(1);
+}
+
+.host--active {
+	cursor: default;
+}
+
+.host--active .dot {
+	background-color: #a9c52f;
+	transition: all 0.3s;
+	animation: ani-dot 1s infinite;
+}
+
+.host--active .dot:hover {
+	background-color: #a9c52f;
+}
+
+.host--active .dot:hover::after {
+	content: 'guest';
+	color: #a9c52f;
+}
+
+
+/* =============================================
+=          AppBody/TabNav                      =
+============================================= */
+
+.tab__nav {
+	position: fixed;
+	width: 100%;
+	z-index: 100;
+	background-color: $color-01;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	padding-top: 70px;
+
+	&__container {
+		display: flex;
+	}
+
+	&__playlist {
+		margin-bottom: 0;
+		display: flex;
+		flex-flow: wrap;
+		flex: 1;
+		transition: transform 0.3s;
+		list-style: none;
+	}
+
+	&__login-outter {
+		position: relative;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+	}
+
+	&__login-btn {
+		padding: 15px;
+		transition: all 0.5s;
+
+		& a {
+			color: #000;
+			opacity: 0.5;
+			text-decoration: underline;
+		}
+
+		&:hover {
+			background-color: #f5f5f5;
+
+			& a {
+				opacity: 1;
+			}
+		}
+	}
+
+	&__list-item {
+		padding: 15px;
+		margin-bottom: 0;
+		position: relative;
+		transition: all 0.5s;
+		cursor: pointer;
+
+		& a {
+			color: #000;
+			opacity: 0.5;
+			transition: all 0.5s;
+			text-decoration: none;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			font-weight: 600;
+			display: block;
+			left: 50%;
+			height: 2px;
+			width: 14px;
+			bottom: 7px;
+			opacity: 0;
+			transition: all 0.5s;
+			background-color: $color-04;
+			transform: translateX(-50%);
+		}
+
+		&:hover {
+			background-color: #f5f5f5;
+
+			& a {
+				opacity: 1;
+			}
+		}
+
+		&--active::after,
+		&--active a {
+			opacity: 1;
+		}
+	}
+}
+
+.tab__nav .login-block__error {
+	position: absolute;
+	margin-left: 20px;
+	transform: translateX(100%);
+	width: 100px;
+}
+
+.tab__nav .login-block__error::before {
+	position: absolute;
+	content: '';
+	display: block;
+	width: 5px;
+	height: 5px;
+	border-radius: 100%;
+	background-color: #f00;
+	top: 50%;
+	opacity: 1;
+	margin-left: -15px;
+	animation: blink-animation 1s infinite;
+}
+
+.tab__nav .login-block__error p {
+	margin-bottom: 0;
+}
+
+/* =============================================
+=          AppBody/Content                     =
+============================================= */
+
+.app-body__container {
+	padding-top: 155px;
+}
+
+.songs__list-item {
+	list-style: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0;
+	cursor: pointer;
+	background-color: $color-01;
+
+	&__container {
+		display: flex;
+		align-items: center;
+		padding: 0 10px;
+
+		&:first-child {
+			padding-left: 0;
+			width: 500px;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+
+
+	&:hover {
+		background-color: #fafafa;
+	}
+
+	&__thumbnail {
+		display: flex;
+
+		& img {
+			width: 40px;
+			height: 40px;
+		}
+
+		&--link {
+			display: flex;
+		}
+	}
+
+	&__name {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		margin-left: 15px;
+
+		&--link {
+			color: black;
+			text-decoration: none;
+		}
+	}
+
+	&__control {
+		display: flex;
+		align-items: center;
+
+		& span {
+			padding: 0 7px;
+		}
+	}
+
+	&__icon {
+		cursor: pointer;
+		color: gray;
+		transition: all 0.4s;
+
+		&:hover {
+			color: #000;
+		}
+	}
+}
+
 
 // the position of fixed elements should be out of scrolling-area to remove juddering when scroll, https://remysharp.com/2012/05/24/issues-with-position-fixed-scrolling-on-ios
 .scroll-content {
@@ -857,6 +1271,121 @@ h5 small {
 	}
 }
 
+/**
+ * User css
+ */
+
+.users {
+	&__container {
+		// top: $tabnav-h + 30px;
+	}
+
+	&__title {
+		span {
+			float: right;
+			font-size: 14px;
+			font-weight: normal;
+			margin-top: 10px;
+		}
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		position: relative;
+
+
+		&::before {
+			content: '';
+			width: 8px;
+			height: 8px;
+			position: absolute;
+			left: 0;
+			border-radius: 100%;
+			background-color: $color-01;
+		}
+
+		&__avt {
+			margin-left: 15px;
+			margin-right: 6px;
+		}
+
+		&__info {
+			display: flex;
+			flex-flow: wrap;
+			width: 40%;
+			margin-top: -6px;
+		}
+
+		&__user {
+			display: flex;
+			flex-flow: wrap;
+			width: 100%;
+		}
+
+		&__name {
+			width: 60%;
+			margin-bottom: 0;
+			margin-right: 10px;
+		}
+
+		&__coin {
+			background-color: $color-nau;
+			border-radius: 2px;
+			padding: 0 6px;
+			color: white;
+
+			&::before {
+				content: '₦';
+				margin-right: 4px;
+			}
+		}
+
+		&__payment {
+			width: 60%;
+			margin-left: 20px;
+
+			form {
+				margin-bottom: 0;
+				display: flex;
+				align-items: flex-end;
+				font-size: 11px;
+
+				> div {
+					flex: 1;
+				}
+			}
+
+			&__input-wraper {
+				flex: 2;
+			}
+
+			&__label {
+				font-weight: 100;
+				text-transform: uppercase;
+			}
+
+			&__submit {
+				padding: 0 30px;
+				margin-left: 10px;
+				text-transform: uppercase;
+				border-color: #c08e52;
+				background-color: #c08e52;
+
+				&:hover {
+					border-color: #a65e09;
+					background-color: #a65e09;
+				}
+			}
+		}
+
+		&--active {
+			&::before {
+				background-color: #347a2a;
+			}
+		}
+	}
+}
 
 /**
  * Naucoin css

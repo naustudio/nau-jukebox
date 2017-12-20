@@ -2,17 +2,17 @@
  * @author Thanh Tran, Tung Tran, Tw
  */
 /*global Songs:true, AppStates:true, Users:true, moment*/
-import { getSongInfoNct } from '../imports/parsers/getSongInfoNct.js';
-import { getSongInfoZing } from '../imports/parsers/getSongInfoZing.js';
-import { getSongInfoSoundcloud } from '../imports/parsers/getSongInfoSoundcloud.js';
-import { getSongInfoYouTube } from '../imports/parsers/getSongInfoYouTube.js';
+import getSongInfoNct from '../imports/parsers/getSongInfoNct';
+import getSongInfoZing from '../imports/parsers/getSongInfoZing';
+import getSongInfoSoundcloud from '../imports/parsers/getSongInfoSoundcloud';
+import getSongInfoYouTube from '../imports/parsers/getSongInfoYouTube';
 
 Meteor.startup(() => {
 	// migrate database
 	Migrations.migrateTo('latest');
 
 	// On server startup, create initial appstates if the database is empty.
-	if (AppStates.find({key: 'playingSongs'}).count() === 0) {
+	if (AppStates.find({ key: 'playingSongs' }).count() === 0) {
 		//first time running
 		AppStates.insert({
 			key: 'playingSongs',
@@ -22,18 +22,23 @@ Meteor.startup(() => {
 	}
 
 	Meteor.setInterval(() => {
-		const passAMinute = moment().add(-90, 'seconds').toDate();
-		Users.update({lastModified: {$lt: passAMinute}}, {
-			$set: {
-				isOnline: false
-			}
-		}, {multi: true});
+		const passAMinute = moment()
+			.add(-90, 'seconds')
+			.toDate();
+		Users.update(
+			{ lastModified: { $lt: passAMinute } },
+			{
+				$set: {
+					isOnline: false
+				}
+			},
+			{ multi: true }
+		);
 		console.log('Checking online status was run at: ', new Date());
 	}, 90000);
 });
 
 Meteor.methods({
-
 	getSongInfo(songurl, authorId) {
 		// Set up a future for async callback sending to clients
 		let songInfo;
@@ -59,17 +64,16 @@ Meteor.methods({
 		if (songInfo && songInfo.streamURL) {
 			songInfo.author = authorId;
 			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
+
 			return Songs.insert(songInfo);
-		} else {
-			//songInfo is error object
-			throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
 		}
+		throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
 	},
 
 	changeHost(userId) {
 		console.log('changeHost', userId);
 		// switch all users isHost off
-		Users.update({}, {$set: {isHost: false}}, {multi: true}, () => {
+		Users.update({}, { $set: { isHost: false } }, { multi: true }, () => {
 			// then switch sHost
 			Users.update(userId, {
 				$set: {
@@ -106,14 +110,18 @@ Meteor.publish('Meteor.users.public', () => {
 	const options = {
 		fields: { isHost: 1, isOnline: 1, balance: 1 }
 	};
+
 	return Meteor.users.find({}, options);
 });
 
-Meteor.publish('userData', function () {
+Meteor.publish('userData', function() {
 	if (this.userId) {
-		return Meteor.users.find({ _id: this.userId }, {
-			fields: { isHost: 1, isOnline: 1, balance: 1 }
-		});
+		Meteor.users.find(
+			{ _id: this.userId },
+			{
+				fields: { isHost: 1, isOnline: 1, balance: 1 }
+			}
+		);
 	} else {
 		this.ready();
 	}

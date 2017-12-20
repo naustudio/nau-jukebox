@@ -8,7 +8,7 @@
  *
  * This wraps the basic media element player with separate <video> tag
  */
-export class YouTubePlayer {
+export default class YouTubePlayer {
 
 	constructor(mainPlayer) {
 		this.type = 'YouTubePlayer';
@@ -18,14 +18,13 @@ export class YouTubePlayer {
 	}
 
 	getYTVideoId(url) {
-		var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-		var match = url.match(regExp);
+		const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+		const match = url.match(regExp);
 		if (match && match[2].length === 11) {
 			return match[2];
-		} else {
-			// error
-			return '';
 		}
+
+		return '';
 	}
 
 	_onVideoEnded() {

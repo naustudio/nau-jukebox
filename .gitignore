@@ -1,4 +1,5 @@
 private/dump/
+package-lock.json
 
 # NodeJS #
 ####################

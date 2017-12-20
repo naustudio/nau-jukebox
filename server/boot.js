@@ -19,5 +19,3 @@ ServiceConfiguration.configurations.upsert({
 		secret: 'wJQUTj6TohUYLiS_PUy_-LHe', //Meteor.settings.google.secret
 	}
 });
-
-
