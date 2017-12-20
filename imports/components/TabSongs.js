@@ -4,22 +4,25 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'proptypes';
+import { withTracker } from 'meteor/react-meteor-data';
+import { distanceInWordsStrict } from 'date-fns';
 import { Container } from 'flux/utils';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
 // import SongStore from '../events/SongStore';
 import * as AppActions from '../events/AppActions';
 
-class TabSong extends Component {
+class TabSongs extends Component {
 	static propTypes = {
-		typeSong: PropTypes.number.isRequired,
+		songs: PropTypes.arrayOf(),
 	}
 
-	// static getStores() {
-	// 	return [SongStore, AppStore, UserStore];
-	// }
+	static defaultProps = {
+		songs: [],
+	}
 
 	static getStores() {
+		return [AppStore, UserStore];
 	}
 
 	static calculateState(prevState) {
@@ -148,19 +151,54 @@ class TabSong extends Component {
 		// return (lst);
 	}
 
+	getTime = (date) => `${distanceInWordsStrict(date, new Date())} ago`;
+
 	render() {
+
 		return (
 			<section className="tab__body song">
 				<div className="container song__container">
-					<ul className="song__list">
-						{this._renderSong()}
+					<ul className="songs__list">
+						{
+							this.props.songs.map(song => (
+								<li key={`${song.id}_${song.timeAdded}`} className="songs__list-item" >
+
+									<span className="songs__list-item__container">
+										<span className="songs__list-item__thumbnail">
+											<img src={`${song.thumbURL}`} alt={`${song.name}`} />
+										</span>
+										<span className="songs__list-item__name">{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`} </span>
+									</span>
+
+									<span className="songs__list-item__container">
+										<span className="songs__list-item__control">
+											<span className="songs__list-item__time">
+												<small>{ this.getTime(song.timeAdded) }</small>
+											</span>
+											<span className="songs__list-item__lyrics songs__list-item__icon">
+												<i className="fa fa-file-text" />
+											</span>
+											<span className="songs__list-item__delete  songs__list-item__icon">
+												<i className="fa fa-times" />
+											</span>
+										</span>
+									</span>
+								</li>
+							))
+						}
 					</ul>
-					{/* /.song__list */}
 				</div>
-				{/* /.container */}
 			</section>
 		);
 	}
 }
 
-export default Container.create(TabSong);
+export default withTracker(() => {
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+
+	return {
+		songs: Songs.find({ timeAdded: { $gt: today.getTime() } }, { sort: { timeAdded: 1 } }).fetch(),
+	};
+})(Container.create(TabSongs));
+

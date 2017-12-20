@@ -654,7 +654,7 @@ h5 small {
 	z-index: 100;
 	background-color: $color-01;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-	margin-top: 70px;
+	padding-top: 70px;
 
 	&__container {
 		display: flex;
@@ -764,6 +764,80 @@ h5 small {
 .tab__nav .login-block__error p {
 	margin-bottom: 0;
 }
+
+/* =============================================
+=          AppBody/Content                     =
+============================================= */
+
+.app-body__container {
+	padding-top: 155px;
+}
+
+.songs__list-item {
+	list-style: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0;
+	cursor: pointer;
+	background-color: $color-01;
+
+	&__container {
+		display: flex;
+		align-items: center;
+		padding: 0 10px;
+
+		&:first-child {
+			padding-left: 0;
+			width: 500px;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+
+
+	&:hover {
+		background-color: #fafafa;
+	}
+
+	&__thumbnail {
+		display: flex;
+
+		& img {
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	&__name {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		margin-left: 15px;
+	}
+
+	&__control {
+		display: flex;
+		align-items: center;
+
+		& span {
+			padding: 0 7px;
+		}
+	}
+
+	&__icon {
+		cursor: pointer;
+		color: gray;
+		transition: all 0.4s;
+
+		&:hover {
+			color: #000;
+		}
+	}
+}
+
 
 // the position of fixed elements should be out of scrolling-area to remove juddering when scroll, https://remysharp.com/2012/05/24/issues-with-position-fixed-scrolling-on-ios
 .scroll-content {

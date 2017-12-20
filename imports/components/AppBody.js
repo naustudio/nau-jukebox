@@ -30,7 +30,6 @@ class AppBody extends Component {
 		};
 	}
 
-
 	_renderTabItem = () => {
 		const index = this.state.tabIndex;
 
@@ -55,7 +54,9 @@ class AppBody extends Component {
 			<main className="tab">
 				<TabNav />
 				{/* <PopUpLyric /> */}
-				{ this._renderTabItem() }
+				<div className="app-body__container">
+					{ this._renderTabItem() }
+				</div>
 			</main>
 		);
 	}

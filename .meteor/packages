@@ -38,3 +38,4 @@ accounts-facebook
 service-configuration@1.0.11
 accounts-ui@1.2.0
 percolate:migrations
+react-meteor-data

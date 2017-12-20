@@ -38,6 +38,8 @@ class SearchBox extends Component {
 				return;
 			}
 
+			console.log('Ready to add to db');
+
 			Meteor.call('getSongInfo', this.searchInput.value, userId, (error /*, result*/) => {
 				if (error) {
 					alert(`Cannot add the song at:\n${this.searchInput.value}\nReason: ${error.reason}`);
