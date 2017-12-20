@@ -33,8 +33,8 @@ fourseven:scss@4.5.4
 ecmascript@0.9.0
 shell-server@0.3.0
 dynamic-import@0.2.0
-accounts-google@1.3.0
-accounts-facebook@1.3.0
+accounts-google
+accounts-facebook
 service-configuration@1.0.11
 accounts-ui@1.2.0
 percolate:migrations

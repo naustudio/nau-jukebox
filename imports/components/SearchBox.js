@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import AppStore from '../events/AppStore';
-import { focusSearchBox, searchSong } from '../events/AppActions';
+import { focusSearchBox, searchSong, errorSignIn } from '../events/AppActions';
 
 class SearchBox extends Component {
 
@@ -19,23 +19,22 @@ class SearchBox extends Component {
 
 	onFormSubmit = (e) => {
 		e.preventDefault();
+		this.submitSong();
 	}
 
 	keyUpSearchSong = (e) => {
-		if (e.keyCode === 13) {
-			this.submitSong();
-			e.preventDefault();
-		} else {
+		if (e.keyCode !== 13) {
 			searchSong(this.searchInput.value);
 		}
 	}
 
 	submitSong = () => {
-		if (this.state.isSignIn && this.searchInput && this.searchInput.value) {
+		if (Meteor.userId() && this.searchInput && this.searchInput.value) {
 			const userId = Meteor.userId();
 
 			if (!userId) {
-				// showRequireMessage();
+				errorSignIn();
+
 				return;
 			}
 
@@ -81,11 +80,7 @@ class SearchBox extends Component {
 								ref={this.refSearchInput}
 							/>
 						</div>
-						<button
-							type="submit"
-							className="search-box__submit"
-							onClick={this.submitSong}
-						/>
+						<button type="submit" className="search-box__submit" />
 					</div>
 					{this.state.searchResult ? (
 						<div className="search-box__result-wrapper">
