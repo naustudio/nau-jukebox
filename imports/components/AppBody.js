@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'proptypes';
+import { Container } from 'flux/utils';
 import TabNav from './TabNav';
-// import TabSong from './TabSong';
-// import TabUsers from './TabUsers';
-// import TabTopSong from './TabTopSong';
+import AppStore from '../events/AppStore';
+import UserStore from '../events/UserStore';
+import TabSongs from './TabSongs';
+import TabUsers from './TabUsers';
+import TabTopSongs from './TabTopSongs';
 // import PopUpLyric from './PopUpLyric';
-import { toggleBtnNav } from '../events/AppActions';
-
 
 class AppBody extends Component {
+	static getStores() {
+		return [AppStore, UserStore];
+	}
+
 	static propTypes = {
 		tabIndex: PropTypes.number,
 		toggleBtnNav: PropTypes.bool,
@@ -19,21 +24,28 @@ class AppBody extends Component {
 		toggleBtnNav: false,
 	}
 
+	static calculateState(prevState) {
+		return {
+			tabIndex: AppStore.getState()['tabIndex'],
+		};
+	}
+
 
 	_renderTabItem = () => {
-		const index = this.props.tabIndex;
-		// switch (index) {
-		// 	case 0:
-		// 	case 1:
-		// 	case 2:
-		// 		return (<TabSong typeSong={index} />);
-		// 	case 3:
-		// 		return (<TabTopSong />);
-		// 	case 4:
-		// 		return (<TabUsers />);
-		// 	default:
-		// 		return (<TabSong />);
-		// }
+		const index = this.state.tabIndex;
+
+		switch (index) {
+			case 0:
+			case 1:
+			case 2:
+				return (<TabSongs typeSong={index} />);
+			case 3:
+				return (<TabTopSongs />);
+			case 4:
+				return (<TabUsers />);
+			default:
+				return (<TabSongs />);
+		}
 	}
 
 	render() {
@@ -41,15 +53,12 @@ class AppBody extends Component {
 
 		return (
 			<main className="tab">
-				<TabNav
-					tabIndex={this.props.tabIndex}
-				/>
-				{ this._renderTabItem() }
+				<TabNav />
 				{/* <PopUpLyric /> */}
-
+				{ this._renderTabItem() }
 			</main>
 		);
 	}
 }
 
-export default AppBody;
+export default Container.create(AppBody);
