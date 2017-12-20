@@ -49,7 +49,7 @@ class TabNav extends Component {
 				className={`tab__nav__list-item ${this.state.tabIndex === index ? 'tab__nav__list-item--active' : ''}`}
 				onClick={this.onTabClick}
 			>
-				<a href="#play-list">{item}</a>
+				<a href="#">{item}</a>
 			</li>));
 
 		return (lst);

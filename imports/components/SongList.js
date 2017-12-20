@@ -71,7 +71,7 @@ class SongList extends Component {
 										</a>
 									</span>
 									<span className="songs__list-item__name">
-										<a href="google.com" target="_blank" className="songs__list-item__name--link">
+										<a href="#" className="songs__list-item__name--link">
 											{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
 										</a>
 									</span>
