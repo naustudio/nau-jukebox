@@ -3,7 +3,6 @@
  */
 import { dispatch } from './AppDispatcher';
 
-
 export const CHANGE_TAB = 'CHANGE_TAB';
 
 export const CHANGE_NHAP = 'CHANGE_NHAP';
@@ -16,7 +15,9 @@ export const TOGGLE_BTN_PLAY = 'TOGGLE_BTN_PLAY';
 
 export const ACTIVE_BTN_PLAY = 'ACTIVE_BTN_PLAY';
 
-export const REPEAT_SONG = 'REPEAT_SONG';
+export const DEACTIVE_BTN_PLAY = 'DEACTIVE_BTN_PLAY';
+
+export const SELECT_SONG = 'SELECT_SONG';
 
 export const ACTIVE_HOST = 'ACTIVE_HOST';
 
@@ -57,14 +58,6 @@ export function toggleUserBook(id) {
 }
 
 /**
- * @param  {Number} id of song
- * @return {void}
- */
-export function toggleBtnPlay() {
-	dispatch({ type: TOGGLE_BTN_PLAY });
-}
-
-/**
  * @param
  * @return {void}
  */
@@ -74,11 +67,20 @@ export function activeBtnPlay() {
 }
 
 /**
+ * @param
+ * @return {void}
+ */
+
+export function deactiveBtnPlay() {
+	dispatch({ type: DEACTIVE_BTN_PLAY });
+}
+
+/**
  * @param {Number} id of song
  * @return {void}
  */
-export function repeatSong(id) {
-	dispatch({ type: REPEAT_SONG, id });
+export function selectSong(id) {
+	dispatch({ type: SELECT_SONG, id });
 }
 
 /**

@@ -6,6 +6,7 @@ import { SongOrigin } from '../constants';
 import SCPlayer from './SCPlayer';
 import AudioPlayer from './AudioPlayer';
 import YouTubePlayer from './YouTubePlayer';
+import { activeBtnPlay } from '../events/AppActions';
 
 /**
  * The main JukeboxPlayer which act as wrapper for different type of player inside
@@ -13,9 +14,7 @@ import YouTubePlayer from './YouTubePlayer';
  * Currently in the wrapper: AudioPlayer, SoundCloudPlayer, YouTubePlayer
  */
 export default class JukeboxPlayer {
-
 	constructor() {
-
 		this.activePlayer = null;
 		this.playerAudio = new AudioPlayer(this);
 		this.playerSoundcloud = new SCPlayer(this);
@@ -39,8 +38,6 @@ export default class JukeboxPlayer {
 			this.currentSong = song;
 			this._isNew = true;
 
-			Session.set('selectedSong', song._id);
-
 			this.pause();
 
 			// switch active player base on its original
@@ -52,7 +49,6 @@ export default class JukeboxPlayer {
 				this.activePlayer = this.playerAudio;
 			}
 		}
-		console.log('selectSong', song.name, song.origin, this.activePlayer.type);
 
 		if (!stopped) {
 			if (this.activePlayer.type === 'AudioPlayer') {
@@ -67,6 +63,7 @@ export default class JukeboxPlayer {
 			}
 		}
 		document.title = `NJ :: ${song.origin} : ${song.name}`;
+		activeBtnPlay();
 	}
 
 	/**
@@ -78,9 +75,6 @@ export default class JukeboxPlayer {
 			return;
 		}
 		AppStates.updatePlayingSongs(this.currentSong._id, this.prevSong ? this.prevSong._id : '');
-
-		const $playButton = $('.js-play-button');
-		$playButton.removeClass('_play').addClass('_pause');
 
 		if (this._isNew) {
 			this._isNew = false;
@@ -97,9 +91,6 @@ export default class JukeboxPlayer {
 	 */
 	pause() {
 		AppStates.updatePlayingSongs('', this.currentSong._id);
-
-		const $playButton = $('.js-play-button');
-		$playButton.removeClass('_pause').addClass('_play');
 
 		if (this.activePlayer) {
 			this.activePlayer.pause();
@@ -122,5 +113,4 @@ export default class JukeboxPlayer {
 			console.log('No more song to play');
 		}
 	}
-
 }

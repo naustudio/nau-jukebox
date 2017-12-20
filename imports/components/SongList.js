@@ -25,7 +25,6 @@ class SongList extends Component {
 
 	static calculateState(prevState) {
 		return {
-			// listSong: SongStore.getState()['listSong'],
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
 			activeHost: UserStore.getState()['activeHost']
@@ -34,22 +33,34 @@ class SongList extends Component {
 
 	getTime = date => `${distanceInWordsStrict(date, new Date())} ago`;
 
-	repeatSong = e => {
-		if (this.state.isSignIn) {
-			const index = parseInt(e.currentTarget.dataset.index, 10);
-			AppActions.repeatSong(index);
-		} else {
-			AppActions.errorSignIn();
-		}
-	};
-
 	activeBtnPlay = () => {
 		AppActions.activeBtnPlay();
 	};
 
+	rebookSong = e => {
+		const userId = Meteor.userId();
+		const songUrl = e.currentTarget.dataset.url;
+
+		if (!userId) {
+			AppActions.errorSignIn();
+
+			return;
+		}
+
+		if (songUrl) {
+			Meteor.call('getSongInfo', songUrl, userId, (error /*, result*/) => {
+				if (error) {
+					alert(`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`);
+				}
+			});
+		}
+	};
+
 	selectSong = e => {
-		const index = e.currentTarget.dataset.index;
-		this.setState({ selectSongIndex: index });
+		const id = e.currentTarget.dataset.id;
+		if (id) {
+			AppActions.selectSong(id);
+		}
 	};
 
 	toggleUserBook = e => {
@@ -63,7 +74,7 @@ class SongList extends Component {
 				<div className="container song__container">
 					<ul className="songs__list">
 						{this.props.songs.map(song => (
-							<li key={`${song.id}_${song.timeAdded}`} className="songs__list-item">
+							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item">
 								<span className="songs__list-item__container">
 									<span className="songs__list-item__thumbnail">
 										<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
@@ -71,7 +82,7 @@ class SongList extends Component {
 										</a>
 									</span>
 									<span className="songs__list-item__name">
-										<a href="#" className="songs__list-item__name--link">
+										<a className="songs__list-item__name--link" data-id={song._id} onClick={this.selectSong}>
 											{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
 										</a>
 									</span>
@@ -85,7 +96,11 @@ class SongList extends Component {
 										<span className="songs__list-item__lyrics songs__list-item__icon">
 											<i className="fa fa-file-text" />
 										</span>
-										<span className="songs__list-item__delete  songs__list-item__icon">
+										<span
+											className="songs__list-item__delete songs__list-item__icon"
+											data-url={song.originalURL}
+											onClick={this.rebookSong}
+										>
 											<i className="fa fa-retweet" />
 										</span>
 									</span>

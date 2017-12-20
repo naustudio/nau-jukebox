@@ -22,18 +22,23 @@ Meteor.startup(() => {
 	}
 
 	Meteor.setInterval(() => {
-		const passAMinute = moment().add(-90, 'seconds').toDate();
-		Users.update({ lastModified: { $lt: passAMinute } }, {
-			$set: {
-				isOnline: false
-			}
-		}, { multi: true });
+		const passAMinute = moment()
+			.add(-90, 'seconds')
+			.toDate();
+		Users.update(
+			{ lastModified: { $lt: passAMinute } },
+			{
+				$set: {
+					isOnline: false
+				}
+			},
+			{ multi: true }
+		);
 		console.log('Checking online status was run at: ', new Date());
 	}, 90000);
 });
 
 Meteor.methods({
-
 	getSongInfo(songurl, authorId) {
 		// Set up a future for async callback sending to clients
 		let songInfo;
@@ -109,11 +114,14 @@ Meteor.publish('Meteor.users.public', () => {
 	return Meteor.users.find({}, options);
 });
 
-Meteor.publish('userData', () => {
+Meteor.publish('userData', function() {
 	if (this.userId) {
-		Meteor.users.find({ _id: this.userId }, {
-			fields: { isHost: 1, isOnline: 1, balance: 1 }
-		});
+		Meteor.users.find(
+			{ _id: this.userId },
+			{
+				fields: { isHost: 1, isOnline: 1, balance: 1 }
+			}
+		);
 	} else {
 		this.ready();
 	}
