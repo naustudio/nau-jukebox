@@ -1,3 +1,7 @@
+/* © 2017
+ * @author Tu Nguyen
+ */
+
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import AppStore from '../events/AppStore';
@@ -16,6 +20,7 @@ class TabNav extends Component {
 			userName: UserStore.getState()['userName'],
 			errorSignIn: UserStore.getState()['errorSignIn'],
 			toggleBtnNav: AppStore.getState()['toggleBtnNav'],
+			tabIndex: AppStore.getState()['tabIndex'],
 		};
 	}
 
@@ -30,10 +35,11 @@ class TabNav extends Component {
 
 	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users'];
 	_renderTabNav = () => {
+		console.log('Tab nav', this.state.tabIndex);
 		const lst = this.tabList.map((item, index) => (
 			<li
-				key={index} data-index={index}
-				className={`tab__nav__list-item ${this.props.tabIndex === index ? 'tab__nav__list-item--active' : ''}`}
+				key={item} data-index={index}
+				className={`tab__nav__list-item ${this.state.tabIndex === index ? 'tab__nav__list-item--active' : ''}`}
 				onClick={this.onTabClick}
 			>
 				<a href="#play-list">{item}</a>

@@ -39,7 +39,6 @@ export const CLOSE_POP_UP = 'CLOSE_POP_UP';
  * @return {void}
  */
 export function changeTab(tabIndex) {
-	console.log('Action.changeTab', tabIndex);
 	dispatch({ type: CHANGE_TAB, tabIndex });
 }
 
