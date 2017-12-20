@@ -56,7 +56,7 @@ class Host extends Component {
 		return (
 			<div
 				className={`host ${this.state.activeHost ? 'host--active' : ''}`}
-				onClick={this.state.activeHost ? null : this.activeHost}
+				onClick={this.activeHost}
 			>
 				<div className="dot" />
 			</div>

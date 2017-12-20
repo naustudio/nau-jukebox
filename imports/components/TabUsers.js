@@ -40,7 +40,6 @@ class TabUsers extends Component {
 	};
 
 	_renderUser = () => {
-		console.log(this.props.users[0]);
 		const lst = this.props.users.map(user => (
 			<li key={user._id} className={`row users__item ${user.isOnline ? 'users__item--active' : ''}`}>
 				<img
@@ -53,7 +52,7 @@ class TabUsers extends Component {
 				<div className="users__item__info">
 					<div className="users__item__user">
 						<p className="users__item__name">{user.profile && user.profile.name}</p>
-						<span className="users__item__coin">{parseFloat(user.balance || 0)}</span>
+						<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
 					</div>
 				</div>
 				{this.state.activeHost ? (
@@ -99,10 +98,5 @@ class TabUsers extends Component {
 }
 
 export default withTracker(() => ({
-	users: Users.find(
-		{},
-		{
-			fields: { profile: 1, balance: 1 }
-		}
-	).fetch()
+	users: Users.find({}).fetch()
 }))(Container.create(TabUsers));
