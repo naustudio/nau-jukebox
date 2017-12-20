@@ -35,10 +35,6 @@ class UserStore extends ReduceStore {
 		};
 	}
 
-	signInUser(info) {
-		return ({ isSignIn: true, errorSignIn: false, userName: 'lepham' });
-	}
-
 	/**
 	 * Pure function, avoid mutate inputs
 	 * @param  {Object} state  Current state object
@@ -48,13 +44,6 @@ class UserStore extends ReduceStore {
 	reduce(state, action) {
 		let reducedState;
 		switch (action.type) {
-			case AppActions.SIGN_IN_USER:
-				reducedState = {
-					isSignIn: this.signInUser(action.info).isSignIn,
-					userName: this.signInUser(action.info).userName,
-					errorSignIn: this.signInUser(action.info).errorSignIn,
-				};
-				break;
 			case AppActions.ERROR_SIGN_IN:
 				reducedState = {
 					errorSignIn: true,

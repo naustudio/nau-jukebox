@@ -24,8 +24,6 @@ export const SEARCH_SONG = 'SEARCH_SONG';
 
 export const FOCUS_SEARCH_BOX = 'FOCUS_SEARCH_BOX';
 
-export const SIGN_IN_USER = 'SIGN_IN_USER';
-
 export const ERROR_SIGN_IN = 'ERROR_SIGN_IN';
 
 export const TOGGLE_BTN_NAV = 'TOGGLE_BTN_NAV';
@@ -107,15 +105,6 @@ export function searchSong(searchString) {
  */
 export function focusSearchBox(isFocus) {
 	dispatch({ type: FOCUS_SEARCH_BOX, isFocus });
-}
-
-/**
- * @param
- * @return {void}
- */
-
-export function signInUser(info) {
-	dispatch({ type: SIGN_IN_USER, info });
 }
 
 /**

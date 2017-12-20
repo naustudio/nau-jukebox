@@ -35,8 +35,8 @@ class AppStore extends ReduceStore {
 	}
 
 	searchSong(searchString) {
-		if (searchString >= 2) {
-			return Songs.find(
+		if (searchString.length >= 2) {
+			const data = Songs.find(
 				{
 					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
 				},
@@ -45,6 +45,8 @@ class AppStore extends ReduceStore {
 					reactive: false,
 				}
 			).fetch();
+
+			return data;
 		}
 
 		return null;

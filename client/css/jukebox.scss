@@ -176,8 +176,6 @@ h5 small {
 	border-bottom: 1px solid $color-06;
 	box-shadow: 1px 1px 1px $color-06;
 	transition: all 0.5s;
-
-	background-image: url("https://static.vecteezy.com/system/resources/previews/000/113/010/non_2x/multicolor-geometric-low-poly-vector-background.jpg");
 	background-repeat: no-repeat;
 
 	&__list {
@@ -248,12 +246,12 @@ h5 small {
 	overflow: hidden;
 	background-color: rgba(255, 255, 255, 0.5);
 
-	&._focus {
+	&--focus {
 		background-color: rgba(255, 255, 255, 0.8);
 		border-color: rgba(0, 0, 0, 0.4);
 	}
 
-	&._active {
+	&--active {
 		background-color: rgba(255, 255, 255, 0.95);
 		border-color: rgba(0, 0, 0, 0.4);
 

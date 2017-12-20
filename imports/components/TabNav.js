@@ -2,11 +2,15 @@
  * @author Tu Nguyen
  */
 
+/* eslint-disable react/no-array-index-key */
+
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
+
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
-import { changeTab, signInUser, closeBtnNav } from '../events/AppActions';
+import AccountsUIWrapper from './AccountUIWrapper';
+import { changeTab, /* closeBtnNav */ } from '../events/AppActions';
 
 class TabNav extends Component {
 
@@ -16,8 +20,6 @@ class TabNav extends Component {
 
 	static calculateState(prevState) {
 		return {
-			isSignIn: UserStore.getState()['isSignIn'],
-			userName: UserStore.getState()['userName'],
 			errorSignIn: UserStore.getState()['errorSignIn'],
 			toggleBtnNav: AppStore.getState()['toggleBtnNav'],
 			tabIndex: AppStore.getState()['tabIndex'],
@@ -29,16 +31,12 @@ class TabNav extends Component {
 		changeTab(index);
 	}
 
-	signInUser = (e) => {
-		signInUser('f');
-	}
-
 	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users'];
 	_renderTabNav = () => {
 		console.log('Tab nav', this.state.tabIndex);
 		const lst = this.tabList.map((item, index) => (
 			<li
-				key={item} data-index={index}
+				key={index} data-index={index}
 				className={`tab__nav__list-item ${this.state.tabIndex === index ? 'tab__nav__list-item--active' : ''}`}
 				onClick={this.onTabClick}
 			>
@@ -49,7 +47,6 @@ class TabNav extends Component {
 	}
 
 	render() {
-
 		return (
 			<nav className="tab__nav">
 				<div className="container tab__nav__container">
@@ -57,13 +54,7 @@ class TabNav extends Component {
 						{this._renderTabNav()}
 					</ul>
 					<div className="tab__nav__login-outter">
-						<div
-							className="tab__nav__login-btn"
-							onClick={this.signInUser}
-						>
-							<a href="#play-list">{this.state.userName}</a>
-						</div>
-
+						<AccountsUIWrapper />
 						{
 							this.state.errorSignIn && (
 								<div className="tab__nav__login-error">
