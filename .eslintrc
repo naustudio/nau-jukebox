@@ -45,7 +45,8 @@
 	"globals": {
 		"Migrations": true,
 		"Trianglify": true,
-		"Songs": true
+		"Songs": true,
+		"Users": true
 	},
 	"env": {
 		"browser": true,

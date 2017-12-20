@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'proptypes';
+// import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import TabNav from './TabNav';
 import AppStore from '../events/AppStore';
@@ -10,12 +10,6 @@ import SongContent from './SongContent';
 // import PopUpLyric from './PopUpLyric';
 
 class AppBody extends Component {
-	static propTypes = {
-	}
-
-	static defaultProps = {
-	}
-
 	static getStores() {
 		return [AppStore, UserStore];
 	}
