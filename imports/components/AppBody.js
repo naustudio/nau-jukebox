@@ -6,7 +6,9 @@ import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
 import TabUsers from './TabUsers';
 import TabTopList from './TabTopList';
-import SongContent from './SongContent';
+import TabSongs from './TabSongs';
+import TabYesterday from './TabYesterday';
+import TabLast7Days from './TabLast7Days';
 // import PopUpLyric from './PopUpLyric';
 
 class AppBody extends Component {
@@ -25,11 +27,11 @@ class AppBody extends Component {
 
 		switch (index) {
 			case 0:
-				return (<SongContent />);
+				return <TabSongs />;
 			case 1:
-				return (<SongContent />);
+				return <TabYesterday />;
 			case 2:
-				return (<SongContent />);
+				return <TabLast7Days />;
 			case 3:
 				return (<TabTopList />);
 			case 4:
