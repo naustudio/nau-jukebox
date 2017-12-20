@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'proptypes';
 import { withTracker } from 'meteor/react-meteor-data';
-import { distanceInWordsStrict } from 'date-fns';
+import { distanceInWordsStrict, subDays } from 'date-fns';
 import { Container } from 'flux/utils';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
@@ -69,27 +69,21 @@ class TabSongs extends Component {
 
 							<span className="songs__list-item__container">
 								<span className="songs__list-item__thumbnail">
-									<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
-										<img src={`${song.thumbURL}`} alt={`${song.name}`} />
-									</a>
+									<img src={`${song.thumbURL}`} alt={`${song.name}`} />
 								</span>
-								<span className="songs__list-item__name">
-									<a href="google.com" target="_blank" className="songs__list-item__name--link">
-										{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
-									</a>
-								</span>
+								<span className="songs__list-item__name">{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`} </span>
 							</span>
 
 							<span className="songs__list-item__container">
 								<span className="songs__list-item__control">
 									<span className="songs__list-item__time">
-										<small>{ this.getTime(song.timeAdded) }</small>
+										<small>{this.getTime(song.timeAdded)}</small>
 									</span>
 									<span className="songs__list-item__lyrics songs__list-item__icon">
 										<i className="fa fa-file-text" />
 									</span>
 									<span className="songs__list-item__delete  songs__list-item__icon">
-										<i className="fa fa-retweet" />
+										<i className="fa fa-times" />
 									</span>
 								</span>
 							</span>
@@ -103,10 +97,16 @@ class TabSongs extends Component {
 
 export default withTracker(() => {
 	const today = new Date();
+	const yesterday = subDays(today, 1);
+
 	today.setHours(0, 0, 0, 0);
+	yesterday.setHours(0, 0, 0, 0);
 
 	return {
-		songs: Songs.find({ timeAdded: { $gt: today.getTime() } }, { sort: { timeAdded: 1 } }).fetch(),
+		songs: Songs.find(
+			{ timeAdded: { $gt: yesterday.getTime(), $lt: today.getTime() } },
+			{ sort: { timeAdded: 1 } }
+		).fetch(),
 	};
 })(Container.create(TabSongs));
 

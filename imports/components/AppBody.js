@@ -4,24 +4,20 @@ import { Container } from 'flux/utils';
 import TabNav from './TabNav';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
-import TabSongs from './TabSongs';
 import TabUsers from './TabUsers';
-import TabTopSongs from './TabTopSongs';
+import TabTopList from './TabTopList';
+import SongContent from './SongContent';
 // import PopUpLyric from './PopUpLyric';
 
 class AppBody extends Component {
-	static getStores() {
-		return [AppStore, UserStore];
-	}
-
 	static propTypes = {
-		tabIndex: PropTypes.number,
-		toggleBtnNav: PropTypes.bool,
 	}
 
 	static defaultProps = {
-		tabIndex: 0,
-		toggleBtnNav: false,
+	}
+
+	static getStores() {
+		return [AppStore, UserStore];
 	}
 
 	static calculateState(prevState) {
@@ -35,21 +31,23 @@ class AppBody extends Component {
 
 		switch (index) {
 			case 0:
+				return (<SongContent />);
 			case 1:
+				return (<SongContent />);
 			case 2:
-				return (<TabSongs typeSong={index} />);
+				return (<SongContent />);
 			case 3:
-				return (<TabTopSongs />);
+				return (<TabTopList />);
 			case 4:
 				return (<TabUsers />);
 			default:
-				return (<TabSongs />);
+				break;
 		}
+
+		return 0;
 	}
 
 	render() {
-
-
 		return (
 			<main className="tab">
 				<TabNav />

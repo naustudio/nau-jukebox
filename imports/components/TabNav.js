@@ -33,7 +33,6 @@ class TabNav extends Component {
 
 	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users'];
 	_renderTabNav = () => {
-		console.log('Tab nav', this.state.tabIndex);
 		const lst = this.tabList.map((item, index) => (
 			<li
 				key={index} data-index={index}

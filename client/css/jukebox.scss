@@ -809,6 +809,10 @@ h5 small {
 			width: 40px;
 			height: 40px;
 		}
+
+		&--link {
+			display: flex;
+		}
 	}
 
 	&__name {
@@ -816,6 +820,11 @@ h5 small {
 		white-space: nowrap;
 		overflow: hidden;
 		margin-left: 15px;
+
+		&--link {
+			color: black;
+			text-decoration: none;
+		}
 	}
 
 	&__control {
