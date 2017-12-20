@@ -31,6 +31,7 @@ class AppStore extends ReduceStore {
 			activeBtnPlay: false,
 			focusSearchBox: false,
 			toggleBtnNav: false,
+			selectedSong: null
 		};
 	}
 
@@ -38,15 +39,23 @@ class AppStore extends ReduceStore {
 		if (searchString.length >= 2) {
 			const data = Songs.find(
 				{
-					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+					searchPattern: { $regex: `${searchString.toLowerCase()}*` }
 				},
 				{
 					limit: 50, // we remove duplicated result and limit further
-					reactive: false,
+					reactive: false
 				}
 			).fetch();
 
 			return data;
+		}
+
+		return null;
+	}
+
+	selectSong(id) {
+		if (id) {
+			return Songs.findOne({ _id: id });
 		}
 
 		return null;
@@ -63,32 +72,32 @@ class AppStore extends ReduceStore {
 		switch (action.type) {
 			case AppActions.CHANGE_TAB:
 				reducedState = {
-					tabIndex: action.tabIndex,
+					tabIndex: action.tabIndex
 				};
 				break;
 			case AppActions.ACTIVE_BTN_PLAY:
 				reducedState = {
-					activeBtnPlay: true,
+					activeBtnPlay: true
 				};
 				break;
-			case AppActions.TOGGLE_BTN_PLAY:
+			case AppActions.DEACTIVE_BTN_PLAY:
 				reducedState = {
-					activeBtnPlay: !state.activeBtnPlay,
+					activeBtnPlay: false
 				};
 				break;
 			case AppActions.FOCUS_SEARCH_BOX:
 				reducedState = {
-					focusSearchBox: action.isFocus,
-				};
-				break;
-			case AppActions.TOGGLE_BTN_NAV:
-				reducedState = {
-					toggleBtnNav: !state.toggleBtnNav,
+					focusSearchBox: action.isFocus
 				};
 				break;
 			case AppActions.SEARCH_SONG:
 				reducedState = {
-					searchResult: this.searchSong(action.searchString),
+					searchResult: this.searchSong(action.searchString)
+				};
+				break;
+			case AppActions.SELECT_SONG:
+				reducedState = {
+					selectedSong: this.selectSong(action.id)
 				};
 				break;
 			default:
@@ -98,7 +107,6 @@ class AppStore extends ReduceStore {
 		// return a new object, to immitate pure function
 		return Object.assign({}, state, reducedState);
 	}
-
 }
 
 // This will create a singleton AppStore and register events trigger from AppDispatcher

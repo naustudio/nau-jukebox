@@ -10,13 +10,17 @@ class ButtonPlay extends Component {
 
 	static calculateState(prevState) {
 		return {
-			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
+			activeBtnPlay: AppStore.getState()['activeBtnPlay']
 		};
 	}
 
 	toggleButton = () => {
-		AppActions.toggleBtnPlay();
-	}
+		if (this.state.activeBtnPlay) {
+			AppActions.deactiveBtnPlay();
+		} else {
+			AppActions.activeBtnPlay();
+		}
+	};
 
 	render() {
 		return (
