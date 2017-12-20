@@ -52,14 +52,14 @@ class TabNav extends Component {
 					<ul className="tab__nav__playlist">
 						{this._renderTabNav()}
 					</ul>
-					<div className="tab__nav__login-outter">
+					<div className="tab__nav__login-outter login-block">
 						<AccountsUIWrapper />
 						{
-							this.state.errorSignIn && (
-								<div className="tab__nav__login-error">
-									<p>Please login to book songs!</p>
+							(this.state.errorSignIn && !Meteor.userId()) ? (
+								<div className="login-block__error">
+									<p>Please login first!</p>
 								</div>
-							)
+							) : null
 						}
 					</div>
 				</div>

@@ -342,6 +342,7 @@ h5 small {
 		padding: 0.5 * $gutter $gutter;
 		margin-bottom: 0;
 		border-top: 1px solid whitesmoke;
+		cursor: pointer;
 
 		&:first-child {
 			margin-top: $gutter;
@@ -744,7 +745,6 @@ h5 small {
 	margin-left: 20px;
 	transform: translateX(100%);
 	width: 100px;
-	display: none;
 }
 
 .tab__nav .login-block__error::before {
@@ -758,7 +758,7 @@ h5 small {
 	top: 50%;
 	opacity: 1;
 	margin-left: -15px;
-	animation: ani-error-login 1s infinite;
+	animation: blink-animation 1s infinite;
 }
 
 .tab__nav .login-block__error p {
