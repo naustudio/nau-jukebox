@@ -39,7 +39,11 @@ class AppStore extends ReduceStore {
 			activeBtnPlay: false,
 			focusSearchBox: false,
 			toggleBtnNav: false,
-			selectedSong: null
+			selectedSong: null,
+			openPopup: false,
+			songName: '',
+			songLyric: '',
+			revealedSongs: []
 		};
 	}
 
@@ -69,6 +73,36 @@ class AppStore extends ReduceStore {
 		return null;
 	}
 
+	getSongNameAndLyric(id) {
+		if (id) {
+			const song = Songs.findOne({ _id: id });
+			if (song) {
+				return {
+					songName: song.name,
+					songLyric: song.lyric
+				};
+			}
+		}
+
+		return {
+			songName: '',
+			songLyric: ''
+		};
+	}
+
+	toggleRevealedSongs(id, songList) {
+		const newArray = [...songList];
+		console.log(songList);
+		const songIndex = newArray.indexOf(id);
+		if (songIndex > -1) {
+			newArray.splice(songIndex, 1);
+		} else {
+			newArray.push(id);
+		}
+
+		return newArray;
+	}
+
 	/**
 	 * Pure function, avoid mutate inputs
 	 * @param  {Object} state  Current state object
@@ -95,6 +129,24 @@ class AppStore extends ReduceStore {
 				break;
 			case AppActions.SELECT_SONG:
 				reducedState = { selectedSong: this.selectSong(action.id) };
+				break;
+			case AppActions.OPEN_POP_UP:
+				reducedState = {
+					openPopup: true
+				};
+				break;
+			case AppActions.CLOSE_POP_UP:
+				reducedState = {
+					openPopup: false
+				};
+				break;
+			case AppActions.UPDATE_LYRIC_POPUP:
+				reducedState = this.getSongNameAndLyric(action.id);
+				break;
+			case AppActions.TOGGLE_USER_BOOK:
+				reducedState = {
+					revealedSongs: this.toggleRevealedSongs(action.id, state.revealedSongs)
+				};
 				break;
 			default:
 				console.log(action.type, 'does nothing');

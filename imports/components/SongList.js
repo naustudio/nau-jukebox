@@ -8,15 +8,16 @@ import { Container } from 'flux/utils';
 import { distanceInWordsStrict } from 'date-fns';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
+import { Users } from '../collections';
 import * as AppActions from '../events/AppActions';
 
 class SongList extends Component {
 	static propTypes = {
-		songs: PropTypes.arrayOf(PropTypes.object),
+		songs: PropTypes.arrayOf(PropTypes.object)
 	};
 
 	static defaultProps = {
-		songs: [],
+		songs: []
 	};
 
 	static getStores() {
@@ -28,8 +29,17 @@ class SongList extends Component {
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
 			activeHost: UserStore.getState()['activeHost'],
+			revealedSongs: AppStore.getState()['revealedSongs']
 		};
 	}
+
+	onOpenLyricPopup = e => {
+		const id = e.currentTarget.dataset.id;
+		if (id) {
+			AppActions.updateLyricPopup(id);
+			AppActions.openPopUp();
+		}
+	};
 
 	getTime = date => `${distanceInWordsStrict(date, new Date())} ago`;
 
@@ -64,11 +74,15 @@ class SongList extends Component {
 	};
 
 	toggleUserBook = e => {
-		const index = parseInt(e.currentTarget.dataset.index, 10);
-		AppActions.toggleUserBook(index);
+		const id = e.currentTarget.dataset.id;
+		if (id) {
+			AppActions.toggleUserBook(id);
+		}
 	};
 
 	render() {
+		const { revealedSongs = [], activeHost } = this.state;
+
 		return (
 			<section className="tab__body song">
 				<div className="container song__container">
@@ -77,31 +91,40 @@ class SongList extends Component {
 							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item">
 								<span className="songs__list-item__container">
 									<span className="songs__list-item__thumbnail">
-										<a
-											href={`${song.originalURL}`}
-											target="_blank"
-											className="songs__list-item__thumbnail--link"
-										>
+										<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
 											<img src={`${song.thumbURL}`} alt={`${song.name}`} />
 										</a>
 									</span>
 									<span className="songs__list-item__name">
-										<a
-											className="songs__list-item__name--link"
-											data-id={song._id}
-											onClick={this.selectSong}
-										>
+										<a className="songs__list-item__name--link" data-id={song._id} onClick={this.selectSong}>
 											{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
 										</a>
 									</span>
 								</span>
+
+								{revealedSongs.indexOf(song._id) > -1 ? (
+									<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
+								) : null}
 
 								<span className="songs__list-item__container">
 									<span className="songs__list-item__control">
 										<span className="songs__list-item__time">
 											<small>{this.getTime(song.timeAdded)}</small>
 										</span>
-										<span className="songs__list-item__lyrics songs__list-item__icon">
+										{activeHost ? (
+											<span
+												className="songs__list-item__lyrics songs__list-item__icon"
+												data-id={song._id}
+												onClick={this.toggleUserBook}
+											>
+												<i className="fa fa-eye" />
+											</span>
+										) : null}
+										<span
+											className="songs__list-item__lyrics songs__list-item__icon"
+											data-id={song._id}
+											onClick={this.onOpenLyricPopup}
+										>
 											<i className="fa fa-file-text" />
 										</span>
 										<span

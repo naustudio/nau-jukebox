@@ -4,9 +4,10 @@
 
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import { startOfWeek, endOfWeek, format } from 'date-fns';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
-import { startOfWeek, endOfWeek, format } from 'date-fns';
+import { Songs, Users } from '../collections';
 import AppStore from '../events/AppStore';
 
 class TabTopList extends Component {
@@ -26,7 +27,7 @@ class TabTopList extends Component {
 		return [AppStore];
 	}
 
-	static calculateState(prevState) {
+	static calculateState() {
 		return {
 			naustormData: AppStore.getState()['naustormData']
 		};
@@ -36,8 +37,6 @@ class TabTopList extends Component {
 
 	render() {
 		const { startWeek, endWeek, naustormData } = this.props;
-
-		console.log('nau', naustormData);
 
 		return (
 			<section className="tab__body song">
