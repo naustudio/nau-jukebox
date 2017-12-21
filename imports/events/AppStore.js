@@ -1,9 +1,17 @@
 /* © 2017 Goalify
  * @author Thanh
  */
+import { Meteor } from 'meteor/meteor';
 import { ReduceStore } from 'flux/utils';
+
+import { Songs } from '../collections';
 import AppDispatcher from './AppDispatcher';
 import * as AppActions from './AppActions';
+
+if (Meteor.isClient) {
+	Meteor.subscribe('Songs.public');
+	window.Songs = Songs;
+}
 
 /**
  * The Flux ReducedStore to keep the states of the whole app

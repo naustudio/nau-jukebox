@@ -16,10 +16,10 @@ class App extends Component {
 		return [AppStore, UserStore];
 	}
 
-	static calculateState(prevState) {
+	static calculateState(/*prevState*/) {
 		return {
 			selectedSong: AppStore.getState()['selectedSong'],
-			activeBtnPlay: AppStore.getState()['activeBtnPlay']
+			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
 		};
 	}
 

@@ -9,7 +9,6 @@
  * This wraps the basic media element player with separate <video> tag
  */
 export default class YouTubePlayer {
-
 	constructor(mainPlayer) {
 		this.type = 'YouTubePlayer';
 		this.song = null;
@@ -54,7 +53,7 @@ export default class YouTubePlayer {
 						// 'volume',
 						'fullscreen',
 					],
-					success: (mediaElement, originalNode, player) => {
+					success: (mediaElement /*, originalNode, player*/) => {
 						// console.log('youtubeplayer init success:', mediaElement, originalNode, player);
 						// store the container to show / hide
 						this.container = mediaElement.closest('.mejs__video');
@@ -70,7 +69,7 @@ export default class YouTubePlayer {
 							// a cue events will trigger later which we'll use to start next song
 							this._onVideoEnded();
 						});
-					}
+					},
 				});
 
 				// for debugging
@@ -90,5 +89,4 @@ export default class YouTubePlayer {
 		}
 		this.player.pause();
 	}
-
 }
