@@ -6,24 +6,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Container } from 'flux/utils';
+import { Users } from '../collections';
 import UserStore from '../events/UserStore';
 
 class TabUsers extends Component {
 	static propTypes = {
-		users: PropTypes.arrayOf(PropTypes.object)
+		users: PropTypes.arrayOf(PropTypes.object),
 	};
 
 	static defaultProps = {
-		users: []
+		users: [],
 	};
 
 	static getStores() {
 		return [UserStore];
 	}
 
-	static calculateState(prevState) {
+	static calculateState(/*prevState*/) {
 		return {
-			activeHost: UserStore.getState()['activeHost']
+			activeHost: UserStore.getState()['activeHost'],
 		};
 	}
 
@@ -33,7 +34,7 @@ class TabUsers extends Component {
 		const amount = form.amount && form.amount.value;
 		const userId = form.userid && form.userid.value;
 		if (amount && userId) {
-			Meteor.call('naucoinPay', userId, amount, (err, result) => {
+			Meteor.call('naucoinPay', userId, amount, (/*err, result*/) => {
 				form.amount.value = '';
 			});
 		}
@@ -71,7 +72,11 @@ class TabUsers extends Component {
 								<input hidden value={user._id} readOnly type="text" name="userid" />
 							</div>
 							<div className="col col--5">
-								<input className="btn btn--primary users__item__payment__submit" type="submit" defaultValue="Submit" />
+								<input
+									className="btn btn--primary users__item__payment__submit"
+									type="submit"
+									defaultValue="Submit"
+								/>
 							</div>
 						</form>
 					</div>
@@ -98,5 +103,5 @@ class TabUsers extends Component {
 }
 
 export default withTracker(() => ({
-	users: Users.find({}).fetch()
+	users: Users.find({}).fetch(),
 }))(Container.create(TabUsers));

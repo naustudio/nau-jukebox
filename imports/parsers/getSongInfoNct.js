@@ -48,6 +48,7 @@ const getSongInfoNct = songurl => {
 	}
 
 	if (lyricResults) {
+		// eslint-disable-next-line no-script-url
 		if (lyricResults[0].includes('javascript:;')) {
 			lyric = null;
 		} else {
@@ -121,10 +122,10 @@ const getSongInfoNct = songurl => {
 			error: 'Errors unknown.',
 		};
 	}
-	console.log('Can\'t parse link');
+	console.log("Can't parse link");
 
 	return {
-		error: 'Can\'t parse and get song info from link',
+		error: "Can't parse and get song info from link",
 	};
 };
 

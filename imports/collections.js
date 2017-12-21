@@ -1,15 +1,55 @@
-/**
- * Main module
+/* © 2017 NauStud.io
+ * @author Thanh
  */
-/*eslint no-shadow:0, no-undef:0*/
-/*global AppStates:true*/
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'simpl-schema';
 
-// Set up a collection to contain song information. On the server,
-// it is backed by a MongoDB collection named 'songs'.
-Songs = new Meteor.Collection('songs');
-AppStates = new Meteor.Collection('appstates');
-Users = Meteor.users;
+const songSchema = new SimpleSchema({
+	timeAdded: {
+		type: Number,
+		label: 'Created timestamp, not Date object',
+	},
+	originalURL: {
+		type: String,
+	},
+	origin: {
+		type: String,
+		allowedValues: ['Soundcloud', 'NCT', 'Zing', 'YouTube'],
+	},
+	name: {
+		type: String,
+	},
+	artist: {
+		type: String,
+		label: 'Artist or Uploader for YouTube',
+	},
+	streamURL: {
+		type: String,
+	},
+	thumbURL: {
+		type: String,
+	},
+	play: {
+		type: Number,
+	},
+	lyric: {
+		type: String,
+		optional: true,
+	},
+	author: {
+		type: String,
+	},
+	searchPattern: {
+		type: String,
+	},
+});
 
+const Songs = new Mongo.Collection('songs');
+Songs.attachSchema(songSchema);
+
+const AppStates = new Mongo.Collection('appstates');
+const Users = Meteor.users;
 
 /**
  * AppStates helper: update playing songs, from any clients
@@ -45,3 +85,5 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 	// update the exact document in AppStates collection with new songs array
 	AppStates.update(playingSongs._id, { key: 'playingSongs', songs });
 };
+
+export { Songs, AppStates, Users };

@@ -19,7 +19,7 @@ class NavBar extends Component {
 		const t = new Trianglify({
 			x_gradient: Trianglify.colorbrewer.Spectral[rs],
 			noiseIntensity: 0,
-			cellsize: rn
+			cellsize: rn,
 		});
 
 		const pattern = t.generate(window.innerWidth, 269);

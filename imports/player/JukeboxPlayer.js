@@ -1,7 +1,7 @@
 /* © 2017 NauStud.io
  * @author Thanh Tran
  */
-/*global AppStates, Songs*/
+import { AppStates, Songs } from '../collections';
 import { SongOrigin } from '../constants';
 import SCPlayer from './SCPlayer';
 import AudioPlayer from './AudioPlayer';
