@@ -1,3 +1,6 @@
+/* © 2017 NauStud.io
+ * @author Tú
+ */
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
@@ -9,7 +12,7 @@ import TabTopList from './TabTopList';
 import TabSongs from './TabSongs';
 import TabYesterday from './TabYesterday';
 import TabLast7Days from './TabLast7Days';
-// import PopUpLyric from './PopUpLyric';
+import PopUpLyric from './PopUpLyric';
 
 class AppBody extends Component {
 	static getStores() {
@@ -18,7 +21,7 @@ class AppBody extends Component {
 
 	static calculateState(/*prevState*/) {
 		return {
-			tabIndex: AppStore.getState()['tabIndex'],
+			tabIndex: AppStore.getState()['tabIndex']
 		};
 	}
 
@@ -47,7 +50,7 @@ class AppBody extends Component {
 		return (
 			<main className="tab">
 				<TabNav />
-				{/* <PopUpLyric /> */}
+				<PopUpLyric />
 				<div className="app-body__container">{this._renderTabItem()}</div>
 			</main>
 		);
