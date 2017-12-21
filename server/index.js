@@ -2,7 +2,7 @@
  * @author Thanh Tran, Tung Tran, Tw
  */
 import { Migrations } from 'meteor/percolate:migrations';
-import { moment } from 'meteor/momentjs:moment';
+// import { moment } from 'meteor/momentjs:moment';
 
 import { AppStates, Songs, Users } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
@@ -19,26 +19,26 @@ Meteor.startup(() => {
 		//first time running
 		AppStates.insert({
 			key: 'playingSongs',
-			songs: [],
+			songs: []
 		});
 		console.log('Insert AppStates.playingSongs key');
 	}
 
-	Meteor.setInterval(() => {
-		const passAMinute = moment()
-			.add(-90, 'seconds')
-			.toDate();
-		Users.update(
-			{ lastModified: { $lt: passAMinute } },
-			{
-				$set: {
-					isOnline: false,
-				},
-			},
-			{ multi: true }
-		);
-		console.log('Checking online status was run at: ', new Date());
-	}, 90000);
+	// Meteor.setInterval(() => {
+	// 	const passAMinute = moment()
+	// 		.add(-90, 'seconds')
+	// 		.toDate();
+	// 	Users.update(
+	// 		{ lastModified: { $lt: passAMinute } },
+	// 		{
+	// 			$set: {
+	// 				isOnline: false,
+	// 			},
+	// 		},
+	// 		{ multi: true }
+	// 	);
+	// 	console.log('Checking online status was run at: ', new Date());
+	// }, 90000);
 });
 
 Meteor.methods({
@@ -81,8 +81,8 @@ Meteor.methods({
 			Users.update(userId, {
 				$set: {
 					isHost: true,
-					lastModified: new Date(),
-				},
+					lastModified: new Date()
+				}
 			});
 		});
 	},
@@ -91,8 +91,8 @@ Meteor.methods({
 		return Users.update(userId, {
 			$set: {
 				isOnline: true,
-				lastModified: new Date(),
-			},
+				lastModified: new Date()
+			}
 		});
 	},
 
@@ -103,15 +103,15 @@ Meteor.methods({
 
 		return Users.update(u._id, {
 			$set: {
-				balance: newBalance,
-			},
+				balance: newBalance
+			}
 		});
-	},
+	}
 });
 
 Meteor.publish('Meteor.users.public', function() {
 	const options = {
-		fields: { isHost: 1, isOnline: 1, balance: 1 },
+		fields: { isHost: 1, status: 1, balance: 1, profile: 1 }
 	};
 
 	return Meteor.users.find({}, options);
@@ -122,7 +122,7 @@ Meteor.publish('userData', function() {
 		return Meteor.users.find(
 			{ _id: this.userId },
 			{
-				fields: { isHost: 1, isOnline: 1, balance: 1 },
+				fields: { isHost: 1, status: 1, balance: 1 }
 			}
 		);
 	}

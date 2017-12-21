@@ -11,11 +11,11 @@ import UserStore from '../events/UserStore';
 
 class TabUsers extends Component {
 	static propTypes = {
-		users: PropTypes.arrayOf(PropTypes.object),
+		users: PropTypes.arrayOf(PropTypes.object)
 	};
 
 	static defaultProps = {
-		users: [],
+		users: []
 	};
 
 	static getStores() {
@@ -24,7 +24,7 @@ class TabUsers extends Component {
 
 	static calculateState(/*prevState*/) {
 		return {
-			activeHost: UserStore.getState()['activeHost'],
+			activeHost: UserStore.getState()['activeHost']
 		};
 	}
 
@@ -41,8 +41,9 @@ class TabUsers extends Component {
 	};
 
 	_renderUser = () => {
+		console.log(this.props.users);
 		const lst = this.props.users.map(user => (
-			<li key={user._id} className={`row users__item ${user.isOnline ? 'users__item--active' : ''}`}>
+			<li key={user._id} className={`row users__item ${user.status.online ? 'users__item--active' : ''}`}>
 				<img
 					src="https://thumbs.dreamstime.com/t/imge-mint-closeup-green-leaves-texture-background-72159554.jpg"
 					width={50}
@@ -72,11 +73,7 @@ class TabUsers extends Component {
 								<input hidden value={user._id} readOnly type="text" name="userid" />
 							</div>
 							<div className="col col--5">
-								<input
-									className="btn btn--primary users__item__payment__submit"
-									type="submit"
-									defaultValue="Submit"
-								/>
+								<input className="btn btn--primary users__item__payment__submit" type="submit" defaultValue="Submit" />
 							</div>
 						</form>
 					</div>
@@ -103,5 +100,5 @@ class TabUsers extends Component {
 }
 
 export default withTracker(() => ({
-	users: Users.find({}).fetch(),
+	users: Users.find({}).fetch()
 }))(Container.create(TabUsers));
