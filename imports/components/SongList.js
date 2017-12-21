@@ -12,11 +12,11 @@ import * as AppActions from '../events/AppActions';
 
 class SongList extends Component {
 	static propTypes = {
-		songs: PropTypes.arrayOf(PropTypes.object),
+		songs: PropTypes.arrayOf(PropTypes.object)
 	};
 
 	static defaultProps = {
-		songs: [],
+		songs: []
 	};
 
 	static getStores() {
@@ -27,9 +27,17 @@ class SongList extends Component {
 		return {
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
-			activeHost: UserStore.getState()['activeHost'],
+			activeHost: UserStore.getState()['activeHost']
 		};
 	}
+
+	onOpenLyricPopup = e => {
+		const id = e.currentTarget.dataset.id;
+		if (id) {
+			AppActions.updateLyricPopup(id);
+			AppActions.openPopUp();
+		}
+	};
 
 	getTime = date => `${distanceInWordsStrict(date, new Date())} ago`;
 
@@ -77,20 +85,12 @@ class SongList extends Component {
 							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item">
 								<span className="songs__list-item__container">
 									<span className="songs__list-item__thumbnail">
-										<a
-											href={`${song.originalURL}`}
-											target="_blank"
-											className="songs__list-item__thumbnail--link"
-										>
+										<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
 											<img src={`${song.thumbURL}`} alt={`${song.name}`} />
 										</a>
 									</span>
 									<span className="songs__list-item__name">
-										<a
-											className="songs__list-item__name--link"
-											data-id={song._id}
-											onClick={this.selectSong}
-										>
+										<a className="songs__list-item__name--link" data-id={song._id} onClick={this.selectSong}>
 											{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
 										</a>
 									</span>
@@ -101,7 +101,11 @@ class SongList extends Component {
 										<span className="songs__list-item__time">
 											<small>{this.getTime(song.timeAdded)}</small>
 										</span>
-										<span className="songs__list-item__lyrics songs__list-item__icon">
+										<span
+											className="songs__list-item__lyrics songs__list-item__icon"
+											data-id={song._id}
+											onClick={this.onOpenLyricPopup}
+										>
 											<i className="fa fa-file-text" />
 										</span>
 										<span

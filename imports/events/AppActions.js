@@ -29,6 +29,8 @@ export const ERROR_SIGN_IN = 'ERROR_SIGN_IN';
 
 export const TOGGLE_BTN_NAV = 'TOGGLE_BTN_NAV';
 
+export const UPDATE_LYRIC_POPUP = 'UPDATE_LYRIC_POPUP';
+
 export const OPEN_POP_UP = 'OPEN_POP_UP';
 
 export const CLOSE_POP_UP = 'CLOSE_POP_UP';
@@ -125,6 +127,15 @@ export function errorSignIn() {
 
 export function toggleBtnNav() {
 	dispatch({ type: TOGGLE_BTN_NAV });
+}
+
+/**
+ * @param
+ * @return {void}
+ */
+
+export function updateLyricPopup(id) {
+	dispatch({ type: UPDATE_LYRIC_POPUP, id });
 }
 
 /**
