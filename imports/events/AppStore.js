@@ -71,34 +71,22 @@ class AppStore extends ReduceStore {
 		let reducedState;
 		switch (action.type) {
 			case AppActions.CHANGE_TAB:
-				reducedState = {
-					tabIndex: action.tabIndex
-				};
+				reducedState = { tabIndex: action.tabIndex };
 				break;
 			case AppActions.ACTIVE_BTN_PLAY:
-				reducedState = {
-					activeBtnPlay: true
-				};
+				reducedState = { activeBtnPlay: true };
 				break;
 			case AppActions.DEACTIVE_BTN_PLAY:
-				reducedState = {
-					activeBtnPlay: false
-				};
+				reducedState = { activeBtnPlay: false };
 				break;
 			case AppActions.FOCUS_SEARCH_BOX:
-				reducedState = {
-					focusSearchBox: action.isFocus
-				};
+				reducedState = { focusSearchBox: action.isFocus };
 				break;
 			case AppActions.SEARCH_SONG:
-				reducedState = {
-					searchResult: this.searchSong(action.searchString)
-				};
+				reducedState = { searchResult: this.searchSong(action.searchString) };
 				break;
 			case AppActions.SELECT_SONG:
-				reducedState = {
-					selectedSong: this.selectSong(action.id)
-				};
+				reducedState = { selectedSong: this.selectSong(action.id) };
 				break;
 			default:
 				console.log(action.type, 'does nothing');

@@ -8,7 +8,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
-
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
 import AccountsUIWrapper from './AccountUIWrapper';

@@ -54,6 +54,11 @@ class UserStore extends ReduceStore {
 					activeHost: action.isActive
 				};
 				break;
+			case AppActions.SET_USER_LIST:
+				reducedState = {
+					userList: action.userList
+				};
+				break;
 			default:
 				console.log(action.type, 'does nothing');
 		}
