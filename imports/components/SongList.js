@@ -8,6 +8,7 @@ import { Container } from 'flux/utils';
 import { distanceInWordsStrict } from 'date-fns';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
+import { Users } from '../collections';
 import * as AppActions from '../events/AppActions';
 
 class SongList extends Component {
@@ -27,7 +28,8 @@ class SongList extends Component {
 		return {
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
-			activeHost: UserStore.getState()['activeHost']
+			activeHost: UserStore.getState()['activeHost'],
+			revealedSongs: AppStore.getState()['revealedSongs']
 		};
 	}
 
@@ -72,11 +74,15 @@ class SongList extends Component {
 	};
 
 	toggleUserBook = e => {
-		const index = parseInt(e.currentTarget.dataset.index, 10);
-		AppActions.toggleUserBook(index);
+		const id = e.currentTarget.dataset.id;
+		if (id) {
+			AppActions.toggleUserBook(id);
+		}
 	};
 
 	render() {
+		const { revealedSongs = [], activeHost } = this.state;
+
 		return (
 			<section className="tab__body song">
 				<div className="container song__container">
@@ -96,11 +102,24 @@ class SongList extends Component {
 									</span>
 								</span>
 
+								{revealedSongs.indexOf(song._id) > -1 ? (
+									<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
+								) : null}
+
 								<span className="songs__list-item__container">
 									<span className="songs__list-item__control">
 										<span className="songs__list-item__time">
 											<small>{this.getTime(song.timeAdded)}</small>
 										</span>
+										{activeHost ? (
+											<span
+												className="songs__list-item__lyrics songs__list-item__icon"
+												data-id={song._id}
+												onClick={this.toggleUserBook}
+											>
+												<i className="fa fa-eye" />
+											</span>
+										) : null}
 										<span
 											className="songs__list-item__lyrics songs__list-item__icon"
 											data-id={song._id}

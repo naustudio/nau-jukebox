@@ -42,7 +42,8 @@ class AppStore extends ReduceStore {
 			selectedSong: null,
 			openPopup: false,
 			songName: '',
-			songLyric: ''
+			songLyric: '',
+			revealedSongs: []
 		};
 	}
 
@@ -87,6 +88,19 @@ class AppStore extends ReduceStore {
 			songName: '',
 			songLyric: ''
 		};
+	}
+
+	toggleRevealedSongs(id, songList) {
+		const newArray = [...songList];
+		console.log(songList);
+		const songIndex = newArray.indexOf(id);
+		if (songIndex > -1) {
+			newArray.splice(songIndex, 1);
+		} else {
+			newArray.push(id);
+		}
+
+		return newArray;
 	}
 
 	/**
@@ -140,6 +154,11 @@ class AppStore extends ReduceStore {
 				break;
 			case AppActions.UPDATE_LYRIC_POPUP:
 				reducedState = this.getSongNameAndLyric(action.id);
+				break;
+			case AppActions.TOGGLE_USER_BOOK:
+				reducedState = {
+					revealedSongs: this.toggleRevealedSongs(action.id, state.revealedSongs)
+				};
 				break;
 			default:
 				console.log(action.type, 'does nothing');

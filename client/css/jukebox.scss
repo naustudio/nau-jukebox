@@ -62,7 +62,8 @@ form {
 	margin: 0;
 }
 
-input, select {
+input,
+select {
 	font-size: 14px;
 
 	&:focus {
@@ -184,7 +185,6 @@ h5 small {
 		display: flex;
 		padding: 15px 0;
 	}
-
 
 	&__img {
 		mix-blend-mode: multiply;
@@ -644,7 +644,6 @@ h5 small {
 	color: #a9c52f;
 }
 
-
 /* =============================================
 =          AppBody/TabNav                      =
 ============================================= */
@@ -783,6 +782,7 @@ h5 small {
 	background-color: $color-01;
 
 	&__container {
+		position: relative;
 		display: flex;
 		align-items: center;
 		padding: 0 10px;
@@ -796,7 +796,6 @@ h5 small {
 			padding-right: 0;
 		}
 	}
-
 
 	&:hover {
 		background-color: #fafafa;
@@ -845,8 +844,14 @@ h5 small {
 			color: #000;
 		}
 	}
-}
 
+	&__author {
+		position: absolute;
+		right: 101%;
+		display: block;
+		white-space: nowrap;
+	}
+}
 
 // the position of fixed elements should be out of scrolling-area to remove juddering when scroll, https://remysharp.com/2012/05/24/issues-with-position-fixed-scrolling-on-ios
 .scroll-content {
@@ -1294,7 +1299,6 @@ h5 small {
 		align-items: center;
 		position: relative;
 
-
 		&::before {
 			content: '';
 			width: 8px;
@@ -1486,7 +1490,6 @@ button.button-naucoin {
 		opacity: 0;
 	}
 }
-
 
 //lyric modal
 
