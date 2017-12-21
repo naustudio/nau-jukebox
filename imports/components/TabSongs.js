@@ -4,8 +4,10 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'proptypes';
+import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Songs } from '../collections';
+import AppStore from '../events/AppStore';
 import SongList from './SongList';
 
 class TabSongs extends Component {
@@ -16,6 +18,16 @@ class TabSongs extends Component {
 	static defaultProps = {
 		songs: [],
 	};
+
+	static getStores() {
+		return [AppStore];
+	}
+
+	static calculateState(/*prevState*/) {
+		return {
+			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
+		};
+	}
 
 	render() {
 		return <SongList songs={this.props.songs} />;
@@ -29,4 +41,4 @@ export default withTracker(() => {
 	return {
 		songs: Songs.find({ timeAdded: { $gt: today.getTime() } }, { sort: { timeAdded: 1 } }).fetch(),
 	};
-})(TabSongs);
+})(Container.create(TabSongs));
