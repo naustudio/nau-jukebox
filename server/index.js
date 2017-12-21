@@ -111,7 +111,7 @@ Meteor.methods({
 
 Meteor.publish('Meteor.users.public', function() {
 	const options = {
-		fields: { isHost: 1, status: 1, balance: 1, profile: 1 }
+		fields: { isHost: 1, status: 1, balance: 1, profile: 1, 'services.facebook.id': 1, 'services.google.picture': 1 }
 	};
 
 	return Meteor.users.find({}, options);

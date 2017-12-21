@@ -44,13 +44,7 @@ class TabUsers extends Component {
 		console.log(this.props.users);
 		const lst = this.props.users.map(user => (
 			<li key={user._id} className={`row users__item ${user.status.online ? 'users__item--active' : ''}`}>
-				<img
-					src="https://thumbs.dreamstime.com/t/imge-mint-closeup-green-leaves-texture-background-72159554.jpg"
-					width={50}
-					height={50}
-					alt="image user"
-					className="users__item__avt"
-				/>
+				<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
 				<div className="users__item__info">
 					<div className="users__item__user">
 						<p className="users__item__name">{user.profile && user.profile.name}</p>
@@ -100,5 +94,21 @@ class TabUsers extends Component {
 }
 
 export default withTracker(() => ({
-	users: Users.find({}).fetch()
+	users: Users.find(
+		{},
+		{
+			transform: user => {
+				let picture = '';
+				if (user.services.google) {
+					picture = user.services.google.picture || '';
+				} else {
+					picture = `https://graph.facebook.com/v2.10/${user.services.facebook.id}/picture?type=square`;
+				}
+				/* eslint-disable no-param-reassign */
+				user.profile.picture = picture;
+
+				return user;
+			}
+		}
+	).fetch()
 }))(Container.create(TabUsers));
