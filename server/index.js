@@ -69,11 +69,10 @@ Meteor.methods({
 		}
 
 		if (songInfo && songInfo.error) {
-			Songs.remove({ originalURL: songurl }, (err, removed) => {
+			Songs.update({ originalURL: songurl }, { $set: { badSong: true } }, { multi: true }, err => {
 				if (err) {
 					console.log(err);
 				}
-				console.log(removed, ' songs removed');
 			});
 		}
 
@@ -120,6 +119,7 @@ Meteor.methods({
 			Songs.find(
 				{
 					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+					badSong: { $ne: true },
 				},
 				{
 					limit: 50, // we remove duplicated result and limit further
@@ -127,7 +127,7 @@ Meteor.methods({
 				}
 			).fetch(),
 			false,
-			song => song.originalURL
+			song => song.originalURL.trim()
 		);
 	},
 });
