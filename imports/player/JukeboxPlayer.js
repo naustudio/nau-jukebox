@@ -74,6 +74,7 @@ export default class JukeboxPlayer {
 		if (!this.currentSong) {
 			return;
 		}
+
 		AppStates.updatePlayingSongs(this.currentSong._id, this.prevSong ? this.prevSong._id : '');
 
 		if (this._isNew) {

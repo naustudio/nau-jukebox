@@ -8,16 +8,17 @@ import { Container } from 'flux/utils';
 import { distanceInWordsStrict } from 'date-fns';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
-import { Users } from '../collections';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Users, AppStates } from '../collections';
 import * as AppActions from '../events/AppActions';
 
 class SongList extends Component {
 	static propTypes = {
-		songs: PropTypes.arrayOf(PropTypes.object)
+		songs: PropTypes.arrayOf(PropTypes.object),
 	};
 
 	static defaultProps = {
-		songs: []
+		songs: [],
 	};
 
 	static getStores() {
@@ -29,7 +30,7 @@ class SongList extends Component {
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
 			activeHost: UserStore.getState()['activeHost'],
-			revealedSongs: AppStore.getState()['revealedSongs']
+			revealedSongs: AppStore.getState()['revealedSongs'],
 		};
 	}
 
@@ -89,6 +90,7 @@ class SongList extends Component {
 					<ul className="songs__list">
 						{this.props.songs.map(song => (
 							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item">
+								<span className="playlist__item__active">&rtri;</span>
 								<span className="songs__list-item__container">
 									<span className="songs__list-item__thumbnail">
 										<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
@@ -145,4 +147,18 @@ class SongList extends Component {
 	}
 }
 
-export default Container.create(SongList);
+export default withTracker(() => {
+	const playingSongs = AppStates.findOne({ key: 'playingSongs' });
+
+	console.log(playingSongs);
+
+	if (playingSongs && Array.isArray(playingSongs.songs)) {
+		return {
+			currentPlayingId: playingSongs.songs.includes(this._id),
+		};
+	} else {
+		return {};
+	}
+})(Container.create(SongList));
+
+// export default Container.create(SongList);

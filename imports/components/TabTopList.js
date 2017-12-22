@@ -14,13 +14,13 @@ class TabTopList extends Component {
 	static propTypes = {
 		naustormData: PropTypes.arrayOf(),
 		endWeek: PropTypes.string,
-		startWeek: PropTypes.string
+		startWeek: PropTypes.string,
 	};
 
 	static defaultProps = {
 		naustormData: [],
 		endWeek: '',
-		startWeek: ''
+		startWeek: '',
 	};
 
 	static getStores() {
@@ -29,7 +29,7 @@ class TabTopList extends Component {
 
 	static calculateState() {
 		return {
-			naustormData: AppStore.getState()['naustormData']
+			naustormData: AppStore.getState()['naustormData'],
 		};
 	}
 
@@ -109,7 +109,7 @@ export default withTracker(() => {
 			const g = groupByAuthor._wrapped[item];
 			const t = {
 				author: g[0].author.length === 0 ? 'The Many-Faced' : g[0].author,
-				books: g.length
+				books: g.length,
 			};
 
 			groupByAuthorData.push(t);
@@ -118,7 +118,7 @@ export default withTracker(() => {
 		return {
 			naustorm_data: naustorm,
 			naustorm_total: songList.length,
-			naustorm_author_data: groupByAuthorData
+			naustorm_author_data: groupByAuthorData,
 		};
 	};
 
@@ -150,6 +150,6 @@ export default withTracker(() => {
 	return {
 		startWeek,
 		endWeek,
-		naustormData: naustormData.naustorm_data
+		naustormData: naustormData.naustorm_data,
 	};
 })(Container.create(TabTopList));

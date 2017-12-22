@@ -66,12 +66,14 @@ const Users = Meteor.users;
  * @return {void}
  */
 AppStates.updatePlayingSongs = function(played, stopped) {
-	const playingSongs = AppStates.findOne({ key: 'playingSongs' });
+	const playingSongs = AppStates.find({ key: 'playingSongs' });
+
 	if (!playingSongs) {
 		return;
 	}
-	
+
 	let songs = playingSongs.songs;
+
 	if (!Array.isArray(songs)) {
 		songs = playingSongs.songs = [];
 	}
