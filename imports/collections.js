@@ -8,44 +8,48 @@ import SimpleSchema from 'simpl-schema';
 const songSchema = new SimpleSchema({
 	timeAdded: {
 		type: Number,
-		label: 'Created timestamp, not Date object'
+		label: 'Created timestamp, not Date object',
 	},
 	originalURL: {
-		type: String
+		type: String,
 	},
 	origin: {
 		type: String,
-		allowedValues: ['Soundcloud', 'NCT', 'Zing', 'YouTube']
+		allowedValues: ['Soundcloud', 'NCT', 'Zing', 'YouTube'],
 	},
 	name: {
-		type: String
+		type: String,
 	},
 	artist: {
 		type: String,
-		label: 'Artist or Uploader for YouTube'
+		label: 'Artist or Uploader for YouTube',
 	},
 	streamURL: {
-		type: String
+		type: String,
 	},
 	thumbURL: {
-		type: String
+		type: String,
 	},
 	play: {
-		type: Number
+		type: Number,
 	},
 	lyric: {
 		type: String,
-		optional: true
+		optional: true,
 	},
 	author: {
-		type: String
+		type: String,
 	},
 	searchPattern: {
-		type: String
+		type: String,
 	},
 	roomId: {
-		type: String
-	}
+		type: String,
+	},
+	badSong: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 const Songs = new Mongo.Collection('songs');
@@ -56,14 +60,14 @@ const Users = Meteor.users;
 
 const roomSchema = new SimpleSchema({
 	name: {
-		type: String
+		type: String,
 	},
 	slug: {
-		type: String
+		type: String,
 	},
 	hostId: {
-		type: String
-	}
+		type: String,
+	},
 });
 
 const Rooms = new Mongo.Collection('rooms');

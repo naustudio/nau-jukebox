@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import AppStore from '../events/AppStore';
-import { focusSearchBox, searchSong, errorSignIn } from '../events/AppActions';
+import { focusSearchBox, errorSignIn } from '../events/AppActions';
 
 class SearchBox extends Component {
 	static getStores() {
@@ -11,10 +11,13 @@ class SearchBox extends Component {
 	static calculateState(/*prevState*/) {
 		return {
 			focusSearchBox: AppStore.getState()['focusSearchBox'],
-			isSignIn: AppStore.getState()['isSignIn'],
-			searchResult: AppStore.getState()['searchResult'],
+			isSignIn: AppStore.getState()['isSignIn']
 		};
 	}
+
+	state = {
+		searchResult: []
+	};
 
 	onFormSubmit = e => {
 		e.preventDefault();
@@ -32,7 +35,13 @@ class SearchBox extends Component {
 
 	keyUpSearchSong = e => {
 		if (e.keyCode !== 13) {
-			searchSong(this.searchInput.value);
+			Meteor.call('searchSong', this.searchInput.value, (err, result) => {
+				if (err) {
+					console.log(err);
+				} else {
+					this.setState({ searchResult: result });
+				}
+			});
 		}
 	};
 
@@ -53,7 +62,7 @@ class SearchBox extends Component {
 
 		// clear input field after inserting has done
 		this.searchInput.value = '';
-		searchSong('');
+		this.setState({ searchResult: [] });
 	};
 
 	focusSearchBox = () => {

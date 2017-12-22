@@ -3,6 +3,7 @@
  */
 import { Migrations } from 'meteor/percolate:migrations';
 // import { moment } from 'meteor/momentjs:moment';
+import subDays from 'date-fns/sub_days';
 
 import { AppStates, Songs, Users } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
@@ -19,7 +20,7 @@ Meteor.startup(() => {
 		//first time running
 		AppStates.insert({
 			key: 'playingSongs',
-			songs: []
+			songs: [],
 		});
 		console.log('Insert AppStates.playingSongs key');
 	}
@@ -60,16 +61,21 @@ Meteor.methods({
 			songInfo = getSongInfoYouTube(songurl);
 		}
 
-		Meteor.call('updateStatus', authorId, (err, result) => {
-			console.log('updateStatus', authorId, err, result);
-		});
-
 		if (songInfo && songInfo.streamURL) {
 			songInfo.author = authorId;
 			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
 
 			return Songs.insert(songInfo);
 		}
+
+		if (songInfo && songInfo.error) {
+			Songs.update({ originalURL: songurl }, { $set: { badSong: true } }, { multi: true }, err => {
+				if (err) {
+					console.log(err);
+				}
+			});
+		}
+
 		throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
 	},
 
@@ -81,8 +87,8 @@ Meteor.methods({
 			Users.update(userId, {
 				$set: {
 					isHost: true,
-					lastModified: new Date()
-				}
+					lastModified: new Date(),
+				},
 			});
 		});
 	},
@@ -91,8 +97,8 @@ Meteor.methods({
 		return Users.update(userId, {
 			$set: {
 				isOnline: true,
-				lastModified: new Date()
-			}
+				lastModified: new Date(),
+			},
 		});
 	},
 
@@ -103,15 +109,32 @@ Meteor.methods({
 
 		return Users.update(u._id, {
 			$set: {
-				balance: newBalance
-			}
+				balance: newBalance,
+			},
 		});
-	}
+	},
+
+	searchSong(searchString) {
+		return _.uniq(
+			Songs.find(
+				{
+					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+					badSong: { $ne: true },
+				},
+				{
+					limit: 50, // we remove duplicated result and limit further
+					reactive: false,
+				}
+			).fetch(),
+			false,
+			song => song.originalURL.trim()
+		);
+	},
 });
 
 Meteor.publish('Meteor.users.public', function() {
 	const options = {
-		fields: { isHost: 1, status: 1, balance: 1, profile: 1, 'services.facebook.id': 1, 'services.google.picture': 1 }
+		fields: { isHost: 1, status: 1, balance: 1, profile: 1, 'services.facebook.id': 1, 'services.google.picture': 1 },
 	};
 
 	return Meteor.users.find({}, options);
@@ -122,7 +145,7 @@ Meteor.publish('userData', function() {
 		return Meteor.users.find(
 			{ _id: this.userId },
 			{
-				fields: { isHost: 1, status: 1, balance: 1 }
+				fields: { isHost: 1, status: 1, balance: 1 },
 			}
 		);
 	}
@@ -131,7 +154,10 @@ Meteor.publish('userData', function() {
 });
 
 Meteor.publish('Songs.public', function() {
-	return Songs.find({});
+	const sevenDaysAgo = subDays(new Date(), 8);
+	sevenDaysAgo.setHours(0, 0, 0, 0);
+
+	return Songs.find({ timeAdded: { $gt: sevenDaysAgo.getTime() } });
 });
 
 Meteor.publish('AppStates.public', function() {

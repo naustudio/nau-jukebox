@@ -49,24 +49,6 @@ class AppStore extends ReduceStore {
 		};
 	}
 
-	searchSong(searchString) {
-		if (searchString.length >= 2) {
-			const data = Songs.find(
-				{
-					searchPattern: { $regex: `${searchString.toLowerCase()}*` }
-				},
-				{
-					limit: 50, // we remove duplicated result and limit further
-					reactive: false
-				}
-			).fetch();
-
-			return data;
-		}
-
-		return null;
-	}
-
 	selectSong(id) {
 		if (id) {
 			return Songs.findOne({ _id: id });
@@ -125,9 +107,6 @@ class AppStore extends ReduceStore {
 				break;
 			case AppActions.FOCUS_SEARCH_BOX:
 				reducedState = { focusSearchBox: action.isFocus };
-				break;
-			case AppActions.SEARCH_SONG:
-				reducedState = { searchResult: this.searchSong(action.searchString) };
 				break;
 			case AppActions.SELECT_SONG:
 				reducedState = { selectedSong: this.selectSong(action.id) };
