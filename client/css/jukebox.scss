@@ -1607,13 +1607,19 @@ button.button-naucoin {
 }
 
 .dashboard {
-	max-width: 600px;
+	max-width: 400px;
 	margin: 50px auto;
 
 	&__logo {
 		max-width: 200px;
 		display: block;
 		margin: 0 auto 30px;
+	}
+
+	&__room {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	&__login-block {

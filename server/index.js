@@ -5,6 +5,7 @@ import { Migrations } from 'meteor/percolate:migrations';
 import subDays from 'date-fns/sub_days';
 
 import { AppStates, Songs, Users, Rooms } from '../imports/collections';
+import { slugify } from '../imports/helpers/utils';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
 import getSongInfoZing from '../imports/parsers/getSongInfoZing';
 import getSongInfoSoundcloud from '../imports/parsers/getSongInfoSoundcloud';
@@ -23,22 +24,6 @@ Meteor.startup(() => {
 		});
 		console.log('Insert AppStates.playingSongs key');
 	}
-
-	// Meteor.setInterval(() => {
-	// 	const passAMinute = moment()
-	// 		.add(-90, 'seconds')
-	// 		.toDate();
-	// 	Users.update(
-	// 		{ lastModified: { $lt: passAMinute } },
-	// 		{
-	// 			$set: {
-	// 				isOnline: false,
-	// 			},
-	// 		},
-	// 		{ multi: true }
-	// 	);
-	// 	console.log('Checking online status was run at: ', new Date());
-	// }, 90000);
 });
 
 Meteor.methods({
@@ -76,6 +61,14 @@ Meteor.methods({
 		}
 
 		throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
+	},
+
+	createRoom(roomName, userId) {
+		return Rooms.insert({
+			name: roomName,
+			slug: slugify(roomName),
+			hostId: userId,
+		});
 	},
 
 	changeHost(userId) {

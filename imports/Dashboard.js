@@ -3,6 +3,7 @@
  */
 
 import React, { Component } from 'react';
+import { Router } from 'react-router';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -16,12 +17,16 @@ import UserStore from './events/UserStore';
 class Dashboard extends Component {
 	static propTypes = {
 		isSignedIn: PropTypes.bool,
-		rooms: PropTypes.arrayOf(PropTypes.object),
+		history: PropTypes.shape({
+			push: PropTypes.func,
+		}),
+		// rooms: PropTypes.arrayOf(PropTypes.object),
 	};
 
 	static defaultProps = {
 		isSignedIn: false,
-		rooms: [],
+		history: null,
+		// rooms: [],
 	};
 
 	static getStores() {
@@ -44,12 +49,18 @@ class Dashboard extends Component {
 
 		const form = e.currentTarget;
 		if (form.name && form.name.value) {
-			console.log(form.name.value);
+			Meteor.call('createRoom', form.name.value, Meteor.userId(), (err, id) => {
+				if (err) {
+					alert(err);
+				} else {
+					this.props.history.push(`/rooms/${Rooms.findOne(id).slug}`);
+				}
+			});
 		}
 	};
 
 	render() {
-		const { rooms, isSignedIn } = this.props;
+		const { /* rooms */ isSignedIn } = this.props;
 		const { errorSignIn } = this.state;
 
 		return (
@@ -64,16 +75,16 @@ class Dashboard extends Component {
 							</div>
 						) : null}
 					</div>
-					<div className="dashboard__room-list">
+					{/* <div className="dashboard__room-list">
 						{rooms.map(room => (
-							<div className="dashboard__room">
+							<div className="dashboard__room" key={room._id}>
 								<span className="dashboard__room-name">{room.name}</span>
 								<a href={`/rooms/${room.slug}`} className="dashboard__join-button button">
 									JOIN
 								</a>
 							</div>
 						))}
-					</div>
+					</div> */}
 					<form className="dashboard__add-room" onSubmit={this.onCreateRoom}>
 						<input type="text" placeholder="Room name" required name="name" />
 						<button type="submit" className="dashboard__create-button">
@@ -88,5 +99,4 @@ class Dashboard extends Component {
 
 export default withTracker(() => ({
 	isSignedIn: !!Meteor.userId(),
-	rooms: Rooms.find({}).fetch(),
 }))(Container.create(Dashboard));
