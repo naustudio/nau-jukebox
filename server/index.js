@@ -133,3 +133,7 @@ Meteor.publish('userData', function() {
 Meteor.publish('Songs.public', function() {
 	return Songs.find({});
 });
+
+Meteor.publish('AppStates.public', function() {
+	return AppStates.find({});
+});

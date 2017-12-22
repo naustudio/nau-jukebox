@@ -8,41 +8,41 @@ import SimpleSchema from 'simpl-schema';
 const songSchema = new SimpleSchema({
 	timeAdded: {
 		type: Number,
-		label: 'Created timestamp, not Date object',
+		label: 'Created timestamp, not Date object'
 	},
 	originalURL: {
-		type: String,
+		type: String
 	},
 	origin: {
 		type: String,
-		allowedValues: ['Soundcloud', 'NCT', 'Zing', 'YouTube'],
+		allowedValues: ['Soundcloud', 'NCT', 'Zing', 'YouTube']
 	},
 	name: {
-		type: String,
+		type: String
 	},
 	artist: {
 		type: String,
-		label: 'Artist or Uploader for YouTube',
+		label: 'Artist or Uploader for YouTube'
 	},
 	streamURL: {
-		type: String,
+		type: String
 	},
 	thumbURL: {
-		type: String,
+		type: String
 	},
 	play: {
-		type: Number,
+		type: Number
 	},
 	lyric: {
 		type: String,
-		optional: true,
+		optional: true
 	},
 	author: {
-		type: String,
+		type: String
 	},
 	searchPattern: {
-		type: String,
-	},
+		type: String
+	}
 });
 
 const Songs = new Mongo.Collection('songs');
@@ -67,10 +67,11 @@ const Users = Meteor.users;
  */
 AppStates.updatePlayingSongs = function(played, stopped) {
 	const playingSongs = AppStates.findOne({ key: 'playingSongs' });
+
 	if (!playingSongs) {
 		return;
 	}
-	
+
 	let songs = playingSongs.songs;
 	if (!Array.isArray(songs)) {
 		songs = playingSongs.songs = [];
