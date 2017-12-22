@@ -25,6 +25,8 @@ export const FOCUS_SEARCH_BOX = 'FOCUS_SEARCH_BOX';
 
 export const ERROR_SIGN_IN = 'ERROR_SIGN_IN';
 
+export const ERROR_SIGN_IN_DASHBOARD = 'ERROR_SIGN_IN_DASHBOARD';
+
 export const TOGGLE_BTN_NAV = 'TOGGLE_BTN_NAV';
 
 export const UPDATE_LYRIC_POPUP = 'UPDATE_LYRIC_POPUP';
@@ -107,6 +109,15 @@ export function focusSearchBox(isFocus) {
 
 export function errorSignIn() {
 	dispatch({ type: ERROR_SIGN_IN });
+}
+
+/**
+ * @param
+ * @return {void}
+ */
+
+export function errorSignInDashboard() {
+	dispatch({ type: ERROR_SIGN_IN_DASHBOARD });
 }
 
 /**

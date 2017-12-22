@@ -1613,7 +1613,12 @@ button.button-naucoin {
 	&__logo {
 		max-width: 200px;
 		display: block;
-		margin: 0 auto;
+		margin: 0 auto 30px;
+	}
+
+	&__login-block {
+		text-align: center;
+		margin-bottom: 20px;
 	}
 
 	&__add-room {

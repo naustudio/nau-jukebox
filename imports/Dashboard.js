@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
 
+import { errorSignInDashboard } from './events/AppActions';
 import { Rooms } from './collections';
 import AccountsUIWrapper from './components/AccountUIWrapper';
 import AppStore from './events/AppStore';
@@ -29,13 +30,27 @@ class Dashboard extends Component {
 
 	static calculateState(/*prevState*/) {
 		return {
-			errorSignInDashboard: UserStore.getState()['errorSignInDashboard'],
+			errorSignIn: UserStore.getState()['errorSignInDashboard'],
 		};
 	}
 
+	onCreateRoom = e => {
+		e.preventDefault();
+		if (!this.props.isSignedIn) {
+			errorSignInDashboard();
+
+			return;
+		}
+
+		const form = e.currentTarget;
+		if (form.name && form.name.value) {
+			console.log(form.name.value);
+		}
+	};
+
 	render() {
 		const { rooms, isSignedIn } = this.props;
-		const { errorSignInDashboard } = this.state;
+		const { errorSignIn } = this.state;
 
 		return (
 			<div className="dashboard">
@@ -43,8 +58,8 @@ class Dashboard extends Component {
 				<div className="dashboard__content">
 					<div className="dashboard__login-block">
 						<AccountsUIWrapper />
-						{errorSignInDashboard && !isSignedIn ? (
-							<div className="login-block__error">
+						{errorSignIn && !isSignedIn ? (
+							<div className="dashboard__login-block__error">
 								<p>Please login first!</p>
 							</div>
 						) : null}
@@ -59,8 +74,8 @@ class Dashboard extends Component {
 							</div>
 						))}
 					</div>
-					<form className="dashboard__add-room">
-						<input type="text" placeholder="Room name" />
+					<form className="dashboard__add-room" onSubmit={this.onCreateRoom}>
+						<input type="text" placeholder="Room name" required name="name" />
 						<button type="submit" className="dashboard__create-button">
 							CREATE
 						</button>
@@ -73,5 +88,5 @@ class Dashboard extends Component {
 
 export default withTracker(() => ({
 	isSignedIn: !!Meteor.userId(),
-	rooms: Rooms.find({}),
+	rooms: Rooms.find({}).fetch(),
 }))(Container.create(Dashboard));
