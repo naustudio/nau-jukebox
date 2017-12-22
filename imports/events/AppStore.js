@@ -4,13 +4,15 @@
 import { Meteor } from 'meteor/meteor';
 import { ReduceStore } from 'flux/utils';
 
-import { Songs } from '../collections';
+import { Songs, AppStates } from '../collections';
 import AppDispatcher from './AppDispatcher';
 import * as AppActions from './AppActions';
 
 if (Meteor.isClient) {
 	Meteor.subscribe('Songs.public');
+	Meteor.subscribe('AppStates.public');
 	window.Songs = Songs;
+	window.AppStates = AppStates;
 }
 
 /**

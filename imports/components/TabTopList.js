@@ -12,9 +12,9 @@ import AppStore from '../events/AppStore';
 
 class TabTopList extends Component {
 	static propTypes = {
-		naustormData: PropTypes.arrayOf(),
-		endWeek: PropTypes.string,
-		startWeek: PropTypes.string,
+		naustormData: PropTypes.arrayOf(PropTypes.object),
+		endWeek: PropTypes.instanceOf(Date),
+		startWeek: PropTypes.instanceOf(Date),
 	};
 
 	static defaultProps = {
@@ -53,7 +53,7 @@ class TabTopList extends Component {
 						<ul className="tab__top-list__inner">
 							{naustormData &&
 								naustormData.map(item => (
-									<li className="tab__top-list__item">
+									<li className="tab__top-list__item" key={item._id}>
 										<div className="naustorm-elm__wrapper">
 											<img className="naustorm-elm__cover" src={item.thumbURL} alt="" />
 											<span className="naustorm-elm__listens">

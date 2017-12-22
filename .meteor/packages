@@ -37,3 +37,4 @@ accounts-ui@1.2.0
 percolate:migrations
 react-meteor-data
 aldeed:collection2-core
+mizzao:user-status
