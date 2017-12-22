@@ -21,8 +21,6 @@ export const SELECT_SONG = 'SELECT_SONG';
 
 export const ACTIVE_HOST = 'ACTIVE_HOST';
 
-export const SEARCH_SONG = 'SEARCH_SONG';
-
 export const FOCUS_SEARCH_BOX = 'FOCUS_SEARCH_BOX';
 
 export const ERROR_SIGN_IN = 'ERROR_SIGN_IN';
@@ -92,15 +90,6 @@ export function selectSong(id) {
 
 export function activeHost(isActive) {
 	dispatch({ type: ACTIVE_HOST, isActive });
-}
-
-/**
- * @param {Number} hostId of song
- * @return {void}
- */
-
-export function searchSong(searchString) {
-	dispatch({ type: SEARCH_SONG, searchString });
 }
 
 /**

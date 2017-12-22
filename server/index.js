@@ -3,6 +3,7 @@
  */
 import { Migrations } from 'meteor/percolate:migrations';
 // import { moment } from 'meteor/momentjs:moment';
+import subDays from 'date-fns/sub_days';
 
 import { AppStates, Songs, Users } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
@@ -106,6 +107,18 @@ Meteor.methods({
 				balance: newBalance
 			}
 		});
+	},
+
+	searchSong(searchString) {
+		return Songs.find(
+			{
+				searchPattern: { $regex: `${searchString.toLowerCase()}*` }
+			},
+			{
+				limit: 50, // we remove duplicated result and limit further
+				reactive: false
+			}
+		).fetch();
 	}
 });
 
@@ -131,7 +144,10 @@ Meteor.publish('userData', function() {
 });
 
 Meteor.publish('Songs.public', function() {
-	return Songs.find({});
+	const sevenDaysAgo = subDays(new Date(), 8);
+	sevenDaysAgo.setHours(0, 0, 0, 0);
+
+	return Songs.find({ timeAdded: { $gt: sevenDaysAgo.getTime() } });
 });
 
 Meteor.publish('AppStates.public', function() {
