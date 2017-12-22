@@ -2,10 +2,9 @@
  * @author Thanh Tran, Tung Tran, Tw
  */
 import { Migrations } from 'meteor/percolate:migrations';
-// import { moment } from 'meteor/momentjs:moment';
 import subDays from 'date-fns/sub_days';
 
-import { AppStates, Songs, Users } from '../imports/collections';
+import { AppStates, Songs, Users, Rooms } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
 import getSongInfoZing from '../imports/parsers/getSongInfoZing';
 import getSongInfoSoundcloud from '../imports/parsers/getSongInfoSoundcloud';
@@ -162,4 +161,8 @@ Meteor.publish('Songs.public', function() {
 
 Meteor.publish('AppStates.public', function() {
 	return AppStates.find({});
+});
+
+Meteor.publish('Rooms.public', function() {
+	return Rooms.find({});
 });

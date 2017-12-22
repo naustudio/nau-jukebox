@@ -1606,5 +1606,24 @@ button.button-naucoin {
 	}
 }
 
+.dashboard {
+	max-width: 600px;
+	margin: 50px auto;
+
+	&__logo {
+		max-width: 200px;
+		display: block;
+		margin: 0 auto;
+	}
+
+	&__add-room {
+		text-align: center;
+	}
+
+	&__create-button {
+		margin-left: 20px;
+	}
+}
+
 // new css will be seperated
 @import '_buttons';

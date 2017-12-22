@@ -4,15 +4,17 @@
 import { Meteor } from 'meteor/meteor';
 import { ReduceStore } from 'flux/utils';
 
-import { Songs, AppStates } from '../collections';
+import { Songs, AppStates, Rooms } from '../collections';
 import AppDispatcher from './AppDispatcher';
 import * as AppActions from './AppActions';
 
 if (Meteor.isClient) {
 	Meteor.subscribe('Songs.public');
 	Meteor.subscribe('AppStates.public');
+	Meteor.subscribe('Rooms.public');
 	window.Songs = Songs;
 	window.AppStates = AppStates;
+	window.Rooms = Rooms;
 }
 
 /**
@@ -45,7 +47,7 @@ class AppStore extends ReduceStore {
 			openPopup: false,
 			songName: '',
 			songLyric: '',
-			revealedSongs: []
+			revealedSongs: [],
 		};
 	}
 
@@ -63,14 +65,14 @@ class AppStore extends ReduceStore {
 			if (song) {
 				return {
 					songName: song.name,
-					songLyric: song.lyric
+					songLyric: song.lyric,
 				};
 			}
 		}
 
 		return {
 			songName: '',
-			songLyric: ''
+			songLyric: '',
 		};
 	}
 
@@ -113,12 +115,12 @@ class AppStore extends ReduceStore {
 				break;
 			case AppActions.OPEN_POP_UP:
 				reducedState = {
-					openPopup: true
+					openPopup: true,
 				};
 				break;
 			case AppActions.CLOSE_POP_UP:
 				reducedState = {
-					openPopup: false
+					openPopup: false,
 				};
 				break;
 			case AppActions.UPDATE_LYRIC_POPUP:
@@ -126,7 +128,7 @@ class AppStore extends ReduceStore {
 				break;
 			case AppActions.TOGGLE_USER_BOOK:
 				reducedState = {
-					revealedSongs: this.toggleRevealedSongs(action.id, state.revealedSongs)
+					revealedSongs: this.toggleRevealedSongs(action.id, state.revealedSongs),
 				};
 				break;
 			default:

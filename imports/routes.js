@@ -8,14 +8,14 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 // route components
 import App from './App';
-import RoomManager from './RoomManager';
+import Dashboard from './Dashboard';
 
 const browserHistory = createBrowserHistory();
 
 const renderRoutes = () => (
 	<Router history={browserHistory}>
 		<Switch>
-			<Route exact path="/" component={RoomManager} />
+			<Route exact path="/" component={Dashboard} />
 			<Route path="/rooms/:id" component={App} />
 			<Redirect to="/" />
 		</Switch>
