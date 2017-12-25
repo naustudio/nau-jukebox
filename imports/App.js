@@ -3,8 +3,11 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
+import { withTracker } from 'meteor/react-meteor-data';
 
+import { Rooms } from './collections';
 import AppHeader from './components/AppHeader';
 import AppBody from './components/AppBody';
 import AppStore from './events/AppStore';
@@ -12,6 +15,17 @@ import UserStore from './events/UserStore';
 import JukeboxPlayer from './player/JukeboxPlayer';
 
 class App extends Component {
+	static propTypes = {
+		room: PropTypes.shape({}),
+		history: PropTypes.shape({
+			replace: PropTypes.func,
+		}).isRequired,
+	};
+
+	static defaultProps = {
+		room: {},
+	};
+
 	static getStores() {
 		return [AppStore, UserStore];
 	}
@@ -25,6 +39,15 @@ class App extends Component {
 
 	componentDidMount() {
 		this.player = new JukeboxPlayer();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const { room } = nextProps;
+		console.log(room);
+
+		if (!room) {
+			this.props.history.replace('/');
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -57,4 +80,11 @@ class App extends Component {
 	}
 }
 
-export default Container.create(App);
+export default withTracker(({ match }) => {
+	const slug = match.params.slug || '';
+
+	return {
+		userId: Meteor.userId(),
+		room: Rooms.findOne({ slug }),
+	};
+})(Container.create(App));
