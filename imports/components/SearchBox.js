@@ -11,12 +11,13 @@ class SearchBox extends Component {
 	static calculateState(/*prevState*/) {
 		return {
 			focusSearchBox: AppStore.getState()['focusSearchBox'],
-			isSignIn: AppStore.getState()['isSignIn']
+			isSignIn: AppStore.getState()['isSignIn'],
+			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
 
 	state = {
-		searchResult: []
+		searchResult: [],
 	};
 
 	onFormSubmit = e => {
@@ -47,6 +48,7 @@ class SearchBox extends Component {
 
 	submitSong = songUrl => {
 		const userId = Meteor.userId();
+		const { currentRoom } = this.state;
 
 		if (!userId) {
 			errorSignIn();
@@ -54,7 +56,11 @@ class SearchBox extends Component {
 			return;
 		}
 
-		Meteor.call('getSongInfo', songUrl, userId, (error /*, result*/) => {
+		if (!currentRoom) {
+			return;
+		}
+
+		Meteor.call('getSongInfo', songUrl, userId, currentRoom._id, (error /*, result*/) => {
 			if (error) {
 				alert(`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`);
 			}

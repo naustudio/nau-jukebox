@@ -10,6 +10,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Rooms } from './collections';
 import AppHeader from './components/AppHeader';
 import AppBody from './components/AppBody';
+import { setRoom } from './events/AppActions';
 import AppStore from './events/AppStore';
 import UserStore from './events/UserStore';
 import JukeboxPlayer from './player/JukeboxPlayer';
@@ -46,6 +47,8 @@ class App extends Component {
 
 		if (!room) {
 			this.props.history.replace('/');
+		} else {
+			setRoom(room);
 		}
 	}
 

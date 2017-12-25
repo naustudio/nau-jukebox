@@ -34,11 +34,19 @@ class TabSongs extends Component {
 	}
 }
 
-export default withTracker(() => {
+export default withTracker(({ currentRoom }) => {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 
 	return {
-		songs: Songs.find({ timeAdded: { $gt: today.getTime() } }, { sort: { timeAdded: 1 } }).fetch(),
+		songs: Songs.find(
+			{
+				timeAdded: { $gt: today.getTime() },
+				roomId: currentRoom ? currentRoom._id : null,
+			},
+			{
+				sort: { timeAdded: 1 },
+			}
+		).fetch(),
 	};
 })(Container.create(TabSongs));

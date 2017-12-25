@@ -21,24 +21,26 @@ class AppBody extends Component {
 
 	static calculateState(/*prevState*/) {
 		return {
-			tabIndex: AppStore.getState()['tabIndex']
+			tabIndex: AppStore.getState()['tabIndex'],
+			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
 
 	_renderTabItem = () => {
 		const index = this.state.tabIndex;
+		const { currentRoom } = this.state;
 
 		switch (index) {
 			case 0:
-				return <TabSongs />;
+				return <TabSongs currentRoom={currentRoom} />;
 			case 1:
-				return <TabYesterday />;
+				return <TabYesterday currentRoom={currentRoom} />;
 			case 2:
-				return <TabLast7Days />;
+				return <TabLast7Days currentRoom={currentRoom} />;
 			case 3:
-				return <TabTopList />;
+				return <TabTopList currentRoom={currentRoom} />;
 			case 4:
-				return <TabUsers />;
+				return <TabUsers currentRoom={currentRoom} />;
 			default:
 				break;
 		}

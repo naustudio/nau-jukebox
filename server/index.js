@@ -32,7 +32,7 @@ UserStatus.events.on('connectionLogout', function(fields) {
 });
 
 Meteor.methods({
-	getSongInfo(songurl, authorId) {
+	getSongInfo(songurl, authorId, roomId) {
 		// Set up a future for async callback sending to clients
 		let songInfo;
 
@@ -52,6 +52,7 @@ Meteor.methods({
 
 		if (songInfo && songInfo.streamURL) {
 			songInfo.author = authorId;
+			songInfo.roomId = roomId;
 			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
 
 			return Songs.insert(songInfo);

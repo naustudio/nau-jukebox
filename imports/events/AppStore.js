@@ -48,6 +48,7 @@ class AppStore extends ReduceStore {
 			songName: '',
 			songLyric: '',
 			revealedSongs: [],
+			currentRoom: null,
 		};
 	}
 
@@ -129,6 +130,11 @@ class AppStore extends ReduceStore {
 			case AppActions.TOGGLE_USER_BOOK:
 				reducedState = {
 					revealedSongs: this.toggleRevealedSongs(action.id, state.revealedSongs),
+				};
+				break;
+			case AppActions.SET_ROOM:
+				reducedState = {
+					currentRoom: action.room,
 				};
 				break;
 			default:

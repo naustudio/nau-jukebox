@@ -23,7 +23,7 @@ class TabLast7Days extends Component {
 	}
 }
 
-export default withTracker(() => {
+export default withTracker(({ currentRoom }) => {
 	const today = new Date();
 	const sevenDaysAgo = subDays(today, 7);
 
@@ -32,7 +32,10 @@ export default withTracker(() => {
 
 	return {
 		songs: Songs.find(
-			{ timeAdded: { $gt: sevenDaysAgo.getTime(), $lt: today.getTime() } },
+			{
+				timeAdded: { $gt: sevenDaysAgo.getTime(), $lt: today.getTime() },
+				roomId: currentRoom ? currentRoom._id : null,
+			},
 			{ sort: { timeAdded: 1 } }
 		).fetch(),
 	};

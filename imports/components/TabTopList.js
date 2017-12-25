@@ -80,7 +80,7 @@ class TabTopList extends Component {
 	}
 }
 
-export default withTracker(() => {
+export default withTracker(({ currentRoom }) => {
 	const today = new Date();
 	const startWeek = startOfWeek(today);
 	const endWeek = endOfWeek(today);
@@ -94,7 +94,10 @@ export default withTracker(() => {
 		const groupByAuthorData = [];
 
 		songList = Songs.find(
-			{ timeAdded: { $gt: startWeek.getTime(), $lt: endWeek.getTime() } },
+			{
+				timeAdded: { $gt: startWeek.getTime(), $lt: endWeek.getTime() },
+				roomId: currentRoom ? currentRoom._id : null,
+			},
 			{ sort: { timeAdded: 1 } }
 		).fetch();
 

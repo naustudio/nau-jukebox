@@ -35,6 +35,7 @@ class SongList extends Component {
 			isSignIn: UserStore.getState()['isSignIn'],
 			activeHost: UserStore.getState()['activeHost'],
 			revealedSongs: AppStore.getState()['revealedSongs'],
+			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
 
@@ -70,6 +71,7 @@ class SongList extends Component {
 	rebookSong = e => {
 		const userId = Meteor.userId();
 		const songUrl = e.currentTarget.dataset.url;
+		const { currentRoom } = this.state;
 
 		if (!userId) {
 			AppActions.errorSignIn();
@@ -77,8 +79,8 @@ class SongList extends Component {
 			return;
 		}
 
-		if (songUrl) {
-			Meteor.call('getSongInfo', songUrl, userId, (error /*, result*/) => {
+		if (songUrl && currentRoom) {
+			Meteor.call('getSongInfo', songUrl, userId, currentRoom._id, (error /*, result*/) => {
 				if (error) {
 					alert(`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`);
 				}
@@ -115,9 +117,9 @@ class SongList extends Component {
 	};
 
 	fallbackImage = (imageUrl, id) => {
-		// if (imageUrl) {
-		// 	return imageUrl;
-		// }
+		if (imageUrl) {
+			return imageUrl;
+		}
 
 		return `https://api.adorable.io/avatar/${id}`;
 	};
