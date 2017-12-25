@@ -35,6 +35,14 @@ class TabTopList extends Component {
 
 	componentDidMount() {}
 
+	fallbackImage = (imageUrl, id) => {
+		if (imageUrl) {
+			return imageUrl;
+		}
+
+		return `https://api.adorable.io/avatar/${id}`;
+	};
+
 	render() {
 		const { startWeek, endWeek, naustormData } = this.props;
 
@@ -55,7 +63,7 @@ class TabTopList extends Component {
 								naustormData.map(item => (
 									<li className="tab__top-list__item columns three naustorm-elm" key={item._id}>
 										<div className="naustorm-elm__wrapper">
-											<img className="naustorm-elm__cover" src={item.thumbURL} alt="" />
+											<img className="naustorm-elm__cover" src={this.fallbackImage(item.thumbURL, item._id)} alt="" />
 											<span className="naustorm-elm__listens">
 												{item.listens} <small>listings</small>
 											</span>
