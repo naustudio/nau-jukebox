@@ -100,11 +100,10 @@ Meteor.methods({
 		Users.update(Meteor.userId(), { $set: { playing: null } });
 	},
 
-	updateStatus(userId) {
+	updateUserRoom(userId, roomId) {
 		return Users.update(userId, {
 			$set: {
-				isOnline: true,
-				lastModified: new Date(),
+				roomId,
 			},
 		});
 	},
@@ -142,10 +141,10 @@ Meteor.methods({
 Meteor.publish('Meteor.users.public', function() {
 	const options = {
 		fields: {
-			isHost: 1,
 			status: 1,
 			balance: 1,
 			profile: 1,
+			roomId: 1,
 			'services.facebook.id': 1,
 			'services.google.picture': 1,
 			playing: 1,
@@ -160,7 +159,7 @@ Meteor.publish('userData', function() {
 		return Meteor.users.find(
 			{ _id: this.userId },
 			{
-				fields: { isHost: 1, status: 1, balance: 1, playing: 1 },
+				fields: { status: 1, balance: 1, playing: 1, roomId: 1, services: 1, profile: 1 },
 			}
 		);
 	}

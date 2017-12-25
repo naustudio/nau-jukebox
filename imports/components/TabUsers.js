@@ -41,7 +41,6 @@ class TabUsers extends Component {
 	};
 
 	_renderUser = () => {
-		console.log(this.props.users);
 		const lst = this.props.users.map(user => (
 			<li key={user._id} className={`row users__item ${user.status.online ? 'users__item--active' : ''}`}>
 				<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
@@ -93,10 +92,11 @@ class TabUsers extends Component {
 	}
 }
 
-export default withTracker(() => ({
+export default withTracker(({ currentRoom }) => ({
 	users: Users.find(
-		{},
+		{ roomId: currentRoom ? currentRoom._id : '' },
 		{
+			sort: { 'status.online': -1, balance: -1 },
 			transform: user => {
 				let picture = `https://api.adorable.io/avatar/${user.profile.name}`;
 				if (user.services) {

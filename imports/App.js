@@ -10,7 +10,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Rooms } from './collections';
 import AppHeader from './components/AppHeader';
 import AppBody from './components/AppBody';
-import { setRoom } from './events/AppActions';
+import { setRoom, activeHost } from './events/AppActions';
 import AppStore from './events/AppStore';
 import UserStore from './events/UserStore';
 import JukeboxPlayer from './player/JukeboxPlayer';
@@ -18,6 +18,7 @@ import JukeboxPlayer from './player/JukeboxPlayer';
 class App extends Component {
 	static propTypes = {
 		room: PropTypes.shape({}),
+		currentUserId: PropTypes.string,
 		history: PropTypes.shape({
 			replace: PropTypes.func,
 		}).isRequired,
@@ -25,6 +26,7 @@ class App extends Component {
 
 	static defaultProps = {
 		room: null,
+		currentUserId: '',
 	};
 
 	static getStores() {
@@ -43,12 +45,22 @@ class App extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { room } = nextProps;
+		const { room, currentUserId } = nextProps;
 
 		if (!room) {
 			this.props.history.replace('/');
 		} else {
 			setRoom(room);
+			if (currentUserId) {
+				if (currentUserId === room.hostId) {
+					activeHost(true);
+				}
+				Meteor.call('updateUserRoom', currentUserId, room._id, err => {
+					if (err) {
+						console.log(err);
+					}
+				});
+			}
 		}
 	}
 
@@ -86,6 +98,7 @@ export default withTracker(({ match }) => {
 	const slug = match.params.slug || '';
 
 	return {
+		currentUserId: Meteor.userId(),
 		rooms: Rooms.find().fetch(),
 		room: Rooms.findOne({ slug }),
 	};

@@ -198,19 +198,15 @@ class SongList extends Component {
 }
 
 export default withTracker(() => {
-	if (Meteor.userId()) {
-		const onlineUsers = Users.find({ 'status.online': true, playing: { $ne: null } }).fetch();
+	const onlineUsers = Users.find({
+		'status.online': true,
+		playing: { $ne: null },
+	}).fetch();
 
-		// if (playingSong && playingSong.playing) {
-		// 	return { currentSongPlaying: playingSong.playing };
-		// }
-
-		return {
-			onlineUsers,
-		};
-	}
-
-	return {};
+	return {
+		onlineUsers,
+		userId: Meteor.userId(), // Must have this to keep tracker running, don't know why
+	};
 })(Container.create(SongList));
 
 // export default Container.create(SongList);
