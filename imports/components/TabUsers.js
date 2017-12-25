@@ -11,11 +11,11 @@ import UserStore from '../events/UserStore';
 
 class TabUsers extends Component {
 	static propTypes = {
-		users: PropTypes.arrayOf(PropTypes.object)
+		users: PropTypes.arrayOf(PropTypes.object),
 	};
 
 	static defaultProps = {
-		users: []
+		users: [],
 	};
 
 	static getStores() {
@@ -24,7 +24,7 @@ class TabUsers extends Component {
 
 	static calculateState(/*prevState*/) {
 		return {
-			activeHost: UserStore.getState()['activeHost']
+			activeHost: UserStore.getState()['activeHost'],
 		};
 	}
 
@@ -98,17 +98,19 @@ export default withTracker(() => ({
 		{},
 		{
 			transform: user => {
-				let picture = '';
-				if (user.services.google) {
-					picture = user.services.google.picture || '';
-				} else {
-					picture = `https://graph.facebook.com/v2.10/${user.services.facebook.id}/picture?type=square`;
+				let picture = `https://api.adorable.io/avatar/${user.profile.name}`;
+				if (user.services) {
+					if (user.services.google) {
+						picture = user.services.google.picture || '';
+					} else {
+						picture = `https://graph.facebook.com/v2.10/${user.services.facebook.id}/picture?type=square`;
+					}
 				}
 				/* eslint-disable no-param-reassign */
 				user.profile.picture = picture;
 
 				return user;
-			}
+			},
 		}
-	).fetch()
+	).fetch(),
 }))(Container.create(TabUsers));

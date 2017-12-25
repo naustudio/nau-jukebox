@@ -814,6 +814,7 @@ h5 small {
 
 	&__thumbnail {
 		display: flex;
+		position: relative;
 
 		& img {
 			width: 40px;
@@ -822,6 +823,34 @@ h5 small {
 
 		&--link {
 			display: flex;
+		}
+
+		&--sc::after {
+			background-image: url(/logo-soundcloud.png);
+		}
+
+		&--nct::after {
+			background-image: url(/logo-nct.png);
+		}
+
+		&--zing::after {
+			background-image: url(/logo-zing.png);
+		}
+
+		&--yt::after {
+			background-image: url(/logo-youtube.png);
+		}
+
+		&--link::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-size: auto 10px;
+			background-repeat: no-repeat;
+			background-position: left bottom;
 		}
 	}
 

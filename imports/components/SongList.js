@@ -6,12 +6,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import { distanceInWordsStrict } from 'date-fns';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Meteor } from 'meteor/meteor';
+
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
-import { withTracker } from 'meteor/react-meteor-data';
-import { Users, AppStates } from '../collections';
+import { Users /* AppStates */ } from '../collections';
 import * as AppActions from '../events/AppActions';
-import { Meteor } from 'meteor/meteor';
 
 class SongList extends Component {
 	static propTypes = {
@@ -46,6 +47,21 @@ class SongList extends Component {
 	};
 
 	getTime = date => `${distanceInWordsStrict(date, new Date())} ago`;
+
+	getThumbnailClass = origin => {
+		switch (origin) {
+			case 'Soundcloud':
+				return 'songs__list-item__thumbnail--sc';
+			case 'NCT':
+				return 'songs__list-item__thumbnail--nct';
+			case 'Zing':
+				return 'songs__list-item__thumbnail--zing';
+			case 'YouTube':
+				return 'songs__list-item__thumbnail--yt';
+			default:
+				return '';
+		}
+	};
 
 	activeBtnPlay = () => {
 		AppActions.activeBtnPlay();
@@ -91,11 +107,19 @@ class SongList extends Component {
 					return <span className="playlist__item__active">&#9657;</span>;
 				}
 
-				if (this.props.onlineUsers[i]._id !== Meteor.userId()) {
-					return <span className="playlist__item__active">&#9656;</span>;
-				}
+				return <span className="playlist__item__active">&#9656;</span>;
 			}
 		}
+
+		return '';
+	};
+
+	fallbackImage = (imageUrl, id) => {
+		// if (imageUrl) {
+		// 	return imageUrl;
+		// }
+
+		return `https://api.adorable.io/avatar/${id}`;
 	};
 
 	render() {
@@ -112,8 +136,12 @@ class SongList extends Component {
 								<div className="songs__list-item">
 									<span className="songs__list-item__container">
 										<span className="songs__list-item__thumbnail">
-											<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
-												<img src={`${song.thumbURL}`} alt={`${song.name}`} />
+											<a
+												href={`${song.originalURL}`}
+												target="_blank"
+												className={`songs__list-item__thumbnail--link ${this.getThumbnailClass(song.origin)}`}
+											>
+												<img src={`${this.fallbackImage(song.thumbURL, song._id)}`} alt={`${song.name}`} />
 											</a>
 										</span>
 										<span className="songs__list-item__name">
@@ -168,7 +196,7 @@ class SongList extends Component {
 }
 
 export default withTracker(() => {
-	if (!!Meteor.userId()) {
+	if (Meteor.userId()) {
 		const onlineUsers = Users.find({ 'status.online': true, playing: { $ne: null } }).fetch();
 
 		// if (playingSong && playingSong.playing) {
