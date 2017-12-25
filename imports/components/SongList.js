@@ -115,9 +115,9 @@ class SongList extends Component {
 	};
 
 	fallbackImage = (imageUrl, id) => {
-		// if (imageUrl) {
-		// 	return imageUrl;
-		// }
+		if (imageUrl) {
+			return imageUrl;
+		}
 
 		return `https://api.adorable.io/avatar/${id}`;
 	};

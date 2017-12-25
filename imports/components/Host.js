@@ -54,10 +54,7 @@ class Host extends Component {
 
 	render() {
 		return (
-			<div
-				className={`host ${this.state.activeHost ? 'host--active' : ''}`}
-				onClick={this.activeHost}
-			>
+			<div className={`host ${this.state.activeHost ? 'host--active' : ''}`} onClick={this.activeHost}>
 				<div className="dot" />
 			</div>
 		);
