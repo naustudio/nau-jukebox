@@ -98,6 +98,7 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 	}
 
 	let songs = playingSongs.songs;
+
 	if (!Array.isArray(songs)) {
 		songs = playingSongs.songs = [];
 	}

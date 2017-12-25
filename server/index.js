@@ -2,10 +2,11 @@
  * @author Thanh Tran, Tung Tran, Tw
  */
 import { Migrations } from 'meteor/percolate:migrations';
+import { UserStatus } from 'meteor/mizzao:user-status';
 import subDays from 'date-fns/sub_days';
 
-import { AppStates, Songs, Users, Rooms } from '../imports/collections';
 import { slugify } from '../imports/helpers/utils';
+import { AppStates, Songs, Users, Rooms } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
 import getSongInfoZing from '../imports/parsers/getSongInfoZing';
 import getSongInfoSoundcloud from '../imports/parsers/getSongInfoSoundcloud';
@@ -24,6 +25,10 @@ Meteor.startup(() => {
 		});
 		console.log('Insert AppStates.playingSongs key');
 	}
+});
+
+UserStatus.events.on('connectionLogout', function(fields) {
+	Users.update(fields.userId, { $set: { playing: null } });
 });
 
 Meteor.methods({
@@ -86,6 +91,14 @@ Meteor.methods({
 		});
 	},
 
+	updatePlayingStatus(userId, songId) {
+		Users.update(Meteor.userId(), { $set: { playing: songId } });
+	},
+
+	removePlayingStatus() {
+		Users.update(Meteor.userId(), { $set: { playing: null } });
+	},
+
 	updateStatus(userId) {
 		return Users.update(userId, {
 			$set: {
@@ -127,7 +140,15 @@ Meteor.methods({
 
 Meteor.publish('Meteor.users.public', function() {
 	const options = {
-		fields: { isHost: 1, status: 1, balance: 1, profile: 1, 'services.facebook.id': 1, 'services.google.picture': 1 },
+		fields: {
+			isHost: 1,
+			status: 1,
+			balance: 1,
+			profile: 1,
+			'services.facebook.id': 1,
+			'services.google.picture': 1,
+			playing: 1,
+		},
 	};
 
 	return Meteor.users.find({}, options);
@@ -138,7 +159,7 @@ Meteor.publish('userData', function() {
 		return Meteor.users.find(
 			{ _id: this.userId },
 			{
-				fields: { isHost: 1, status: 1, balance: 1 },
+				fields: { isHost: 1, status: 1, balance: 1, playing: 1 },
 			}
 		);
 	}
