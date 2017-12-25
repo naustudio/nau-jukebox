@@ -23,7 +23,6 @@ class ButtonPlay extends Component {
 	};
 
 	render() {
-		console.log(this.state);
 		return (
 			<li className="navbar__item">
 				<div

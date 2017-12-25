@@ -3,6 +3,7 @@
  */
 import { Migrations } from 'meteor/percolate:migrations';
 // import { moment } from 'meteor/momentjs:moment';
+import { UserStatus } from 'meteor/mizzao:user-status';
 
 import { AppStates, Songs, Users } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
@@ -19,7 +20,7 @@ Meteor.startup(() => {
 		//first time running
 		AppStates.insert({
 			key: 'playingSongs',
-			songs: []
+			songs: [],
 		});
 		console.log('Insert AppStates.playingSongs key');
 	}
@@ -39,6 +40,10 @@ Meteor.startup(() => {
 	// 	);
 	// 	console.log('Checking online status was run at: ', new Date());
 	// }, 90000);
+});
+
+UserStatus.events.on('connectionLogout', function(fields) {
+	Users.update(fields.userId, { $set: { playing: null } });
 });
 
 Meteor.methods({
@@ -81,19 +86,17 @@ Meteor.methods({
 			Users.update(userId, {
 				$set: {
 					isHost: true,
-					lastModified: new Date()
-				}
+					lastModified: new Date(),
+				},
 			});
 		});
 	},
 
-	updateStatus(userId) {
-		return Users.update(userId, {
-			$set: {
-				isOnline: true,
-				lastModified: new Date()
-			}
-		});
+	updatePlayingStatus(userId, songId) {
+		Users.update(Meteor.userId(), { $set: { playing: songId } });
+	},
+	removePlayingStatus(userId) {
+		Users.update(Meteor.userId(), { $set: { playing: null } });
 	},
 
 	naucoinPay(userId, amount) {
@@ -103,15 +106,23 @@ Meteor.methods({
 
 		return Users.update(u._id, {
 			$set: {
-				balance: newBalance
-			}
+				balance: newBalance,
+			},
 		});
-	}
+	},
 });
 
 Meteor.publish('Meteor.users.public', function() {
 	const options = {
-		fields: { isHost: 1, status: 1, balance: 1, profile: 1, 'services.facebook.id': 1, 'services.google.picture': 1 }
+		fields: {
+			isHost: 1,
+			status: 1,
+			balance: 1,
+			profile: 1,
+			'services.facebook.id': 1,
+			'services.google.picture': 1,
+			playing: 1,
+		},
 	};
 
 	return Meteor.users.find({}, options);
@@ -122,7 +133,7 @@ Meteor.publish('userData', function() {
 		return Meteor.users.find(
 			{ _id: this.userId },
 			{
-				fields: { isHost: 1, status: 1, balance: 1 }
+				fields: { isHost: 1, status: 1, balance: 1, playing: 1 },
 			}
 		);
 	}

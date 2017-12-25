@@ -11,14 +11,17 @@ import UserStore from '../events/UserStore';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Users, AppStates } from '../collections';
 import * as AppActions from '../events/AppActions';
+import { Meteor } from 'meteor/meteor';
 
 class SongList extends Component {
 	static propTypes = {
 		songs: PropTypes.arrayOf(PropTypes.object),
+		onlineUsers: PropTypes.arrayOf(PropTypes.object),
 	};
 
 	static defaultProps = {
 		songs: [],
+		onlineUsers: [],
 	};
 
 	static getStores() {
@@ -81,6 +84,20 @@ class SongList extends Component {
 		}
 	};
 
+	whoIsPlaying = id => {
+		for (let i = 0; i < this.props.onlineUsers.length; i++) {
+			if (id === this.props.onlineUsers[i].playing) {
+				if (this.props.onlineUsers[i]._id === Meteor.userId()) {
+					return <span className="playlist__item__active">&#9657;</span>;
+				}
+
+				if (this.props.onlineUsers[i]._id !== Meteor.userId()) {
+					return <span className="playlist__item__active">&#9656;</span>;
+				}
+			}
+		}
+	};
+
 	render() {
 		const { revealedSongs = [], activeHost } = this.state;
 
@@ -89,55 +106,58 @@ class SongList extends Component {
 				<div className="container song__container">
 					<ul className="songs__list">
 						{this.props.songs.map(song => (
-							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item">
-								<span className="playlist__item__active">&rtri;</span>
-								<span className="songs__list-item__container">
-									<span className="songs__list-item__thumbnail">
-										<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
-											<img src={`${song.thumbURL}`} alt={`${song.name}`} />
-										</a>
-									</span>
-									<span className="songs__list-item__name">
-										<a className="songs__list-item__name--link" data-id={song._id} onClick={this.selectSong}>
-											{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
-										</a>
-									</span>
-								</span>
+							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper playlist__item">
+								{this.whoIsPlaying(song._id)}
 
-								{revealedSongs.indexOf(song._id) > -1 ? (
-									<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
-								) : null}
-
-								<span className="songs__list-item__container">
-									<span className="songs__list-item__control">
-										<span className="songs__list-item__time">
-											<small>{this.getTime(song.timeAdded)}</small>
+								<div className="songs__list-item">
+									<span className="songs__list-item__container">
+										<span className="songs__list-item__thumbnail">
+											<a href={`${song.originalURL}`} target="_blank" className="songs__list-item__thumbnail--link">
+												<img src={`${song.thumbURL}`} alt={`${song.name}`} />
+											</a>
 										</span>
-										{activeHost ? (
+										<span className="songs__list-item__name">
+											<a className="songs__list-item__name--link" data-id={song._id} onClick={this.selectSong}>
+												{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
+											</a>
+										</span>
+									</span>
+
+									{revealedSongs.indexOf(song._id) > -1 ? (
+										<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
+									) : null}
+
+									<span className="songs__list-item__container">
+										<span className="songs__list-item__control">
+											<span className="songs__list-item__time">
+												<small>{this.getTime(song.timeAdded)}</small>
+											</span>
+											{activeHost ? (
+												<span
+													className="songs__list-item__lyrics songs__list-item__icon"
+													data-id={song._id}
+													onClick={this.toggleUserBook}
+												>
+													<i className="fa fa-eye" />
+												</span>
+											) : null}
 											<span
 												className="songs__list-item__lyrics songs__list-item__icon"
 												data-id={song._id}
-												onClick={this.toggleUserBook}
+												onClick={this.onOpenLyricPopup}
 											>
-												<i className="fa fa-eye" />
+												<i className="fa fa-file-text" />
 											</span>
-										) : null}
-										<span
-											className="songs__list-item__lyrics songs__list-item__icon"
-											data-id={song._id}
-											onClick={this.onOpenLyricPopup}
-										>
-											<i className="fa fa-file-text" />
-										</span>
-										<span
-											className="songs__list-item__delete songs__list-item__icon"
-											data-url={song.originalURL}
-											onClick={this.rebookSong}
-										>
-											<i className="fa fa-retweet" />
+											<span
+												className="songs__list-item__delete songs__list-item__icon"
+												data-url={song.originalURL}
+												onClick={this.rebookSong}
+											>
+												<i className="fa fa-retweet" />
+											</span>
 										</span>
 									</span>
-								</span>
+								</div>
 							</li>
 						))}
 					</ul>
@@ -148,17 +168,19 @@ class SongList extends Component {
 }
 
 export default withTracker(() => {
-	const playingSongs = AppStates.findOne({ key: 'playingSongs' });
+	if (!!Meteor.userId()) {
+		const onlineUsers = Users.find({ 'status.online': true, playing: { $ne: null } }).fetch();
 
-	console.log(playingSongs);
+		// if (playingSong && playingSong.playing) {
+		// 	return { currentSongPlaying: playingSong.playing };
+		// }
 
-	if (playingSongs && Array.isArray(playingSongs.songs)) {
 		return {
-			currentPlayingId: playingSongs.songs.includes(this._id),
+			onlineUsers,
 		};
-	} else {
-		return {};
 	}
+
+	return {};
 })(Container.create(SongList));
 
 // export default Container.create(SongList);

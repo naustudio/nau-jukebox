@@ -1,7 +1,7 @@
 /* © 2017 NauStud.io
  * @author Thanh Tran
  */
-import { AppStates, Songs } from '../collections';
+import { AppStates, Songs, Users } from '../collections';
 import { SongOrigin } from '../constants';
 import SCPlayer from './SCPlayer';
 import AudioPlayer from './AudioPlayer';
@@ -75,8 +75,12 @@ export default class JukeboxPlayer {
 			return;
 		}
 
-		AppStates.updatePlayingSongs(this.currentSong._id, this.prevSong ? this.prevSong._id : '');
+		if (!!Meteor.userId()) {
+			// Users.update(Meteor.userId(), { playing: this.currentSong._id });
+			Meteor.call('updatePlayingStatus', Meteor.userId, this.currentSong._id);
+		}
 
+		// AppStates.updatePlayingSongs(this.currentSong._id, this.prevSong ? this.prevSong._id : '');
 		if (this._isNew) {
 			this._isNew = false;
 			this.activePlayer.play(this.currentSong);
@@ -92,6 +96,10 @@ export default class JukeboxPlayer {
 	 */
 	pause() {
 		AppStates.updatePlayingSongs('', this.currentSong._id);
+
+		if (!!Meteor.userId()) {
+			Meteor.call('removePlayingStatus', Meteor.userId);
+		}
 
 		if (this.activePlayer) {
 			this.activePlayer.pause();

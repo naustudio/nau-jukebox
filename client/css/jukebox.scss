@@ -772,9 +772,19 @@ h5 small {
 	padding-top: 155px;
 }
 
-.songs__list-item {
+.songs__list-item-wrapper {
 	position: relative;
 	list-style: none;
+
+	& .playlist__item__active {
+		opacity: 1;
+		color: brown;
+		font-weight: bold;
+	}
+}
+
+.songs__list-item {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
