@@ -23,7 +23,7 @@ class App extends Component {
 	};
 
 	static defaultProps = {
-		room: {},
+		room: null,
 	};
 
 	static getStores() {
@@ -43,7 +43,6 @@ class App extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		const { room } = nextProps;
-		console.log(room);
 
 		if (!room) {
 			this.props.history.replace('/');
@@ -84,7 +83,7 @@ export default withTracker(({ match }) => {
 	const slug = match.params.slug || '';
 
 	return {
-		userId: Meteor.userId(),
+		rooms: Rooms.find().fetch(),
 		room: Rooms.findOne({ slug }),
 	};
 })(Container.create(App));

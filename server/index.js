@@ -67,6 +67,7 @@ Meteor.methods({
 		return Rooms.insert({
 			name: roomName,
 			slug: slugify(roomName),
+			createdBy: userId,
 			hostId: userId,
 		});
 	},

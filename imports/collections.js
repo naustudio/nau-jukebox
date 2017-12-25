@@ -65,6 +65,9 @@ const roomSchema = new SimpleSchema({
 	slug: {
 		type: String,
 	},
+	createdBy: {
+		type: String,
+	},
 	hostId: {
 		type: String,
 	},
