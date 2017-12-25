@@ -137,6 +137,9 @@ Meteor.methods({
 			song => song.originalURL.trim()
 		);
 	},
+	toggleSongAuthor(songId, revealed) {
+		return Songs.update(songId, { $set: { isRevealed: revealed } });
+	},
 });
 
 Meteor.publish('Meteor.users.public', function() {

@@ -34,7 +34,6 @@ class SongList extends Component {
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
 			activeHost: UserStore.getState()['activeHost'],
-			revealedSongs: AppStore.getState()['revealedSongs'],
 			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
@@ -97,8 +96,13 @@ class SongList extends Component {
 
 	toggleUserBook = e => {
 		const id = e.currentTarget.dataset.id;
+		const revealed = e.currentTarget.dataset.revealed;
 		if (id) {
-			AppActions.toggleUserBook(id);
+			Meteor.call('toggleSongAuthor', id, !revealed, err => {
+				if (err) {
+					console.log(err);
+				}
+			});
 		}
 	};
 
@@ -125,7 +129,7 @@ class SongList extends Component {
 	};
 
 	render() {
-		const { revealedSongs = [], activeHost } = this.state;
+		const { activeHost } = this.state;
 
 		return (
 			<section className="tab__body song">
@@ -153,7 +157,7 @@ class SongList extends Component {
 										</span>
 									</span>
 
-									{revealedSongs.indexOf(song._id) > -1 ? (
+									{song.isRevealed ? (
 										<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
 									) : null}
 
@@ -166,6 +170,7 @@ class SongList extends Component {
 												<span
 													className="songs__list-item__lyrics songs__list-item__icon"
 													data-id={song._id}
+													data-revealed={song.isRevealed}
 													onClick={this.toggleUserBook}
 												>
 													<i className="fa fa-eye" />

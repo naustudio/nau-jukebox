@@ -9,8 +9,6 @@ export const CHANGE_NHAP = 'CHANGE_NHAP';
 
 export const DELETE_SONG = 'DELETE_SONG';
 
-export const TOGGLE_USER_BOOK = 'TOGGLE_USER_BOOK';
-
 export const TOGGLE_BTN_PLAY = 'TOGGLE_BTN_PLAY';
 
 export const ACTIVE_BTN_PLAY = 'ACTIVE_BTN_PLAY';
@@ -51,14 +49,6 @@ export function changeTab(tabIndex) {
  */
 export function deleleSong(id) {
 	dispatch({ type: DELETE_SONG, id });
-}
-
-/**
- * @param  {Number} id of song
- * @return {void}
- */
-export function toggleUserBook(id) {
-	dispatch({ type: TOGGLE_USER_BOOK, id });
 }
 
 /**

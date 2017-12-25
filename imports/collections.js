@@ -50,6 +50,10 @@ const songSchema = new SimpleSchema({
 		type: Boolean,
 		optional: true,
 	},
+	isRevealed: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 const Songs = new Mongo.Collection('songs');

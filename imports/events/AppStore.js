@@ -77,18 +77,6 @@ class AppStore extends ReduceStore {
 		};
 	}
 
-	toggleRevealedSongs(id, songList) {
-		const newArray = [...songList];
-		const songIndex = newArray.indexOf(id);
-		if (songIndex > -1) {
-			newArray.splice(songIndex, 1);
-		} else {
-			newArray.push(id);
-		}
-
-		return newArray;
-	}
-
 	/**
 	 * Pure function, avoid mutate inputs
 	 * @param  {Object} state  Current state object
@@ -128,11 +116,6 @@ class AppStore extends ReduceStore {
 				break;
 			case AppActions.UPDATE_LYRIC_POPUP:
 				reducedState = this.getSongNameAndLyric(action.id);
-				break;
-			case AppActions.TOGGLE_USER_BOOK:
-				reducedState = {
-					revealedSongs: this.toggleRevealedSongs(action.id, state.revealedSongs),
-				};
 				break;
 			case AppActions.SET_ROOM:
 				reducedState = {
