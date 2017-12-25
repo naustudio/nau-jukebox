@@ -18,11 +18,13 @@ class SongList extends Component {
 	static propTypes = {
 		songs: PropTypes.arrayOf(PropTypes.object),
 		onlineUsers: PropTypes.arrayOf(PropTypes.object),
+		userId: PropTypes.string,
 	};
 
 	static defaultProps = {
 		songs: [],
 		onlineUsers: [],
+		userId: '',
 	};
 
 	static getStores() {
@@ -33,7 +35,6 @@ class SongList extends Component {
 		return {
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
-			activeHost: UserStore.getState()['activeHost'],
 			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
@@ -68,8 +69,8 @@ class SongList extends Component {
 	};
 
 	rebookSong = e => {
-		const userId = Meteor.userId();
 		const songUrl = e.currentTarget.dataset.url;
+		const { userId } = this.props;
 		const { currentRoom } = this.state;
 
 		if (!userId) {
@@ -96,7 +97,7 @@ class SongList extends Component {
 
 	toggleUserBook = e => {
 		const id = e.currentTarget.dataset.id;
-		const revealed = e.currentTarget.dataset.revealed;
+		const revealed = e.currentTarget.dataset.revealed === 'true';
 		if (id) {
 			Meteor.call('toggleSongAuthor', id, !revealed, err => {
 				if (err) {
@@ -129,7 +130,8 @@ class SongList extends Component {
 	};
 
 	render() {
-		const { activeHost } = this.state;
+		const { currentRoom } = this.state;
+		const { userId } = this.props;
 
 		return (
 			<section className="tab__body song">
@@ -166,7 +168,7 @@ class SongList extends Component {
 											<span className="songs__list-item__time">
 												<small>{this.getTime(song.timeAdded)}</small>
 											</span>
-											{activeHost ? (
+											{currentRoom && currentRoom.hostId === userId ? (
 												<span
 													className="songs__list-item__lyrics songs__list-item__icon"
 													data-id={song._id}

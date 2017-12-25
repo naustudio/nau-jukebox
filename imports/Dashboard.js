@@ -76,7 +76,7 @@ class Dashboard extends Component {
 					</div>
 					{rooms && rooms.length ? (
 						<div className="dashboard__room-container">
-							<h5 className="dashboard__room-header">My Rooms</h5>
+							<h5 className="dashboard__room-header">Rooms of which I am the host</h5>
 							<ul className="dashboard__room-list">
 								{rooms.map(room => (
 									<li className="dashboard__room" key={room._id}>

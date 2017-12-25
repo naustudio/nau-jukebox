@@ -8,6 +8,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Container } from 'flux/utils';
 import { Users } from '../collections';
 import UserStore from '../events/UserStore';
+import AppStore from '../events/AppStore';
 
 class TabUsers extends Component {
 	static propTypes = {
@@ -19,12 +20,12 @@ class TabUsers extends Component {
 	};
 
 	static getStores() {
-		return [UserStore];
+		return [UserStore, AppStore];
 	}
 
 	static calculateState(/*prevState*/) {
 		return {
-			activeHost: UserStore.getState()['activeHost'],
+			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
 
@@ -40,11 +41,27 @@ class TabUsers extends Component {
 		}
 	};
 
+	onSetHost = e => {
+		const confirm = window.confirm('Are you sure?');
+		if (confirm) {
+			const userId = e.currentTarget.dataset.userid;
+			const { currentRoom } = this.state;
+			if (userId && currentRoom) {
+				Meteor.call('changeHost', userId, currentRoom._id, err => {
+					if (err) {
+						console.log(err);
+					}
+				});
+			}
+		}
+	};
+
 	_renderUser = () => {
+		const { currentRoom } = this.state;
 		const lst = this.props.users.map(user => (
 			<li key={user._id} className={`row users__item ${user.status.online ? 'users__item--active' : ''}`}>
 				<div className="users__item__image-wrapper">
-					{user.isHost && (
+					{user._id === this.state.currentRoom.hostId && (
 						<div className="users__item__host-icon-wrapper">
 							<i className="fa fa-user-secret users__item__host-icon" aria-hidden="true" />
 						</div>
@@ -58,7 +75,7 @@ class TabUsers extends Component {
 						<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
 					</div>
 				</div>
-				{this.state.activeHost ? (
+				{currentRoom && currentRoom.hostId === Meteor.userId() ? (
 					<div className="users__item__payment">
 						<form onSubmit={this.onFormSubmit}>
 							<div className="users__item__payment__input-wraper">
@@ -76,6 +93,17 @@ class TabUsers extends Component {
 							<div className="col col--5">
 								<input className="btn btn--primary users__item__payment__submit" type="submit" defaultValue="Submit" />
 							</div>
+							{user._id !== this.state.currentRoom.hostId ? (
+								<div className="col col--5">
+									<button
+										data-userid={user._id}
+										className="btn btn--danger users__item__payment__submit"
+										onClick={this.onSetHost}
+									>
+										Set as HOST
+									</button>
+								</div>
+							) : null}
 						</form>
 					</div>
 				) : null}
@@ -86,7 +114,6 @@ class TabUsers extends Component {
 	};
 
 	render() {
-		console.log('all user', this.props.users);
 		return (
 			<section className="tab__body users">
 				<div className="container users__container">

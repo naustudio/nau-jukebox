@@ -78,18 +78,8 @@ Meteor.methods({
 		});
 	},
 
-	changeHost(userId) {
-		console.log('changeHost', userId);
-		// switch all users isHost off
-		Users.update({}, { $set: { isHost: false } }, { multi: true }, () => {
-			// then switch sHost
-			Users.update(userId, {
-				$set: {
-					isHost: true,
-					lastModified: new Date(),
-				},
-			});
-		});
+	changeHost(userId, roomId) {
+		return Rooms.update(roomId, { $set: { hostId: userId } });
 	},
 
 	updatePlayingStatus(userId, songId) {
@@ -138,6 +128,8 @@ Meteor.methods({
 		);
 	},
 	toggleSongAuthor(songId, revealed) {
+		console.log(songId, revealed);
+
 		return Songs.update(songId, { $set: { isRevealed: revealed } });
 	},
 });
