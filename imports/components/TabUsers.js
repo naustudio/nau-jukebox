@@ -43,7 +43,15 @@ class TabUsers extends Component {
 	_renderUser = () => {
 		const lst = this.props.users.map(user => (
 			<li key={user._id} className={`row users__item ${user.status.online ? 'users__item--active' : ''}`}>
-				<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
+				<div className="users__item__image-wrapper">
+					{user.isHost && (
+						<div className="users__item__host-icon-wrapper">
+							<i className="fa fa-user-secret users__item__host-icon" aria-hidden="true" />
+						</div>
+					)}
+
+					<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
+				</div>
 				<div className="users__item__info">
 					<div className="users__item__user">
 						<p className="users__item__name">{user.profile && user.profile.name}</p>
@@ -78,6 +86,7 @@ class TabUsers extends Component {
 	};
 
 	render() {
+		console.log('all user', this.props.users);
 		return (
 			<section className="tab__body users">
 				<div className="container users__container">

@@ -1392,7 +1392,6 @@ h5 small {
 
 		&__avt {
 			margin-left: 15px;
-			margin-right: 6px;
 		}
 
 		&__info {
@@ -1412,6 +1411,7 @@ h5 small {
 			width: 60%;
 			margin-bottom: 0;
 			margin-right: 10px;
+			margin-left: 6px;
 		}
 
 		&__coin {
@@ -1424,6 +1424,22 @@ h5 small {
 				content: '₦';
 				margin-right: 4px;
 			}
+		}
+
+		&__image-wrapper {
+			display: flex;
+			position: relative;
+		}
+
+		&__host-icon-wrapper {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.75);
+			display: flex;
+			background-color: white;
+			border-radius: 50%;
+			padding: 2px;
 		}
 
 		&__payment {
