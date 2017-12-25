@@ -50,10 +50,10 @@ class TabTopList extends Component {
 						</h5>
 					</div>
 					<div className="tab__top-list__wrapper">
-						<ul className="tab__top-list__inner">
+						<ul className="tab__top-list__inner naustorm">
 							{naustormData &&
 								naustormData.map(item => (
-									<li className="tab__top-list__item" key={item._id}>
+									<li className="tab__top-list__item columns three naustorm-elm" key={item._id}>
 										<div className="naustorm-elm__wrapper">
 											<img className="naustorm-elm__cover" src={item.thumbURL} alt="" />
 											<span className="naustorm-elm__listens">
