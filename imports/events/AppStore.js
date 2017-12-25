@@ -79,7 +79,6 @@ class AppStore extends ReduceStore {
 
 	toggleRevealedSongs(id, songList) {
 		const newArray = [...songList];
-		console.log(songList);
 		const songIndex = newArray.indexOf(id);
 		if (songIndex > -1) {
 			newArray.splice(songIndex, 1);
@@ -112,7 +111,10 @@ class AppStore extends ReduceStore {
 				reducedState = { focusSearchBox: action.isFocus };
 				break;
 			case AppActions.SELECT_SONG:
-				reducedState = { selectedSong: this.selectSong(action.id) };
+				reducedState = {
+					selectedSong: this.selectSong(action.id),
+					activeBtnPlay: true,
+				};
 				break;
 			case AppActions.OPEN_POP_UP:
 				reducedState = {

@@ -1,12 +1,12 @@
 /* © 2017 NauStud.io
  * @author Thanh Tran
  */
-import { AppStates, Songs, Users } from '../collections';
+import { Songs /* Users */ } from '../collections';
 import { SongOrigin } from '../constants';
 import SCPlayer from './SCPlayer';
 import AudioPlayer from './AudioPlayer';
 import YouTubePlayer from './YouTubePlayer';
-import { activeBtnPlay } from '../events/AppActions';
+import { deactiveBtnPlay, selectSong } from '../events/AppActions';
 
 /**
  * The main JukeboxPlayer which act as wrapper for different type of player inside
@@ -63,7 +63,6 @@ export default class JukeboxPlayer {
 			}
 		}
 		document.title = `NJ :: ${song.origin} : ${song.name}`;
-		activeBtnPlay();
 	}
 
 	/**
@@ -75,7 +74,7 @@ export default class JukeboxPlayer {
 			return;
 		}
 
-		if (!!Meteor.userId()) {
+		if (Meteor.userId()) {
 			// Users.update(Meteor.userId(), { playing: this.currentSong._id });
 			Meteor.call('updatePlayingStatus', Meteor.userId, this.currentSong._id);
 		}
@@ -95,9 +94,7 @@ export default class JukeboxPlayer {
 	 * @return {[type]} [description]
 	 */
 	pause() {
-		AppStates.updatePlayingSongs('', this.currentSong._id);
-
-		if (!!Meteor.userId()) {
+		if (Meteor.userId()) {
 			Meteor.call('removePlayingStatus', Meteor.userId);
 		}
 
@@ -112,14 +109,14 @@ export default class JukeboxPlayer {
 	 * @return {[type]} [description]
 	 */
 	playNext() {
-		const nextSong = Songs.findOne({ timeAdded: { $gt: this.currentSong.timeAdded } });
-		// console.log('Play next:', nextSong.name, nextSong.origin);
+		const nextSong = Songs.findOne({ timeAdded: { $gt: this.currentSong.timeAdded }, roomId: this.currentSong.roomId });
 
 		if (nextSong) {
 			//delay some time so that calling play on the next song can work
-			this.selectSong(nextSong);
+			selectSong(nextSong._id);
 		} else {
 			console.log('No more song to play');
+			deactiveBtnPlay();
 		}
 	}
 }
