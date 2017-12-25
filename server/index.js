@@ -2,9 +2,8 @@
  * @author Thanh Tran, Tung Tran, Tw
  */
 import { Migrations } from 'meteor/percolate:migrations';
-// import { moment } from 'meteor/momentjs:moment';
 import { UserStatus } from 'meteor/mizzao:user-status';
-
+import subDays from 'date-fns/sub_days';
 import { AppStates, Songs, Users } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
 import getSongInfoZing from '../imports/parsers/getSongInfoZing';
@@ -65,16 +64,21 @@ Meteor.methods({
 			songInfo = getSongInfoYouTube(songurl);
 		}
 
-		Meteor.call('updateStatus', authorId, (err, result) => {
-			console.log('updateStatus', authorId, err, result);
-		});
-
 		if (songInfo && songInfo.streamURL) {
 			songInfo.author = authorId;
 			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
 
 			return Songs.insert(songInfo);
 		}
+
+		if (songInfo && songInfo.error) {
+			Songs.update({ originalURL: songurl }, { $set: { badSong: true } }, { multi: true }, err => {
+				if (err) {
+					console.log(err);
+				}
+			});
+		}
+
 		throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
 	},
 
@@ -95,8 +99,18 @@ Meteor.methods({
 	updatePlayingStatus(userId, songId) {
 		Users.update(Meteor.userId(), { $set: { playing: songId } });
 	},
+
 	removePlayingStatus(userId) {
 		Users.update(Meteor.userId(), { $set: { playing: null } });
+	},
+
+	updateStatus(userId) {
+		return Users.update(userId, {
+			$set: {
+				isOnline: true,
+				lastModified: new Date(),
+			},
+		});
 	},
 
 	naucoinPay(userId, amount) {
@@ -109,6 +123,23 @@ Meteor.methods({
 				balance: newBalance,
 			},
 		});
+	},
+
+	searchSong(searchString) {
+		return _.uniq(
+			Songs.find(
+				{
+					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+					badSong: { $ne: true },
+				},
+				{
+					limit: 50, // we remove duplicated result and limit further
+					reactive: false,
+				}
+			).fetch(),
+			false,
+			song => song.originalURL.trim()
+		);
 	},
 });
 
@@ -142,7 +173,10 @@ Meteor.publish('userData', function() {
 });
 
 Meteor.publish('Songs.public', function() {
-	return Songs.find({});
+	const sevenDaysAgo = subDays(new Date(), 8);
+	sevenDaysAgo.setHours(0, 0, 0, 0);
+
+	return Songs.find({ timeAdded: { $gt: sevenDaysAgo.getTime() } });
 });
 
 Meteor.publish('AppStates.public', function() {

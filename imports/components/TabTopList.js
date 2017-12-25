@@ -138,7 +138,7 @@ export default withTracker(() => {
 			return user;
 		});
 
-		newUserList = _.sortBy(newUserList, i => -1 * (1000 * (i.isOnline ? 1 : 0)) - (i.balance || 0));
+		newUserList = _.sortBy(newUserList, i => -1 * (1000 * i.status.online) - (i.balance || 0));
 
 		// Session.set('USER_LIST', newUserList);
 		return newUserList;

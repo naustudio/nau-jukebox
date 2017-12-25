@@ -43,6 +43,10 @@ const songSchema = new SimpleSchema({
 	searchPattern: {
 		type: String,
 	},
+	badSong: {
+		type: Boolean,
+		optional: true,
+	},
 });
 
 const Songs = new Mongo.Collection('songs');
