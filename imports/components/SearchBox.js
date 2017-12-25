@@ -35,8 +35,8 @@ class SearchBox extends Component {
 	};
 
 	keyUpSearchSong = e => {
-		if (e.keyCode !== 13) {
-			Meteor.call('searchSong', this.searchInput.value, (err, result) => {
+		if (e.keyCode !== 13 && this.state.currentRoom) {
+			Meteor.call('searchSong', this.searchInput.value, this.state.currentRoom._id, (err, result) => {
 				if (err) {
 					console.log(err);
 				} else {

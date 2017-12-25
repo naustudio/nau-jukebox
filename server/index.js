@@ -120,11 +120,12 @@ Meteor.methods({
 		});
 	},
 
-	searchSong(searchString) {
+	searchSong(searchString, roomId) {
 		return _.uniq(
 			Songs.find(
 				{
 					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+					roomId,
 					badSong: { $ne: true },
 				},
 				{
