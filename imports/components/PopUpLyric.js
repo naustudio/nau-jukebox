@@ -16,7 +16,7 @@ class PopUpLyric extends Component {
 		return {
 			openPopUp: AppStore.getState()['openPopup'],
 			songName: AppStore.getState()['songName'],
-			songLyric: AppStore.getState()['songLyric']
+			songLyric: AppStore.getState()['songLyric'],
 		};
 	}
 
@@ -24,7 +24,7 @@ class PopUpLyric extends Component {
 		const lyric = document.getElementById('divLyric');
 		const lyricBody = document.querySelector('.popup-lyric__body');
 		if (lyric) {
-			lyric.style.maxHeight = '70vh';
+			lyric.style.maxHeight = 'inherit';
 		}
 
 		if (lyricBody) {
@@ -51,7 +51,7 @@ class PopUpLyric extends Component {
 						<p
 							className="popup-lyric__full"
 							dangerouslySetInnerHTML={{
-								__html: this.state.songLyric
+								__html: this.state.songLyric,
 							}}
 						/>
 					</article>
