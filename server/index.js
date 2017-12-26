@@ -171,6 +171,7 @@ Meteor.publish('Meteor.users.public', function() {
 			'services.facebook.id': 1,
 			'services.google.picture': 1,
 			playing: 1,
+			isHost: 1,
 		},
 	};
 
@@ -182,7 +183,7 @@ Meteor.publish('userData', function() {
 		return Meteor.users.find(
 			{ _id: this.userId },
 			{
-				fields: { status: 1, balance: 1, playing: 1, roomId: 1, services: 1, profile: 1 },
+				fields: { status: 1, balance: 1, playing: 1, roomId: 1, services: 1, profile: 1, isHost: 1 },
 			}
 		);
 	}

@@ -111,10 +111,30 @@ class SongList extends Component {
 		for (let i = 0; i < this.props.onlineUsers.length; i++) {
 			if (id === this.props.onlineUsers[i].playing) {
 				if (this.props.onlineUsers[i]._id === Meteor.userId()) {
-					return <span className="playlist__item__active">&#9656;</span>;
+					return (
+						<span
+							className={`${
+								this.props.onlineUsers[i].isHost
+									? 'playlist__item__active playlist__item__active-host'
+									: 'playlist__item__active'
+							}`}
+						>
+							&#9656;
+						</span>
+					);
 				}
 
-				return <span className="playlist__item__active">&#9657;</span>;
+				return (
+					<span
+						className={`${
+							this.props.onlineUsers[i].isHost
+								? 'playlist__item__active playlist__item__active-host'
+								: 'playlist__item__active'
+						}`}
+					>
+						&#9657;
+					</span>
+				);
 			}
 		}
 
