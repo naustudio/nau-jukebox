@@ -4,11 +4,24 @@ This is a fun, side project to allow our team to collectively suggest and play a
 
 The songs URL is currently parsable from nhaccuatui.com, mp3.zing.com, soundcloud.com, youtube.com
 
-**NOTE: This code is under major migration to support OAuth login and multi-room. Stay tuned.** 
+**NOTE: This code is under major migration to support OAuth login and multi-room. Stay tuned.**
 
 
 Changelog:
 ----------
+
+### 2017-12-26
+- [BIG CHANG] Migrate Client side to React and Flux architecture
+- Optimize synced songs to client (play list now sync much faster)
+- Search logic moved to server
+- Mark bad songs if re-book with now-invalid URL
+- Host indicator
+- New Naucoin editing UI, row by row, instead of a dropdown
+
+### 2017-11-08
+- Upgrade to Meteor 1.6
+- Fix NCT & Zing URL parsers
+- Finally add license notice
 
 ### 2017-09-18
 - Re-organize code to separate client/server folders
