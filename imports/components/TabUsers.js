@@ -95,13 +95,13 @@ class TabUsers extends Component {
 							</div>
 							{user._id !== this.state.currentRoom.hostId ? (
 								<div className="col col--5">
-									<button
+									<input
+										type="button"
 										data-userid={user._id}
-										className="btn btn--danger users__item__payment__submit"
+										className="button-primary users__item__payment__submit"
+										value="Set as HOST"
 										onClick={this.onSetHost}
-									>
-										Set as HOST
-									</button>
+									/>
 								</div>
 							) : null}
 						</form>
