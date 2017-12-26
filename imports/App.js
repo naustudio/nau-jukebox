@@ -85,7 +85,7 @@ class App extends Component {
 			<div>
 				<AppHeader />
 				<AppBody />
-				<div className="player-panel">
+				<div className="player-panel" style={{ zIndex: -1 }}>
 					<audio id="audio-player" src="song.mp3" preload="none" width="300" />
 					<video id="youtube-player" preload="none" width="300" height="200" src="" />
 				</div>
