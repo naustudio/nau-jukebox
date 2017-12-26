@@ -66,7 +66,7 @@ export default withTracker(() => {
 	if (Meteor.userId()) {
 		try {
 			UserStatus.startMonitor({
-				threshold: 10000,
+				threshold: 30000,
 				interval: 2000,
 				idleOnBlur: true,
 			});
