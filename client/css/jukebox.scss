@@ -1629,6 +1629,12 @@ h5 small {
 				background-color: #347a2a;
 			}
 		}
+
+		&--idle {
+			&::before {
+				background-color: #f4ff57;
+			}
+		}
 	}
 }
 
