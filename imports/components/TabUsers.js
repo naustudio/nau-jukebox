@@ -50,7 +50,13 @@ class TabUsers extends Component {
 						</div>
 					)}
 
-					<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
+					<img
+						src={user.profile.picture}
+						width={50}
+						height={50}
+						alt="image user"
+						className="users__item__avt"
+					/>
 				</div>
 				<div className="users__item__info">
 					<div className="users__item__user">
@@ -74,7 +80,11 @@ class TabUsers extends Component {
 								<input hidden value={user._id} readOnly type="text" name="userid" />
 							</div>
 							<div className="col col--5">
-								<input className="btn btn--primary users__item__payment__submit" type="submit" defaultValue="Submit" />
+								<input
+									className="btn btn--primary users__item__payment__submit"
+									type="submit"
+									defaultValue="Submit"
+								/>
 							</div>
 						</form>
 					</div>
@@ -87,6 +97,7 @@ class TabUsers extends Component {
 
 	render() {
 		console.log('all user', this.props.users);
+
 		return (
 			<section className="tab__body users">
 				<div className="container users__container">
@@ -103,8 +114,9 @@ class TabUsers extends Component {
 
 export default withTracker(() => ({
 	users: Users.find(
-		{},
+		{ services: { $exists: true } }, // fetch only modern user, ignore legacy ones
 		{
+			sort: { 'status.online': -1, balance: -1 },
 			transform: user => {
 				let picture = `https://api.adorable.io/avatar/${user.profile.name}`;
 				if (user.services) {
