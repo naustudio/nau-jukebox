@@ -10,10 +10,8 @@ db.getCollection('songs').aggregate([
 	},
 	{
 		$group: {
-			_id: '$name',
+			_id: '$artist',
 			count: { $sum: 1 },
-			name: { $first: '$name' },
-			artist: { $first: '$artist' },
 		},
 	},
 	{
@@ -21,5 +19,5 @@ db.getCollection('songs').aggregate([
 			count: -1,
 		},
 	},
-	{ $out: 'stats2017' },
+	{ $out: 'statsartist2017' },
 ]);
