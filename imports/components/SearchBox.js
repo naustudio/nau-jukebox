@@ -94,10 +94,21 @@ class SearchBox extends Component {
 	};
 
 	focusSearchBox = () => {
+		const { currentRoom } = this.state;
+		if (this.searchInput.value) {
+			Meteor.call('searchSong', this.searchInput.value, currentRoom._id, (err, result) => {
+				if (err) {
+					console.log(err);
+				} else {
+					this.setState({ searchResult: result, selectedIndex: -1 });
+				}
+			});
+		}
 		focusSearchBox(true);
 	};
 
 	blurSearchBox = () => {
+		this.setState({ searchResult: [], selectedIndex: -1 });
 		focusSearchBox(false);
 	};
 
