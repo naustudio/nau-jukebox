@@ -13,10 +13,12 @@ import SongList from './SongList';
 class TabSongs extends Component {
 	static propTypes = {
 		songs: PropTypes.arrayOf(PropTypes.object),
+		isLoadingSong: PropTypes.bool,
 	};
 
 	static defaultProps = {
 		songs: [],
+		isLoadingSong: false,
 	};
 
 	static getStores() {
@@ -30,15 +32,25 @@ class TabSongs extends Component {
 	}
 
 	render() {
+		if (this.props.isLoadingSong) {
+			return (
+				<section className="tab__body song">
+					<div className="container song__container">Fetching songs...</div>
+				</section>
+			);
+		}
+
 		return <SongList songs={this.props.songs} />;
 	}
 }
 
 export default withTracker(({ currentRoom }) => {
 	const today = new Date();
+	const songHandle = Meteor.subscribe('Songs.public');
 	today.setHours(0, 0, 0, 0);
 
 	return {
+		isLoadingSong: !songHandle.ready(),
 		songs: Songs.find(
 			{
 				timeAdded: { $gt: today.getTime() },
