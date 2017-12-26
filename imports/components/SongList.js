@@ -111,10 +111,10 @@ class SongList extends Component {
 		for (let i = 0; i < this.props.onlineUsers.length; i++) {
 			if (id === this.props.onlineUsers[i].playing) {
 				if (this.props.onlineUsers[i]._id === Meteor.userId()) {
-					return <span className="playlist__item__active">&#9657;</span>;
+					return <span className="playlist__item__active">&#9656;</span>;
 				}
 
-				return <span className="playlist__item__active">&#9656;</span>;
+				return <span className="playlist__item__active">&#9657;</span>;
 			}
 		}
 
@@ -138,7 +138,7 @@ class SongList extends Component {
 				<div className="container song__container">
 					<ul className="songs__list">
 						{this.props.songs.map(song => (
-							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper playlist__item">
+							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper">
 								{this.whoIsPlaying(song._id)}
 
 								<div className="songs__list-item">
@@ -163,7 +163,7 @@ class SongList extends Component {
 										<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
 									) : null}
 
-									<span className="songs__list-item__container">
+									<span className="songs__list-item__container nau--hidden-xxs nau--hidden-xs">
 										<span className="songs__list-item__control">
 											<span className="songs__list-item__time">
 												<small>{this.getTime(song.timeAdded)}</small>
@@ -192,6 +192,37 @@ class SongList extends Component {
 											>
 												<i className="fa fa-retweet" />
 											</span>
+										</span>
+									</span>
+								</div>
+								<div className="songs__list-item nau--hidden-sm nau--hidden-md nau--hidden-lg">
+									<span className="songs__list-item__control">
+										<span className="songs__list-item__time">
+											<small>{this.getTime(song.timeAdded)}</small>
+										</span>
+										{currentRoom && currentRoom.hostId === userId ? (
+											<span
+												className="songs__list-item__lyrics songs__list-item__icon"
+												data-id={song._id}
+												data-revealed={song.isRevealed}
+												onClick={this.toggleUserBook}
+											>
+												<i className="fa fa-eye" />
+											</span>
+										) : null}
+										<span
+											className="songs__list-item__lyrics songs__list-item__icon"
+											data-id={song._id}
+											onClick={this.onOpenLyricPopup}
+										>
+											<i className="fa fa-file-text" />
+										</span>
+										<span
+											className="songs__list-item__delete songs__list-item__icon"
+											data-url={song.originalURL}
+											onClick={this.rebookSong}
+										>
+											<i className="fa fa-retweet" />
 										</span>
 									</span>
 								</div>
