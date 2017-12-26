@@ -65,53 +65,60 @@ class TabUsers extends Component {
 					user.status.idle ? 'users__item--idle' : ''
 				}`}
 			>
-				<div className="users__item__image-wrapper">
-					{user._id === this.state.currentRoom.hostId && (
-						<div className="users__item__host-icon-wrapper">
-							<i className="fa fa-user-secret users__item__host-icon" aria-hidden="true" />
-						</div>
-					)}
-
-					<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
-				</div>
-				<div className="users__item__info">
-					<div className="users__item__user">
-						<p className="users__item__name">{user.profile && user.profile.name}</p>
-						<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
+				{user._id === this.state.currentRoom.hostId && (
+					<div className="users__item__host-icon-wrapper">
+						<i className="fa fa-user-secret users__item__host-icon" aria-hidden="true" />
 					</div>
-				</div>
-				{currentRoom && currentRoom.hostId === Meteor.userId() ? (
-					<div className="users__item__payment">
-						<form onSubmit={this.onFormSubmit}>
-							<div className="users__item__payment__input-wraper">
-								<label htmlFor="users__item__payment__input" className="users__item__payment__label">
-									AMOUNT OF PAYMENT (+/-)
-								</label>
-								<input
-									className="users__item__payment__input"
-									type="number"
-									name="amount"
-									id="users__item__payment__input"
-								/>
-								<input hidden value={user._id} readOnly type="text" name="userid" />
+				)}
+
+				<div className="users__item-wrapper">
+					<div className="users__item__image-and-name">
+						<div className="users__item__image-wrapper">
+							<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
+						</div>
+						<div className="users__item__info">
+							<div className="users__item__user">
+								<p className="users__item__name">{user.profile && user.profile.name}</p>
+								<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
 							</div>
-							<div className="col col--5">
-								<input className="btn btn--primary users__item__payment__submit" type="submit" defaultValue="Submit" />
-							</div>
-							{user._id !== this.state.currentRoom.hostId ? (
+						</div>
+					</div>
+
+					{currentRoom && currentRoom.hostId === Meteor.userId() ? (
+						<div className="users__item__payment">
+							<form onSubmit={this.onFormSubmit}>
+								<div className="users__item__payment__input-wraper">
+									<input
+										className="users__item__payment__input"
+										type="number"
+										name="amount"
+										id="users__item__payment__input"
+										placeholder="AMOUNT OF PAYMENT (+/-)"
+									/>
+									<input hidden value={user._id} readOnly type="text" name="userid" />
+								</div>
 								<div className="col col--5">
 									<input
-										type="button"
-										data-userid={user._id}
-										className="button-primary users__item__payment__submit"
-										value="Set as HOST"
-										onClick={this.onSetHost}
+										className="btn btn--primary users__item__payment__submit"
+										type="submit"
+										defaultValue="Submit"
 									/>
 								</div>
-							) : null}
-						</form>
-					</div>
-				) : null}
+								{user._id !== this.state.currentRoom.hostId ? (
+									<div className="col col--5">
+										<input
+											type="button"
+											data-userid={user._id}
+											className="button-primary users__item__payment__submit"
+											value="Set as HOST"
+											onClick={this.onSetHost}
+										/>
+									</div>
+								) : null}
+							</form>
+						</div>
+					) : null}
+				</div>
 			</li>
 		));
 
@@ -129,7 +136,11 @@ class TabUsers extends Component {
 						Users
 						<span>₦: Naucoin, ₦1.00 = 1000VND</span>
 					</h5>
-					{ids.indexOf(currentRoom.hostId) < 0 ? <em className="users__info">* Host is now in another room *</em> : ''}
+					{currentRoom && ids.indexOf(currentRoom.hostId) < 0 ? (
+						<em className="users__info">* Host is now in another room *</em>
+					) : (
+						''
+					)}
 					<ul className="users__list">{this._renderUser()}</ul>
 				</div>
 			</section>
