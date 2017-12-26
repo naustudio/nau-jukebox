@@ -128,8 +128,6 @@ Meteor.methods({
 		);
 	},
 	toggleSongAuthor(songId, revealed) {
-		console.log(songId, revealed);
-
 		return Songs.update(songId, { $set: { isRevealed: revealed } });
 	},
 });

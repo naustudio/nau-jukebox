@@ -114,6 +114,9 @@ class TabUsers extends Component {
 	};
 
 	render() {
+		const ids = this.props.users.map(u => u._id);
+		const { currentRoom } = this.state;
+
 		return (
 			<section className="tab__body users">
 				<div className="container users__container">
@@ -121,6 +124,7 @@ class TabUsers extends Component {
 						Users
 						<span>₦: Naucoin, ₦1.00 = 1000VND</span>
 					</h5>
+					{ids.indexOf(currentRoom.hostId) < 0 ? <em className="users__info">* Host is now in another room *</em> : ''}
 					<ul className="users__list">{this._renderUser()}</ul>
 				</div>
 			</section>
