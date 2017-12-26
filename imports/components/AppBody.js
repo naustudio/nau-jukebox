@@ -4,6 +4,9 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
+import { withTracker } from 'meteor/react-meteor-data';
+import { UserStatus } from 'meteor/mizzao:user-status';
+
 import TabNav from './TabNav';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
@@ -59,4 +62,18 @@ class AppBody extends Component {
 	}
 }
 
-export default Container.create(AppBody);
+export default withTracker(() => {
+	if (Meteor.userId()) {
+		try {
+			UserStatus.startMonitor({
+				threshold: 30000,
+				interval: 2000,
+				idleOnBlur: true,
+			});
+		} catch (err) {
+			console.log('Syncing...');
+		}
+	}
+
+	return {};
+})(Container.create(AppBody));

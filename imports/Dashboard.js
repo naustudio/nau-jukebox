@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
 
+import blockWords from './helpers/block-words.json';
 import { errorSignInDashboard } from './events/AppActions';
 import { Rooms } from './collections';
 import AccountsUIWrapper from './components/AccountUIWrapper';
@@ -37,6 +38,30 @@ class Dashboard extends Component {
 			errorSignIn: UserStore.getState()['errorSignInDashboard'],
 		};
 	}
+
+	onInputName = e => {
+		const input = e.target;
+		const blockCharacter = /[!@#$%^&*()+=_{}[\]|\\/:;"'><?~`,.]/g;
+		let usingBlockWordFlag = false;
+
+		if (blockCharacter.test(input.value)) {
+			input.setCustomValidity("Use only alphanumeric characters, space or '-'");
+
+			return;
+		}
+
+		blockWords.forEach(word => {
+			if (input.value.indexOf(word) > -1) {
+				usingBlockWordFlag = true;
+			}
+		});
+
+		if (usingBlockWordFlag) {
+			input.setCustomValidity('You are using block words. Please try a different name');
+		} else {
+			input.setCustomValidity('');
+		}
+	};
 
 	onCreateRoom = e => {
 		e.preventDefault();
@@ -90,7 +115,7 @@ class Dashboard extends Component {
 						</div>
 					) : null}
 					<form className="dashboard__add-room" onSubmit={this.onCreateRoom}>
-						<input type="text" placeholder="Room name" required name="name" />
+						<input type="text" placeholder="Room name" required name="name" minLength="4" onInput={this.onInputName} />
 						<button type="submit" className="dashboard__create-button">
 							CREATE
 						</button>

@@ -18,10 +18,18 @@ class SearchBox extends Component {
 
 	state = {
 		searchResult: [],
+		selectedIndex: -1,
 	};
 
 	onFormSubmit = e => {
 		e.preventDefault();
+		const { selectedIndex, searchResult } = this.state;
+		if (selectedIndex >= 0) {
+			this.submitSong(searchResult[selectedIndex].originalURL);
+
+			return;
+		}
+
 		if (this.searchInput && this.searchInput.value) {
 			this.submitSong(this.searchInput.value);
 		}
@@ -35,14 +43,28 @@ class SearchBox extends Component {
 	};
 
 	keyUpSearchSong = e => {
-		if (e.keyCode !== 13 && this.state.currentRoom) {
-			Meteor.call('searchSong', this.searchInput.value, this.state.currentRoom._id, (err, result) => {
-				if (err) {
-					console.log(err);
-				} else {
-					this.setState({ searchResult: result });
+		const { selectedIndex, searchResult, currentRoom } = this.state;
+		switch (e.keyCode) {
+			case 38:
+				this.setState({ selectedIndex: Math.max(selectedIndex - 1, 0) });
+				break;
+			case 40:
+				this.setState({ selectedIndex: Math.min(selectedIndex + 1, searchResult.length - 1) });
+				break;
+			case 27:
+				this.setState({ searchResult: [], selectedIndex: -1 });
+				break;
+			default:
+				if (e.keyCode !== 13 && currentRoom) {
+					Meteor.call('searchSong', this.searchInput.value, currentRoom._id, (err, result) => {
+						if (err) {
+							console.log(err);
+						} else {
+							this.setState({ searchResult: result, selectedIndex: -1 });
+						}
+					});
 				}
-			});
+				break;
 		}
 	};
 
@@ -68,14 +90,25 @@ class SearchBox extends Component {
 
 		// clear input field after inserting has done
 		this.searchInput.value = '';
-		this.setState({ searchResult: [] });
+		this.setState({ searchResult: [], selectedIndex: -1 });
 	};
 
 	focusSearchBox = () => {
+		const { currentRoom } = this.state;
+		if (this.searchInput.value) {
+			Meteor.call('searchSong', this.searchInput.value, currentRoom._id, (err, result) => {
+				if (err) {
+					console.log(err);
+				} else {
+					this.setState({ searchResult: result, selectedIndex: -1 });
+				}
+			});
+		}
 		focusSearchBox(true);
 	};
 
 	blurSearchBox = () => {
+		this.setState({ searchResult: [], selectedIndex: -1 });
 		focusSearchBox(false);
 	};
 
@@ -84,6 +117,8 @@ class SearchBox extends Component {
 	};
 
 	render() {
+		const { selectedIndex } = this.state;
+
 		return (
 			<li className="col col--7 navbar__item navbar__item--input">
 				<form
@@ -106,13 +141,13 @@ class SearchBox extends Component {
 						</div>
 						<button type="submit" className="search-box__submit" />
 					</div>
-					{this.state.searchResult ? (
+					{this.state.searchResult && this.state.searchResult.length ? (
 						<div className="search-box__result-wrapper">
 							<ul className="song-result__list">
-								{this.state.searchResult.map(song => (
+								{this.state.searchResult.map((song, index) => (
 									<li
 										key={song._id}
-										className="song-result__item"
+										className={`song-result__item ${selectedIndex === index ? 'song-result__item--selected' : null}`}
 										onClick={this.onSearchResultClick}
 										data-href={song.originalURL}
 									>

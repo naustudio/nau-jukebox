@@ -59,7 +59,12 @@ class TabUsers extends Component {
 	_renderUser = () => {
 		const { currentRoom } = this.state;
 		const lst = this.props.users.map(user => (
-			<li key={user._id} className={`row users__item ${user.status.online ? 'users__item--active' : ''}`}>
+			<li
+				key={user._id}
+				className={`row users__item ${user.status.online ? 'users__item--active' : ''} ${
+					user.status.idle ? 'users__item--idle' : ''
+				}`}
+			>
 				<div className="users__item__image-wrapper">
 					{user._id === this.state.currentRoom.hostId && (
 						<div className="users__item__host-icon-wrapper">
@@ -114,6 +119,9 @@ class TabUsers extends Component {
 	};
 
 	render() {
+		const ids = this.props.users.map(u => u._id);
+		const { currentRoom } = this.state;
+
 		return (
 			<section className="tab__body users">
 				<div className="container users__container">
@@ -121,6 +129,7 @@ class TabUsers extends Component {
 						Users
 						<span>₦: Naucoin, ₦1.00 = 1000VND</span>
 					</h5>
+					{ids.indexOf(currentRoom.hostId) < 0 ? <em className="users__info">* Host is now in another room *</em> : ''}
 					<ul className="users__list">{this._renderUser()}</ul>
 				</div>
 			</section>

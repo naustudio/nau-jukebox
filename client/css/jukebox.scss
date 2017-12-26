@@ -605,7 +605,7 @@ h5 small {
 			border-top: 0;
 		}
 
-		&._active {
+		&--selected {
 			background-color: $color-07;
 		}
 	}
@@ -613,14 +613,14 @@ h5 small {
 
 .search-box {
 	width: 100%;
-	background-color: rgba($color-01, 0.5);
+	background-color: rgba($color-01, 0.8);
 	border-radius: 4px;
 	overflow: hidden;
 	border: 1px solid $color-06;
 }
 
 .search-box--focus {
-	background-color: rgba(255, 255, 255, 0.8);
+	background-color: rgba(255, 255, 255, 0.9);
 	border-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -1752,6 +1752,11 @@ h5 small {
 		}
 	}
 
+	&__info {
+		display: inline-block;
+		margin-bottom: 10px;
+	}
+
 	&__item {
 		display: flex;
 		align-items: center;
@@ -1860,6 +1865,12 @@ h5 small {
 		&--active {
 			&::before {
 				background-color: #347a2a;
+			}
+		}
+
+		&--idle {
+			&::before {
+				background-color: #f4ff57;
 			}
 		}
 	}

@@ -75,6 +75,10 @@ const roomSchema = new SimpleSchema({
 	hostId: {
 		type: String,
 	},
+	password: {
+		type: String,
+		optional: true,
+	},
 });
 
 const Rooms = new Mongo.Collection('rooms');
