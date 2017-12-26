@@ -54,6 +54,10 @@ const songSchema = new SimpleSchema({
 		type: Boolean,
 		optional: true,
 	},
+	lastFetch: {
+		type: Number,
+		optional: true,
+	},
 });
 
 const Songs = new Mongo.Collection('songs');

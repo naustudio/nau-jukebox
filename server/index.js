@@ -69,6 +69,35 @@ Meteor.methods({
 		throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
 	},
 
+	refetchSongInfo(song) {
+		// Set up a future for async callback sending to clients
+		let songInfo;
+
+		if (String(song.originalURL).includes('nhaccuatui')) {
+			console.log('Getting NCT song info');
+			songInfo = getSongInfoNct(song.originalURL);
+		} else if (String(song.originalURL).includes('mp3.zing')) {
+			console.log('Getting Zing song info');
+			songInfo = getSongInfoZing(song.originalURL);
+		}
+
+		if (songInfo && songInfo.streamURL) {
+			Songs.update(song._id, { $set: { streamURL: songInfo.streamURL, lastFetch: Date.now() } });
+
+			return songInfo.streamURL;
+		}
+
+		if (songInfo && songInfo.error) {
+			Songs.update(song._id, { $set: { badSong: true } }, { multi: true }, err => {
+				if (err) {
+					console.log(err);
+				}
+			});
+		}
+
+		return null;
+	},
+
 	createRoom(roomName, userId) {
 		return Rooms.insert({
 			name: roomName,
