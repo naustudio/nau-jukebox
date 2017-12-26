@@ -128,8 +128,8 @@ h5 small {
 }
 
 .container {
-	// min-width: 768px;
-	max-width: 768px;
+	// min-width: 767px;
+	max-width: 767px;
 }
 
 .player-panel {
@@ -162,13 +162,39 @@ h5 small {
 	width: 100%;
 }
 
+@media screen and (max-width: 384px) {
+	.nau--hidden-xxs {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 384px) and (max-width: 480px) {
+	.nau--hidden-xs {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+	.nau--hidden-sm {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 767px) and (max-width: 992px) {
+	.nau--hidden-md {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 992px) {
+	.nau--hidden-lg {
+		display: none !important;
+	}
+}
+
 /* =============================================
 =          AppHeader                            =
 ============================================= */
-
-.container {
-	padding: 0 10px;
-}
 
 .navbar {
 	width: 100%;
@@ -187,7 +213,7 @@ h5 small {
 		list-style-type: none;
 		margin: 0;
 		display: flex;
-		padding: 15px 0;
+		padding-top: 15px;
 		flex-wrap: wrap;
 		justify-content: center;
 		// flex-direction: column;
@@ -337,7 +363,7 @@ h5 small {
 		background-color: $color-06;
 		margin-left: -4px;
 		width: $search-w;
-		position: absolute;
+		// position: absolute;
 		padding: 0;
 		top: 0;
 		right: 0;
@@ -389,23 +415,10 @@ h5 small {
 
 .search-box__wrap {
 	display: flex;
-	position: relative;
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 767px) {
 	.navbar {
-		width: 100%;
-		background-color: $color-08;
-		padding-bottom: 0;
-		position: fixed;
-		top: 0;
-		z-index: 300;
-		background-size: cover;
-		border-bottom: 1px solid $color-06;
-		box-shadow: 1px 1px 1px $color-06;
-		transition: all 0.5s;
-		background-repeat: no-repeat;
-
 		&__list {
 			display: flex;
 			padding: 15px 0;
@@ -566,6 +579,12 @@ h5 small {
 				background: $color-09;
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.navbar {
+		height: 190px;
 	}
 }
 
@@ -785,7 +804,124 @@ h5 small {
 =          AppBody/TabNav                      =
 ============================================= */
 
-@media screen and (min-width: 992px) {
+@media screen and (max-width: 767px) {
+	.login-block {
+		background: #f7f7f7;
+		z-index: 2;
+		border-bottom: 1px solid #eee;
+		padding: 10px 15px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+}
+
+.tab {
+	padding-top: 190px;
+
+	& ul {
+		margin: 0;
+	}
+}
+
+.tab__nav {
+	position: fixed;
+	width: 100%;
+	z-index: 1;
+
+	&__playlist {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		z-index: -1;
+		list-style: none;
+		background-color: #eff1e2;
+		transition: all 0.4s;
+
+		&--active {
+			transform: translate3d(0, 100%, 0);
+		}
+	}
+
+	&__button {
+		background: transparent;
+		border: 1px solid rgba(0, 0, 0, 0.3);
+		border-radius: 3px;
+		padding: 2px 5px;
+		margin: 0;
+		float: right;
+	}
+
+	&__icon {
+		font-size: 16px !important;
+	}
+
+	&__list-item {
+		text-align: center;
+		padding: 15px;
+		margin-bottom: 0;
+		position: relative;
+		transition: all 0.5s;
+		cursor: pointer;
+
+		& a {
+			color: #000;
+			opacity: 0.5;
+			transition: all 0.5s;
+			text-decoration: none;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			font-weight: 600;
+			display: block;
+			left: 50%;
+			height: 2px;
+			width: 14px;
+			bottom: 7px;
+			opacity: 0;
+			transition: all 0.5s;
+			background-color: $color-04;
+			transform: translateX(-50%);
+		}
+
+		&--active::after,
+		&--active a {
+			opacity: 1;
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.container {
+		margin: 0;
+		padding: 15px;
+		width: 100%;
+	}
+
+	.tab__nav {
+		&--mobile-no-pd {
+			padding: 0;
+		}
+
+		&__container {
+			margin: 0 0 2rem 0;
+			width: 100%;
+			z-index: 1;
+		}
+
+		&__list {
+			width: auto;
+		}
+	}
+}
+
+@media screen and (min-width: 767px) {
+	.tab {
+		padding-top: 0;
+	}
+
 	.tab__nav {
 		position: fixed;
 		width: 100%;
@@ -799,12 +935,13 @@ h5 small {
 		}
 
 		&__playlist {
+			position: static;
 			margin-bottom: 0;
 			display: flex;
 			flex-flow: wrap;
 			flex: 1;
-			transition: transform 0.3s;
-			list-style: none;
+			background-color: transparent;
+			z-index: 1;
 		}
 
 		&__login-outter {
@@ -834,32 +971,10 @@ h5 small {
 		}
 
 		&__list-item {
-			padding: 15px;
-			margin-bottom: 0;
-			position: relative;
-			transition: all 0.5s;
-			cursor: pointer;
+			text-align: left;
 
-			& a {
-				color: #000;
-				opacity: 0.5;
-				transition: all 0.5s;
-				text-decoration: none;
-			}
-
-			&::after {
-				content: '';
-				position: absolute;
-				font-weight: 600;
-				display: block;
-				left: 50%;
-				height: 2px;
-				width: 14px;
-				bottom: 7px;
-				opacity: 0;
-				transition: all 0.5s;
-				background-color: $color-04;
-				transform: translateX(-50%);
+			&:first-child {
+				padding-left: 0;
 			}
 
 			&:hover {
@@ -868,11 +983,6 @@ h5 small {
 				& a {
 					opacity: 1;
 				}
-			}
-
-			&--active::after,
-			&--active a {
-				opacity: 1;
 			}
 		}
 	}
@@ -908,12 +1018,15 @@ h5 small {
 ============================================= */
 
 .app-body__container {
-	padding-top: 155px;
+	padding-top: 55px;
 }
 
 .songs__list-item-wrapper {
 	position: relative;
 	list-style: none;
+	padding-bottom: 4px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 2.4rem;
 
 	& .playlist__item__active {
 		opacity: 1;
@@ -932,28 +1045,15 @@ h5 small {
 	background-color: $color-01;
 
 	&__container {
-		position: relative;
 		display: flex;
 		align-items: center;
-		padding: 0 10px;
-
-		&:first-child {
-			padding-left: 0;
-			width: 500px;
-		}
-
-		&:last-child {
-			padding-right: 0;
-		}
-	}
-
-	&:hover {
-		background-color: #fafafa;
+		width: 100%;
 	}
 
 	&__thumbnail {
 		display: flex;
 		position: relative;
+		width: 40px;
 
 		& img {
 			width: 40px;
@@ -1011,6 +1111,10 @@ h5 small {
 
 		& span {
 			padding: 0 7px;
+
+			&:first-child {
+				padding-left: 0;
+			}
 		}
 	}
 
@@ -1029,6 +1133,141 @@ h5 small {
 		right: 101%;
 		display: block;
 		white-space: nowrap;
+	}
+}
+
+@media screen and (min-width: 480px) {
+	.songs__list-item {
+		&__container {
+			width: auto;
+
+			&:first-child {
+				padding-left: 0;
+				width: 370px;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 767px) {
+	.app-body__container {
+		padding-top: 155px;
+	}
+
+	.songs__list-item-wrapper {
+		border: none;
+		margin-bottom: 0;
+	}
+
+	.songs__list-item {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0;
+		cursor: pointer;
+		background-color: $color-01;
+
+		&__container {
+			position: relative;
+			display: flex;
+			align-items: center;
+			padding: 0 10px;
+			width: auto;
+
+			&:first-child {
+				padding-left: 0;
+				width: 430px;
+			}
+
+			&:last-child {
+				padding-right: 0;
+			}
+		}
+
+		&:hover {
+			background-color: #fafafa;
+		}
+
+		&__thumbnail {
+			display: flex;
+			position: relative;
+
+			& img {
+				width: 40px;
+				height: 40px;
+			}
+
+			&--link {
+				display: flex;
+			}
+
+			&--sc::after {
+				background-image: url(/logo-soundcloud.png);
+			}
+
+			&--nct::after {
+				background-image: url(/logo-nct.png);
+			}
+
+			&--zing::after {
+				background-image: url(/logo-zing.png);
+			}
+
+			&--yt::after {
+				background-image: url(/logo-youtube.png);
+			}
+
+			&--link::after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-size: auto 10px;
+				background-repeat: no-repeat;
+				background-position: left bottom;
+			}
+		}
+
+		&__name {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			margin-left: 15px;
+
+			&--link {
+				color: black;
+				text-decoration: none;
+			}
+		}
+
+		&__control {
+			display: flex;
+			align-items: center;
+
+			& span {
+				padding: 0 7px;
+			}
+		}
+
+		&__icon {
+			cursor: pointer;
+			color: gray;
+			transition: all 0.4s;
+
+			&:hover {
+				color: #000;
+			}
+		}
+
+		&__author {
+			position: absolute;
+			right: 101%;
+			display: block;
+			white-space: nowrap;
+		}
 	}
 }
 
@@ -1356,7 +1595,6 @@ h5 small {
 		-webkit-transform: translateY(25%);
 		transform: translateY(25%);
 		color: white;
-		z-index: 20;
 		font-weight: 100;
 		font-size: 16px;
 		opacity: 0.4;

@@ -36,7 +36,7 @@ class NavBar extends Component {
 		return (
 			<nav className="navbar" ref={this.refNav}>
 				{/* <Host /> */}
-				<div className="container">
+				<div className="container navbar-container">
 					<ul className="navbar__list">
 						<li className="navbar__item navbar__item-logo">
 							<a href="https://naustud.io" target="_blank" rel="noopener noreferrer">

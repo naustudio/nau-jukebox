@@ -34,9 +34,17 @@ class TabNav extends Component {
 		};
 	}
 
+	state = {
+		navbarIsShown: false,
+	};
+
 	onTabClick = e => {
 		const index = parseInt(e.currentTarget.dataset.index, 10);
 		changeTab(index);
+
+		if (this.state.navbarIsShown) {
+			this.toggleNavbar();
+		}
 	};
 
 	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users'];
@@ -49,18 +57,33 @@ class TabNav extends Component {
 				onClick={this.onTabClick}
 			>
 				<a href="#">{item}</a>
-			</li>));
+			</li>
+		));
 
 		return lst;
+	};
+
+	toggleNavbar = () => {
+		this.setState({
+			navbarIsShown: !this.state.navbarIsShown,
+		});
 	};
 
 	render() {
 		return (
 			<nav className="tab__nav">
-				<div className="container tab__nav__container">
-					<ul className="tab__nav__playlist">{this._renderTabNav()}</ul>
+				<div className="container tab__nav__container tab__nav--mobile-no-pd">
+					<ul className={`tab__nav__playlist ${this.state.navbarIsShown ? 'tab__nav__playlist--active' : ''}`}>
+						{this._renderTabNav()}
+					</ul>
 					<div className="tab__nav__login-outter login-block">
 						<AccountsUIWrapper />
+						<button
+							className={`tab__nav__button tab__collapse nau--hidden-md nau--hidden-lg`}
+							onClick={this.toggleNavbar}
+						>
+							<i className="fa fa-bars tab__nav__icon" aria-hidden="true" />
+						</button>
 						{this.state.errorSignIn && !this.props.isSignedIn ? (
 							<div className="login-block__error">
 								<p>Please login first!</p>
