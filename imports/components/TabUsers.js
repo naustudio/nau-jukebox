@@ -56,29 +56,44 @@ class TabUsers extends Component {
 		}
 	};
 
+	//
+
 	_renderUser = () => {
 		const { currentRoom } = this.state;
-		const lst = this.props.users.map(user => (
-			<li
-				key={user._id}
-				className={`row users__item ${user.status.online ? 'users__item--active' : ''} ${
-					user.status.idle ? 'users__item--idle' : ''
-				}`}
-			>
-				{user._id === this.state.currentRoom.hostId && (
-					<div className="users__item__host-icon-wrapper">
-						<i className="fa fa-user-secret users__item__host-icon" aria-hidden="true" />
-					</div>
-				)}
 
+		this.props.users.map(user => {
+			console.log('user name', user.profile.name);
+			console.log('user online', user.status.online);
+			console.log('user idle', user.status.idle);
+			console.log('');
+		});
+
+		const lst = this.props.users.map(user => (
+			<li key={user._id} className="row users__item">
 				<div className="users__item-wrapper">
 					<div className="users__item__image-and-name">
+						{user._id === this.state.currentRoom.hostId && (
+							<div className="users__item__host-icon-wrapper">
+								<i className="fa fa-user-secret users__item__host-icon" aria-hidden="true" />
+							</div>
+						)}
+						{currentRoom && currentRoom.hostId === Meteor.userId() ? (
+							<div className="users__item__checkbox">
+								<span className="users__item__checkbox-container" data-userid={user._id} onClick={this.onSetHost} />
+							</div>
+						) : null}
 						<div className="users__item__image-wrapper">
 							<img src={user.profile.picture} width={50} height={50} alt="image user" className="users__item__avt" />
 						</div>
 						<div className="users__item__info">
 							<div className="users__item__user">
-								<p className="users__item__name">{user.profile && user.profile.name}</p>
+								<p
+									className={`users__item__name ${user.status.online ? 'users__item--active' : ''} ${
+										user.status.idle ? 'users__item--idle' : ''
+									} `}
+								>
+									{user.profile && user.profile.name}
+								</p>
 								<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
 							</div>
 						</div>
@@ -104,17 +119,6 @@ class TabUsers extends Component {
 										defaultValue="Submit"
 									/>
 								</div>
-								{user._id !== this.state.currentRoom.hostId ? (
-									<div className="col col--5">
-										<input
-											type="button"
-											data-userid={user._id}
-											className="button-primary users__item__payment__submit"
-											value="Set as HOST"
-											onClick={this.onSetHost}
-										/>
-									</div>
-								) : null}
 							</form>
 						</div>
 					) : null}

@@ -1745,6 +1745,7 @@ h5 small {
 .users {
 	&__container {
 		// top: $tabnav-h + 30px;
+		padding-left: 40px;
 	}
 
 	&__title {
@@ -1765,10 +1766,12 @@ h5 small {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		flex-wrap: wrap;
+		border-bottom: 1px solid #eee;
+		padding-bottom: 8px;
 	}
 
 	&__item {
-		position: relative;
 		list-style: none;
 
 		&::before {
@@ -1790,8 +1793,8 @@ h5 small {
 		&__info {
 			display: flex;
 			flex-flow: wrap;
-			width: 40%;
-			margin-top: -6px;
+			width: 100%;
+			// margin-top: -6px;
 		}
 
 		&__user {
@@ -1799,12 +1802,39 @@ h5 small {
 			flex-flow: wrap;
 			width: 100%;
 			align-items: center;
+			justify-content: space-between;
 		}
 
 		&__name {
 			margin-bottom: 0;
-			margin-right: 10px;
+			margin-right: 20px;
 			margin-left: 6px;
+			position: relative;
+
+			&::before {
+				content: '';
+				width: 8px;
+				height: 8px;
+				position: absolute;
+				left: 100%;
+				border-radius: 100%;
+				background-color: $color-01;
+				top: 50%;
+				transform: translate3d(0, -50%, 0);
+				margin-left: 5px;
+			}
+		}
+
+		&--active {
+			&::before {
+				background-color: #347a2a;
+			}
+		}
+
+		&--idle {
+			&::before {
+				background-color: #f4ff57;
+			}
 		}
 
 		&__coin {
@@ -1812,6 +1842,7 @@ h5 small {
 			border-radius: 2px;
 			padding: 0 6px;
 			color: white;
+			align-self: center;
 
 			&::before {
 				content: '₦';
@@ -1828,6 +1859,7 @@ h5 small {
 			position: absolute;
 			right: 100%;
 			align-items: center;
+			justify-content: center;
 			display: flex;
 			width: 20px;
 			height: 20px;
@@ -1837,13 +1869,16 @@ h5 small {
 
 		&__image-and-name {
 			display: flex;
-			flex-basis: 60%;
+			flex-basis: 100%;
+			position: relative;
 		}
 
 		&__payment {
+			width: 100%;
 			// width: 60%;
 			display: flex;
 			justify-content: flex-end;
+			margin-top: 5px;
 			// margin-left: 20px;
 
 			form {
@@ -1890,15 +1925,54 @@ h5 small {
 			}
 		}
 
-		&--active {
-			&::before {
-				background-color: #347a2a;
+		&__checkbox-container {
+			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			right: 100%;
+			transform: translate3d(0, -50%, 0);
+			border: 1px solid black;
+			padding: 10px;
+			margin: 0;
+		}
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.users {
+		&__container {
+			padding-left: 0;
+			// top: $tabnav-h + 30px;
+		}
+
+		&__title {
+			span {
 			}
 		}
 
-		&--idle {
-			&::before {
-				background-color: #f4ff57;
+		&__info {
+
+		}
+
+		&__item-wrapper {
+			flex-wrap: nowrap;
+			border: none;
+			padding-bottom: 0;
+		}
+
+		&__item {
+
+			&__info {
+				width: 100%;
+			}
+
+			&__image-and-name {
+				flex-basis: 60%;
+			}
+
+			&__payment {
+				width: auto;
+				margin-top: 0;
 			}
 		}
 	}
