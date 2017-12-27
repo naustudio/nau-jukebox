@@ -1,80 +1,55 @@
-NAU JUKEBOX
-===========
-This is a fun, side project to allow our team to collectively suggest and play a continuously pending list of songs.
+# NÂU JUKEBOX
 
-The songs URL is currently parsable from nhaccuatui.com, mp3.zing.com, soundcloud.com, youtube.com
+A simple webapp which allows group of people (co-workers, friends gathering, house-mates) collectively suggest and play a continuously pending list of songs.
 
-**NOTE: This code is under major migration to support OAuth login and multi-room. Stay tuned.**
+Currently users can book songs from well-known online music providers including: nhaccuatui.com, mp3.zing.com, soundcloud.com, and youtube.com. You can add more music providers by sending us a pull request.
 
+The app is built with [Meteor](http://meteor.com/) which allows real-time interactions among active users.
 
-Changelog:
-----------
+![Screenshot](public/screenshot.png "Nau Jukebox screenshot")
 
-### 2017-12-26
-- [BIG CHANG] Migrate Client side to React and Flux architecture
-- Optimize synced songs to client (play list now sync much faster)
-- Search logic moved to server
-- Mark bad songs if re-book with now-invalid URL
-- Host indicator
-- New Naucoin editing UI, row by row, instead of a dropdown
+## Features:
 
-### 2017-11-08
-- Upgrade to Meteor 1.6
-- Fix NCT & Zing URL parsers
-- Finally add license notice
+* Multiple rooms: different groups will be able to create different rooms with different playlist
+* Login with Facebook and Google accounts
+* Book songs from nhaccuatui.com, mp3.zing.com, soundcloud.com, and youtube.com
+* Continuously play the media in the playlist regardless they come from different sources
+* See today's playlist, yesterday's and last 7 days'
+* See top songs of the week
+* See current room's user list
+* **Host** user role who is allowed to remove booked songs
+* Simple and manual points system to reward users (Room member set own rules and host will be the referee)
 
-### 2017-09-18
-- Re-organize code to separate client/server folders
-- Upgrade code to ES6
-- Upgrade MediaElementPlayer to 4.2.5 to fix several auto-continuation issues
-- Fix booking of Zing source URLs
-- Changes of labels and icons to more understandable UI
+## Roadmap:
 
-### 2017-09-12
-- Upgrade to Meteor 1.5.1
-- Move to use Meteor built-in Accounts collection
-- Implement OAuth login with Facebook and Google
-- Change logo and text labels
-- Tweak search results
+See this project's [milestones](https://github.com/naustudio/nau-jukebox/milestones)
 
-### Release 2016-08-21
-- Refactor parsers to use new ES6 module format
-- Completely refactor the player to allow to play more type of source
-- Implement Youtube parser and player (using MediaElementJS wrapper with YouTube iFrame player API)
+## Changelog:
 
-### Release 2016-08-14
-- Upgrade to Meteor 1.4.0.1 with support for Node 4 & MongoDB 3
-- New lyrics display (for NCT & Zing only)
+See [CHANGELOG.md](CHANGELOG.md).
 
-### Release 2016-07-19
-- New experiment __NauCoin__ feature
+## Contributing:
 
-### Release 2016-07-15
-- New __SoundCloud__ URL support
-- Make `nickname` compulsory field to book songs
-- New __host (admin)__ role (require login)
-- Bug fixes
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-### Release 2016-06-20
-- New __NauStorm__ section
-- New dynamic header background
+## Colophon:
 
-### Release 2016-05-22
-- Upgrade to Meteor 1.3.2.4
-- Many bug fixes
+* Meteor JS - http://meteor.com
+* MongoDB - https://www.mongodb.com
+* MediaElementJS - http://mediaelementjs.com
+* ReactJS - https://reactjs.org
+* Flux - https://github.com/facebook/flux
+* Babel - https://babeljs.io
+* Other Meteor packages: see .meteor/packages
+* Other npm packages: see package.json
 
-### Release 2016-05-03
-- UI refresh
-- New nickname input to store the person who book the songs
-- New keyboard shortcuts to focus on the input field
-- New tab lists to show song book from different periods
-- Input box is now also a search box to quickly search and rebook existing songs
+## Contributors
 
-Colophon:
----------
-- Meteor JS - http://meteor.com
-- MediaElementJS - http://mediaelementjs.com/
-- Other Meteor packages: see .meteor/packages
+<!-- prettier-ignore -->
+| ![github.com/trongthanh](https://avatars3.githubusercontent.com/u/234226?s=128) | ![github.com/tampham47](https://avatars3.githubusercontent.com/u/5687992?s=128) | ![github.com/tttt-conan](https://avatars3.githubusercontent.com/u/8154402?s=128) | ![github.com/TDiNguyen](https://api.adorable.io/avatars/128/TDiNguyen@github.png "18071187") | ![github.com/leptco](https://api.adorable.io/avatars/128/leptco@github.png "26835659") |
+| ----------------- | ----------------------- | --- | --- | --- |
+| [@trongthanh](https://github.com/trongthanh) | [@tampham47](https://github.com/tampham47) | [@tttt-conan](https://github.com/tttt-conan) | [@TDiNguyen](https://github.com/TDiNguyen) | [@leptco](https://github.com/leptco) |
 
 ---
+
 © 2017 Nâu Studio and contributors. Licensed under MIT license.
