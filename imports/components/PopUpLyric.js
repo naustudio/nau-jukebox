@@ -16,7 +16,7 @@ class PopUpLyric extends Component {
 		return {
 			openPopUp: AppStore.getState()['openPopup'],
 			songName: AppStore.getState()['songName'],
-			songLyric: AppStore.getState()['songLyric']
+			songLyric: AppStore.getState()['songLyric'],
 		};
 	}
 
@@ -36,6 +36,7 @@ class PopUpLyric extends Component {
 		closePopUp();
 	};
 
+	/* eslint-disable react/no-danger */
 	render() {
 		return (
 			<section onClick={this.closePopUp} className={`popup-lyric ${this.state.openPopUp ? 'popup-lyric--active' : ''}`}>
@@ -51,7 +52,7 @@ class PopUpLyric extends Component {
 						<p
 							className="popup-lyric__full"
 							dangerouslySetInnerHTML={{
-								__html: this.state.songLyric
+								__html: this.state.songLyric,
 							}}
 						/>
 					</article>

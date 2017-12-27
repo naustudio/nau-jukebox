@@ -1,5 +1,7 @@
 # NÂU JUKEBOX
 
+[![Travis CI build status](https://travis-ci.org/naustudio/nau-jukebox.svg?branch=master "Travis CI build status")](https://travis-ci.org/naustudio/nau-jukebox)
+
 A simple webapp which allows group of people (co-workers, friends gathering, house-mates) collectively suggest and play a continuously pending list of songs.
 
 Currently users can book songs from well-known online music providers including: nhaccuatui.com, mp3.zing.com, soundcloud.com, and youtube.com. You can add more music providers by sending us a pull request.

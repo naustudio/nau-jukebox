@@ -7,7 +7,8 @@
   "scripts": {
     "eslint-check": "eslint --print-config .eslintrc | eslint-config-prettier-check",
     "lint": "eslint .",
-    "start": "meteor"
+    "start": "meteor",
+    "test": "npm run lint"
   },
   "browserslist": [
     "defaults",
