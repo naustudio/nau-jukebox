@@ -9,6 +9,8 @@ import { Container } from 'flux/utils';
 import { Users } from '../collections';
 import UserStore from '../events/UserStore';
 import AppStore from '../events/AppStore';
+import Badge from '../components/Badge';
+import PopupForm from '../components/PopupForm';
 
 class TabUsers extends Component {
 	static propTypes = {
@@ -17,6 +19,10 @@ class TabUsers extends Component {
 
 	static defaultProps = {
 		users: [],
+	};
+
+	static state = {
+		isPopoverShow: false,
 	};
 
 	static getStores() {
@@ -38,6 +44,7 @@ class TabUsers extends Component {
 			Meteor.call('naucoinPay', userId, amount, (/*err, result*/) => {
 				form.amount.value = '';
 			});
+			this.togglePopover();
 		}
 	};
 
@@ -56,17 +63,33 @@ class TabUsers extends Component {
 		}
 	};
 
-	//
+	showBadges = user => {
+		if (user.status.online && user.status.idle) {
+			return <Badge message={'Idle'} type="warning" />;
+		} else if (user.status.online) {
+			return <Badge message={'Online'} type="success" />;
+		}
+
+		return null;
+	};
+
+	togglePopover = e => {
+		if (!e || this.state.isPopoverShow) {
+			this.setState({ isPopoverShow: !this.state.isPopoverShow });
+
+			return;
+		}
+
+		const id = e.target.dataset.id;
+
+		this.setState({
+			isPopoverShow: !this.state.isPopoverShow,
+			formId: id,
+		});
+	};
 
 	_renderUser = () => {
 		const { currentRoom } = this.state;
-
-		this.props.users.map(user => {
-			console.log('user name', user.profile.name);
-			console.log('user online', user.status.online);
-			console.log('user idle', user.status.idle);
-			console.log('');
-		});
 
 		const lst = this.props.users.map(user => (
 			<li key={user._id} className="row users__item">
@@ -87,21 +110,21 @@ class TabUsers extends Component {
 						</div>
 						<div className="users__item__info">
 							<div className="users__item__user">
-								<p
-									className={`users__item__name ${user.status.online ? 'users__item--active' : ''} ${
-										user.status.idle ? 'users__item--idle' : ''
-									} `}
-								>
-									{user.profile && user.profile.name}
-								</p>
-								<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
+								<div className="users__item__name-wrapper">
+									<p className="users__item__name">{user.profile && user.profile.name}</p>
+
+									{currentRoom && currentRoom.hostId === user._id ? <Badge type="dark" message="Host" /> : null}
+									{this.showBadges(user)}
+								</div>
 							</div>
 						</div>
 					</div>
 
 					{currentRoom && currentRoom.hostId === Meteor.userId() ? (
 						<div className="users__item__payment">
-							<form onSubmit={this.onFormSubmit}>
+							<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
+
+							<form onSubmit={this.onFormSubmit} className="nau--hidden-xxs nau--hidden-xs nau--hidden-sm">
 								<div className="users__item__payment__input-wraper">
 									<input
 										className="users__item__payment__input"
@@ -120,6 +143,13 @@ class TabUsers extends Component {
 									/>
 								</div>
 							</form>
+							<input
+								className="btn btn--primary nau--hidden-md nau--hidden-lg"
+								type="button"
+								defaultValue="Payment"
+								data-id={`${user._id}`}
+								onClick={this.togglePopover}
+							/>
 						</div>
 					) : null}
 				</div>
@@ -146,6 +176,9 @@ class TabUsers extends Component {
 						''
 					)}
 					<ul className="users__list">{this._renderUser()}</ul>
+					{this.state.isPopoverShow === true ? (
+						<PopupForm id={`${this.state.formId}`} onSubmit={this.onFormSubmit} onClose={this.togglePopover} />
+					) : null}
 				</div>
 			</section>
 		);
