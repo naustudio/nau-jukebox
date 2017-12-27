@@ -98,6 +98,10 @@ Meteor.methods({
 		return null;
 	},
 
+	removeSong(songId) {
+		return Songs.remove(songId);
+	},
+
 	createRoom(roomName, userId) {
 		return Rooms.insert({
 			name: roomName,

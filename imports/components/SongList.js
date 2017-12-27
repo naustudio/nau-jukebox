@@ -95,6 +95,20 @@ class SongList extends Component {
 		}
 	};
 
+	removeSong = e => {
+		const id = e.currentTarget.dataset.id;
+		if (id) {
+			const rs = window.confirm('Are you sure');
+			if (rs) {
+				Meteor.call('removeSong', id, err => {
+					if (err) {
+						console.log(err);
+					}
+				});
+			}
+		}
+	};
+
 	toggleUserBook = e => {
 		const id = e.currentTarget.dataset.id;
 		const revealed = e.currentTarget.dataset.revealed === 'true';
@@ -212,6 +226,15 @@ class SongList extends Component {
 											>
 												<i className="fa fa-retweet" />
 											</span>
+											{currentRoom && currentRoom.hostId === userId ? (
+												<span
+													className="songs__list-item__delete songs__list-item__icon"
+													data-id={song._id}
+													onClick={this.removeSong}
+												>
+													<i className="fa fa-close" />
+												</span>
+											) : null}
 										</span>
 									</span>
 								</div>
@@ -244,6 +267,15 @@ class SongList extends Component {
 										>
 											<i className="fa fa-retweet" />
 										</span>
+										{currentRoom && currentRoom.hostId === userId ? (
+											<span
+												className="songs__list-item__delete songs__list-item__icon"
+												data-id={song._id}
+												onClick={this.removeSong}
+											>
+												<i className="fa fa-close" />
+											</span>
+										) : null}
 									</span>
 								</div>
 							</li>
