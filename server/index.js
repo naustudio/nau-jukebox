@@ -12,6 +12,8 @@ import getSongInfoZing from '../imports/parsers/getSongInfoZing';
 import getSongInfoSoundcloud from '../imports/parsers/getSongInfoSoundcloud';
 import getSongInfoYouTube from '../imports/parsers/getSongInfoYouTube';
 
+const cacheLatestSong = {};
+
 Meteor.startup(() => {
 	// migrate database
 	Migrations.migrateTo('latest');
@@ -33,6 +35,10 @@ UserStatus.events.on('connectionLogout', function(fields) {
 
 Meteor.methods({
 	getSongInfo(songurl, authorId, roomId) {
+		if (cacheLatestSong[roomId] === songurl) {
+			throw new Meteor.Error(403, 'This song is already booked');
+		}
+
 		// Set up a future for async callback sending to clients
 		let songInfo;
 
@@ -54,6 +60,7 @@ Meteor.methods({
 			songInfo.author = authorId;
 			songInfo.roomId = roomId;
 			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
+			cacheLatestSong[roomId] = songurl;
 
 			return Songs.insert(songInfo);
 		}
@@ -96,6 +103,10 @@ Meteor.methods({
 		}
 
 		return null;
+	},
+
+	removeSong(songId) {
+		return Songs.remove(songId);
 	},
 
 	createRoom(roomName, userId) {
