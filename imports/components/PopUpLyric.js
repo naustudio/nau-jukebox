@@ -33,21 +33,22 @@ class PopUpLyric extends Component {
 	}
 
 	closePopUp = e => {
-		const $popupLyric = $(e.target);
-		if ($popupLyric.closest('.popup-lyric__wrap').length) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			return false;
+		if (e.target === this.popupLyric) {
+			closePopUp();
 		}
-		closePopUp();
+	};
 
-		return true;
+	refPopupLyric = ref => {
+		this.popupLyric = ref;
 	};
 
 	render() {
 		return (
-			<section onClick={this.closePopUp} className={`popup-lyric ${this.state.openPopUp ? 'popup-lyric--active' : ''}`}>
+			<section
+				onClick={this.closePopUp}
+				className={`popup-lyric ${this.state.openPopUp ? 'popup-lyric--active' : ''}`}
+				ref={this.refPopupLyric}
+			>
 				<div className="popup-lyric__wrap">
 					<header className="popup-lyric__header">
 						<h4 className="popup-lyric__title">Lyric</h4>
