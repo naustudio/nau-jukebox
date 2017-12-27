@@ -749,6 +749,7 @@ h5 small {
 	left: 25px;
 	z-index: 1000;
 	cursor: pointer;
+	font-weight: 700;
 }
 
 .host .dot {
@@ -1914,9 +1915,9 @@ h5 small {
 				}
 			}
 
-			& input[type=button],
-			& input[type=submit],
-			& input[type=number] {
+			& input[type='button'],
+			& input[type='submit'],
+			& input[type='number'] {
 				margin: 0 4px;
 
 				&:last-child {

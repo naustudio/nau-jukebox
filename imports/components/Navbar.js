@@ -3,11 +3,24 @@
  */
 
 import React, { Component } from 'react';
+import { Container } from 'flux/utils';
 // import Host from './Host';
+
 import SearchBox from './SearchBox';
 import ButtonPlay from './ButtonPlay';
+import AppStore from '../events/AppStore';
 
 class NavBar extends Component {
+	static getStores() {
+		return [AppStore];
+	}
+
+	static calculateState(/*prevState*/) {
+		return {
+			currentRoom: AppStore.getState()['currentRoom'],
+		};
+	}
+
 	componentDidMount() {
 		this.navbarBackground();
 		Meteor.setInterval(this.navbarBackground, 60000);
@@ -36,6 +49,7 @@ class NavBar extends Component {
 		return (
 			<nav className="navbar" ref={this.refNav}>
 				{/* <Host /> */}
+				<h6 className="host">Room: {this.state.currentRoom ? this.state.currentRoom.name : ''}</h6>
 				<div className="container navbar-container">
 					<ul className="navbar__list">
 						<li className="navbar__item navbar__item-logo">
@@ -52,4 +66,4 @@ class NavBar extends Component {
 	}
 }
 
-export default NavBar;
+export default Container.create(NavBar);
