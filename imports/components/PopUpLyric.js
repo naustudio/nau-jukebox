@@ -32,8 +32,17 @@ class PopUpLyric extends Component {
 		}
 	}
 
-	closePopUp = () => {
+	closePopUp = e => {
+		const $popupLyric = $(e.target);
+		if ($popupLyric.closest('.popup-lyric__wrap').length) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			return false;
+		}
 		closePopUp();
+
+		return true;
 	};
 
 	render() {
@@ -42,7 +51,7 @@ class PopUpLyric extends Component {
 				<div className="popup-lyric__wrap">
 					<header className="popup-lyric__header">
 						<h4 className="popup-lyric__title">Lyric</h4>
-						<span className="popup-lyric__close" onClick={this.closePopUp}>
+						<span className="popup-lyric__close" onClick={closePopUp}>
 							X
 						</span>
 					</header>
