@@ -16,7 +16,7 @@ const renderRoutes = () => (
 	<Router history={browserHistory}>
 		<Switch>
 			<Route exact path="/" component={Dashboard} />
-			<Route path="/rooms/:slug" component={App} />
+			<Route path="/room/:slug" component={App} />
 			<Redirect to="/" />
 		</Switch>
 	</Router>

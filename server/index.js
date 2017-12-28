@@ -110,9 +110,15 @@ Meteor.methods({
 	},
 
 	createRoom(roomName, userId) {
+		const slug = slugify(roomName);
+		const room = Rooms.findOne({ slug });
+		if (room) {
+			throw new Meteor.Error(403, 'This room is already exist');
+		}
+
 		return Rooms.insert({
 			name: roomName,
-			slug: slugify(roomName),
+			slug,
 			createdBy: userId,
 			hostId: userId,
 		});

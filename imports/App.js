@@ -107,10 +107,11 @@ class App extends Component {
 
 export default withTracker(({ match }) => {
 	const slug = match.params.slug || '';
+	const roomHandle = Meteor.subscribe('Rooms.public');
 
 	return {
+		isLoadingSong: !roomHandle.ready(),
 		currentUserId: Meteor.userId(),
-		rooms: Rooms.find().fetch(),
 		room: Rooms.findOne({ slug }),
 	};
 })(Container.create(App));
