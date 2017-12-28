@@ -4,6 +4,9 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
+import { withTracker } from 'meteor/react-meteor-data';
+import { UserStatus } from 'meteor/mizzao:user-status';
+
 import TabNav from './TabNav';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
@@ -21,24 +24,26 @@ class AppBody extends Component {
 
 	static calculateState(/*prevState*/) {
 		return {
-			tabIndex: AppStore.getState()['tabIndex']
+			tabIndex: AppStore.getState()['tabIndex'],
+			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
 
 	_renderTabItem = () => {
 		const index = this.state.tabIndex;
+		const { currentRoom } = this.state;
 
 		switch (index) {
 			case 0:
-				return <TabSongs />;
+				return <TabSongs currentRoom={currentRoom} />;
 			case 1:
-				return <TabYesterday />;
+				return <TabYesterday currentRoom={currentRoom} />;
 			case 2:
-				return <TabLast7Days />;
+				return <TabLast7Days currentRoom={currentRoom} />;
 			case 3:
-				return <TabTopList />;
+				return <TabTopList currentRoom={currentRoom} />;
 			case 4:
-				return <TabUsers />;
+				return <TabUsers currentRoom={currentRoom} />;
 			default:
 				break;
 		}
@@ -57,4 +62,18 @@ class AppBody extends Component {
 	}
 }
 
-export default Container.create(AppBody);
+export default withTracker(() => {
+	if (Meteor.userId()) {
+		try {
+			UserStatus.startMonitor({
+				threshold: 30000,
+				interval: 2000,
+				idleOnBlur: true,
+			});
+		} catch (err) {
+			console.log('Syncing...');
+		}
+	}
+
+	return {};
+})(Container.create(AppBody));

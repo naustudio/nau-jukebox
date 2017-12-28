@@ -56,6 +56,7 @@ html {
 body {
 	margin: 0;
 	-webkit-overflow-scroll: touch;
+	font-family: 'Roboto', sans-serif;
 }
 
 form {
@@ -128,8 +129,8 @@ h5 small {
 }
 
 .container {
-	min-width: 768px;
-	max-width: 768px;
+	// min-width: 767px;
+	max-width: 767px;
 }
 
 .player-panel {
@@ -162,6 +163,36 @@ h5 small {
 	width: 100%;
 }
 
+@media screen and (max-width: 384px) {
+	.nau--hidden-xxs {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 384px) and (max-width: 480px) {
+	.nau--hidden-xs {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+	.nau--hidden-sm {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 767px) and (max-width: 992px) {
+	.nau--hidden-md {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 992px) {
+	.nau--hidden-lg {
+		display: none !important;
+	}
+}
+
 /* =============================================
 =          AppHeader                            =
 ============================================= */
@@ -183,7 +214,10 @@ h5 small {
 		list-style-type: none;
 		margin: 0;
 		display: flex;
-		padding: 15px 0;
+		padding-top: 15px;
+		flex-wrap: wrap;
+		justify-content: center;
+		// flex-direction: column;
 	}
 
 	&__img {
@@ -192,165 +226,8 @@ h5 small {
 	}
 
 	&__item {
-		display: inline-block;
-		margin: 0;
-
-		a {
-			display: flex;
-			align-items: center;
-			text-decoration: none;
-		}
-
-		&--icon,
-		&--tool {
-			width: 20%;
-			color: $color-nau;
-		}
-
 		&--input {
-			width: 60%;
-			// padding: 0.5 * $gutter 0;
-			position: relative;
-			margin-left: 64px;
-		}
-
-		&--icon {
-			float: left;
-			// padding: 15px 0;
-			font-size: 12px;
-			line-height: 1;
-			letter-spacing: 2.5px;
-			font-weight: 600;
-
-			img {
-				height: 40px;
-				display: block;
-				mix-blend-mode: multiply;
-			}
-		}
-
-		&--tool {
-			float: right;
-		}
-	}
-}
-
-.search-box {
-	$search-w: 90px;
-
-	position: absolute;
-	width: 100%;
-	border-radius: 4px;
-	border: 1px solid $color-06;
-	// margin-top: 4px;
-	overflow: hidden;
-	background-color: rgba(255, 255, 255, 0.5);
-
-	&--focus {
-		background-color: rgba(255, 255, 255, 0.8);
-		border-color: rgba(0, 0, 0, 0.4);
-	}
-
-	&--active {
-		background-color: rgba(255, 255, 255, 0.95);
-		border-color: rgba(0, 0, 0, 0.4);
-
-		.search-box__result-wrapper {
-			display: block;
-		}
-
-		.search-box__control {
-			border-bottom: 1px solid gray;
-		}
-	}
-
-	&__control {
-		position: relative;
-	}
-
-	&__input-wrapper {
-		margin-right: $search-w;
-		left: 0;
-	}
-
-	&__result-wrapper {
-		display: none;
-	}
-
-	&__submit {
-		color: rgba(0, 0, 0, 0.5);
-		background-color: $color-06;
-		margin-left: -4px;
-		width: $search-w;
-		position: absolute;
-		padding: 0;
-		top: 0;
-		right: 0;
-		text-align: center;
-		border: 0;
-		border-radius: 0;
-
-		&::before {
-			content: 'Search';
-		}
-
-		&:hover {
-			background-color: $color-06;
-			border-color: $color-04;
-			color: $color-04;
-		}
-
-		&._active {
-			&::before {
-				content: '...';
-				animation: submit-moving 0.75s linear infinite;
-			}
-		}
-	}
-
-	&__input {
-		margin-bottom: 0;
-		display: inline-block;
-		border-radius: 0;
-	}
-
-	.search-box__input {
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-		border: 0;
-		background-color: transparent;
-
-		&:focus {
-			border: 0;
-		}
-	}
-
-	.search-box__submit {
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
-		border-left: 0;
-	}
-}
-
-.song-result {
-	&__list {
-		list-style-type: none;
-		margin: 0;
-	}
-
-	&__item {
-		padding: 0.5 * $gutter $gutter;
-		margin-bottom: 0;
-		border-top: 1px solid whitesmoke;
-		cursor: pointer;
-
-		&:first-child {
-			margin-top: $gutter;
-			border-top: 0;
-		}
-
-		&._active {
-			background-color: $color-07;
+			width: 100%;
 		}
 	}
 }
@@ -359,16 +236,8 @@ h5 small {
 .play-button {
 	position: relative;
 	width: $playbutton-h;
-	height: $playbutton-h;
-	// margin-top: 1 * $gutter;
-	margin-left: 4 * $gutter;
+	height: $playbutton-h; // margin-top: 1 * $gutter;
 	cursor: pointer;
-
-	&:hover {
-		.play-button__element {
-			background: $color-09;
-		}
-	}
 
 	&__element {
 		border-radius: $playbutton-w / 2;
@@ -451,20 +320,301 @@ h5 small {
 }
 
 .search-box {
-	width: 100%;
-	background-color: rgba($color-01, 0.5);
-	border-radius: 4px;
-	overflow: hidden;
-	border: 1px solid $color-06;
-}
+	$search-w: 90px;
 
-.search-box--focus {
-	background-color: rgba(255, 255, 255, 0.8);
-	border-color: rgba(0, 0, 0, 0.4);
+	width: 100%;
+	border-radius: 4px;
+	border: 1px solid $color-06; // margin-top: 4px;
+	overflow: hidden;
+	background-color: rgba($color-01, 0.8);
+
+	&--focus {
+		background-color: rgba(255, 255, 255, 0.8);
+		border-color: rgba(0, 0, 0, 0.4);
+	}
+
+	&--active {
+		background-color: rgba(255, 255, 255, 0.95);
+		border-color: rgba(0, 0, 0, 0.4);
+
+		.search-box__result-wrapper {
+			display: block;
+		}
+
+		.search-box__control {
+			border-bottom: 1px solid gray;
+		}
+	}
+
+	&__control {
+		position: relative;
+	}
+
+	&__input-wrapper {
+		margin-right: $search-w;
+		left: 0;
+	}
+
+	&__result-wrapper {
+		display: none;
+	}
+
+	&__submit {
+		color: rgba(0, 0, 0, 0.5);
+		background-color: $color-06;
+		margin-left: -4px;
+		width: $search-w;
+		// position: absolute;
+		padding: 0;
+		top: 0;
+		right: 0;
+		text-align: center;
+		border: 0;
+		border-radius: 0;
+
+		&::before {
+			content: 'Search';
+		}
+
+		&:hover {
+			background-color: $color-06;
+			border-color: $color-04;
+			color: $color-04;
+		}
+
+		&._active {
+			&::before {
+				content: '...';
+				animation: submit-moving 0.75s linear infinite;
+			}
+		}
+	}
+
+	&__input {
+		margin-bottom: 0;
+		display: inline-block;
+		border-radius: 0;
+	}
+
+	.search-box__input {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		border: 0;
+		background-color: transparent;
+
+		&:focus {
+			border: 0;
+		}
+	}
+
+	.search-box__submit {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		border-left: 0;
+	}
 }
 
 .search-box__wrap {
 	display: flex;
+}
+
+@media screen and (min-width: 767px) {
+	.navbar {
+		&__list {
+			display: flex;
+			padding: 15px 0;
+		}
+
+		&__item {
+			display: inline-block;
+			margin: 0;
+
+			a {
+				display: flex;
+				align-items: center;
+				text-decoration: none;
+			}
+
+			&--icon,
+			&--tool {
+				width: 20%;
+				color: $color-nau;
+			}
+
+			&--input {
+				width: 60%; // padding: 0.5 * $gutter 0;
+				position: relative;
+				margin-left: 64px;
+			}
+
+			&--icon {
+				float: left; // padding: 15px 0;
+				font-size: 12px;
+				line-height: 1;
+				letter-spacing: 2.5px;
+				font-weight: 600;
+
+				img {
+					height: 40px;
+					display: block;
+					mix-blend-mode: multiply;
+				}
+			}
+
+			&--tool {
+				float: right;
+			}
+		}
+	}
+
+	.search-box {
+		$search-w: 90px;
+
+		position: absolute;
+		width: 100%;
+		border-radius: 4px;
+		border: 1px solid $color-06; // margin-top: 4px;
+		overflow: hidden;
+		background-color: rgba(255, 255, 255, 0.5);
+
+		&--focus {
+			background-color: rgba(255, 255, 255, 0.8);
+			border-color: rgba(0, 0, 0, 0.4);
+		}
+
+		&--active {
+			background-color: rgba(255, 255, 255, 0.95);
+			border-color: rgba(0, 0, 0, 0.4);
+
+			.search-box__result-wrapper {
+				display: block;
+			}
+
+			.search-box__control {
+				border-bottom: 1px solid gray;
+			}
+		}
+
+		&__control {
+			position: relative;
+		}
+
+		&__input-wrapper {
+			margin-right: $search-w;
+			left: 0;
+		}
+
+		&__result-wrapper {
+			display: none;
+		}
+
+		&__submit {
+			color: rgba(0, 0, 0, 0.5);
+			background-color: $color-06;
+			margin-left: -4px;
+			width: $search-w;
+			position: absolute;
+			padding: 0;
+			top: 0;
+			right: 0;
+			text-align: center;
+			border: 0;
+			border-radius: 0;
+
+			&::before {
+				content: 'Search';
+			}
+
+			&:hover {
+				background-color: $color-06;
+				border-color: $color-04;
+				color: $color-04;
+			}
+
+			&._active {
+				&::before {
+					content: '...';
+					animation: submit-moving 0.75s linear infinite;
+				}
+			}
+		}
+
+		&__input {
+			margin-bottom: 0;
+			display: inline-block;
+			border-radius: 0;
+		}
+
+		.search-box__input {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+			border: 0;
+			background-color: transparent;
+
+			&:focus {
+				border: 0;
+			}
+		}
+
+		.search-box__submit {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			border-left: 0;
+		}
+	}
+
+	.search-box__input {
+		margin-right: 90px;
+		width: 100%;
+	}
+
+	.play-button {
+		position: relative;
+		width: $playbutton-h;
+		height: $playbutton-h; // margin-top: 1 * $gutter;
+		margin-left: 4 * $gutter;
+		cursor: pointer;
+
+		&:hover {
+			.play-button__element {
+				background: $color-09;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.navbar {
+		height: 190px;
+	}
+}
+
+.song-result {
+	&__list {
+		list-style-type: none;
+		margin: 0;
+	}
+
+	&__item {
+		padding: 0.5 * $gutter $gutter;
+		margin-bottom: 0;
+		border-top: 1px solid whitesmoke;
+		cursor: pointer;
+
+		&:first-child {
+			margin-top: $gutter;
+			border-top: 0;
+		}
+
+		&--selected {
+			background-color: $color-07;
+		}
+	}
+}
+
+.search-box--focus {
+	background-color: rgba(255, 255, 255, 0.9);
+	border-color: rgba(0, 0, 0, 0.4);
 }
 
 .search-box__input[type='text'],
@@ -481,7 +631,6 @@ h5 small {
 }
 
 .search-box__input {
-	margin-right: 90px;
 	width: 100%;
 }
 
@@ -503,7 +652,7 @@ h5 small {
 	position: relative;
 	width: 40px;
 	height: 40px;
-	margin-left: 60px;
+	// margin-left: 60px;
 	margin-bottom: 0;
 	cursor: pointer;
 }
@@ -593,6 +742,7 @@ h5 small {
 	left: 25px;
 	z-index: 1000;
 	cursor: pointer;
+	font-weight: 700;
 }
 
 .host .dot {
@@ -648,54 +798,48 @@ h5 small {
 =          AppBody/TabNav                      =
 ============================================= */
 
+.tab {
+	padding-top: 190px;
+
+	& ul {
+		margin: 0;
+	}
+}
+
 .tab__nav {
 	position: fixed;
 	width: 100%;
-	z-index: 100;
-	background-color: $color-01;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-	padding-top: 70px;
-
-	&__container {
-		display: flex;
-	}
+	z-index: 1;
 
 	&__playlist {
-		margin-bottom: 0;
-		display: flex;
-		flex-flow: wrap;
-		flex: 1;
-		transition: transform 0.3s;
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		z-index: -1;
 		list-style: none;
+		background-color: #eff1e2;
+		transition: all 0.4s;
+
+		&--active {
+			transform: translate3d(0, 100%, 0);
+		}
 	}
 
-	&__login-outter {
-		position: relative;
-		display: flex;
-		justify-content: space-evenly;
-		align-items: center;
+	&__button {
+		background: transparent;
+		border: 1px solid rgba(0, 0, 0, 0.3);
+		border-radius: 3px;
+		padding: 2px 5px;
+		margin: 0;
+		float: right;
 	}
 
-	&__login-btn {
-		padding: 15px;
-		transition: all 0.5s;
-
-		& a {
-			color: #000;
-			opacity: 0.5;
-			text-decoration: underline;
-		}
-
-		&:hover {
-			background-color: #f5f5f5;
-
-			& a {
-				opacity: 1;
-			}
-		}
+	&__icon {
+		font-size: 16px !important;
 	}
 
 	&__list-item {
+		text-align: center;
 		padding: 15px;
 		margin-bottom: 0;
 		position: relative;
@@ -722,14 +866,6 @@ h5 small {
 			transition: all 0.5s;
 			background-color: $color-04;
 			transform: translateX(-50%);
-		}
-
-		&:hover {
-			background-color: #f5f5f5;
-
-			& a {
-				opacity: 1;
-			}
 		}
 
 		&--active::after,
@@ -764,22 +900,132 @@ h5 small {
 	margin-bottom: 0;
 }
 
+@media screen and (max-width: 767px) {
+	.login-block {
+		background: #f7f7f7;
+		z-index: 2;
+		border-bottom: 1px solid #eee;
+		padding: 10px 15px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.container {
+		margin: 0;
+		padding: 15px;
+		width: 100%;
+	}
+
+	.tab__nav {
+		&--mobile-no-pd {
+			padding: 0;
+		}
+
+		&__container {
+			margin: 0 0 2rem 0;
+			width: 100%;
+			z-index: 1;
+		}
+
+		&__list {
+			width: auto;
+		}
+	}
+}
+
+@media screen and (min-width: 767px) {
+	.tab {
+		padding-top: 0;
+	}
+
+	.tab__nav {
+		z-index: 100;
+		background-color: $color-01;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		padding-top: 70px;
+
+		&__container {
+			display: flex;
+		}
+
+		&__playlist {
+			position: static;
+			margin-bottom: 0;
+			display: flex;
+			flex-flow: wrap;
+			flex: 1;
+			background-color: transparent;
+			z-index: 1;
+		}
+
+		&__login-outter {
+			position: relative;
+			display: flex;
+			justify-content: space-evenly;
+			align-items: center;
+		}
+
+		&__login-btn {
+			padding: 15px;
+			transition: all 0.5s;
+
+			& a {
+				color: #000;
+				opacity: 0.5;
+				text-decoration: underline;
+			}
+
+			&:hover {
+				background-color: #f5f5f5;
+
+				& a {
+					opacity: 1;
+				}
+			}
+		}
+
+		&__list-item {
+			text-align: left;
+
+			&:first-child {
+				padding-left: 0;
+			}
+
+			&:hover {
+				background-color: #f5f5f5;
+
+				& a {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}
+
 /* =============================================
 =          AppBody/Content                     =
 ============================================= */
 
 .app-body__container {
-	padding-top: 155px;
+	padding-top: 55px;
 }
 
 .songs__list-item-wrapper {
 	position: relative;
 	list-style: none;
+	padding-bottom: 4px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 2.4rem;
 
 	& .playlist__item__active {
 		opacity: 1;
 		color: brown;
 		font-weight: bold;
+	}
+
+	& .playlist__item__active-host {
+		font-size: 25px;
 	}
 }
 
@@ -789,32 +1035,18 @@ h5 small {
 	align-items: center;
 	justify-content: space-between;
 	margin: 0;
-	cursor: pointer;
 	background-color: $color-01;
 
 	&__container {
-		position: relative;
 		display: flex;
 		align-items: center;
-		padding: 0 10px;
-
-		&:first-child {
-			padding-left: 0;
-			width: 500px;
-		}
-
-		&:last-child {
-			padding-right: 0;
-		}
-	}
-
-	&:hover {
-		background-color: #fafafa;
+		width: 100%;
 	}
 
 	&__thumbnail {
 		display: flex;
 		position: relative;
+		width: 40px;
 
 		& img {
 			width: 40px;
@@ -872,6 +1104,10 @@ h5 small {
 
 		& span {
 			padding: 0 7px;
+
+			&:first-child {
+				padding-left: 0;
+			}
 		}
 	}
 
@@ -879,10 +1115,6 @@ h5 small {
 		cursor: pointer;
 		color: gray;
 		transition: all 0.4s;
-
-		&:hover {
-			color: #000;
-		}
 	}
 
 	&__author {
@@ -890,6 +1122,103 @@ h5 small {
 		right: 101%;
 		display: block;
 		white-space: nowrap;
+	}
+}
+
+@media screen and (min-width: 480px) {
+	.songs__list-item {
+		&__container {
+			width: auto;
+
+			&:first-child {
+				padding-left: 0;
+				width: 370px;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 767px) {
+	.app-body__container {
+		padding-top: 155px;
+	}
+
+	.songs__list-item-wrapper {
+		border: none;
+		margin-bottom: 0;
+	}
+
+	.songs__list-item {
+		margin: 0;
+		cursor: pointer;
+		background-color: $color-01;
+
+		&__container {
+			position: relative;
+			padding: 0 10px;
+			width: auto;
+
+			&:first-child {
+				padding-left: 0;
+				width: 430px;
+			}
+
+			&:last-child {
+				padding-right: 0;
+			}
+		}
+
+		&:hover {
+			background-color: #fafafa;
+		}
+
+		&__thumbnail {
+			display: flex;
+			position: relative;
+
+			& img {
+				width: 40px;
+				height: 40px;
+			}
+
+			&--link {
+				display: flex;
+			}
+
+			&--sc::after {
+				background-image: url(/logo-soundcloud.png);
+			}
+
+			&--nct::after {
+				background-image: url(/logo-nct.png);
+			}
+
+			&--zing::after {
+				background-image: url(/logo-zing.png);
+			}
+
+			&--yt::after {
+				background-image: url(/logo-youtube.png);
+			}
+
+			&--link::after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-size: auto 10px;
+				background-repeat: no-repeat;
+				background-position: left bottom;
+			}
+		}
+
+		&__icon {
+			&:hover {
+				color: #000;
+			}
+		}
 	}
 }
 
@@ -1217,7 +1546,6 @@ h5 small {
 		-webkit-transform: translateY(25%);
 		transform: translateY(25%);
 		color: white;
-		z-index: 20;
 		font-weight: 100;
 		font-size: 16px;
 		opacity: 0.4;
@@ -1364,6 +1692,7 @@ h5 small {
 .users {
 	&__container {
 		// top: $tabnav-h + 30px;
+		padding-left: 40px;
 	}
 
 	&__title {
@@ -1375,20 +1704,22 @@ h5 small {
 		}
 	}
 
-	&__item {
+	&__info {
+		display: inline-block;
+		margin-bottom: 10px;
+	}
+
+	&__item-wrapper {
 		display: flex;
 		align-items: center;
-		position: relative;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		border-bottom: 1px solid #eee;
+		padding-bottom: 8px;
+	}
 
-		&::before {
-			content: '';
-			width: 8px;
-			height: 8px;
-			position: absolute;
-			left: 0;
-			border-radius: 100%;
-			background-color: $color-01;
-		}
+	&__item {
+		list-style: none;
 
 		&__avt {
 			margin-left: 15px;
@@ -1397,21 +1728,28 @@ h5 small {
 		&__info {
 			display: flex;
 			flex-flow: wrap;
-			width: 40%;
-			margin-top: -6px;
+			width: 100%;
+			// margin-top: -6px;
 		}
 
 		&__user {
 			display: flex;
 			flex-flow: wrap;
 			width: 100%;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		&__name-wrapper {
+			display: flex;
+			align-items: center;
 		}
 
 		&__name {
-			width: 60%;
 			margin-bottom: 0;
 			margin-right: 10px;
 			margin-left: 6px;
+			position: relative;
 		}
 
 		&__coin {
@@ -1419,6 +1757,7 @@ h5 small {
 			border-radius: 2px;
 			padding: 0 6px;
 			color: white;
+			align-self: center;
 
 			&::before {
 				content: '₦';
@@ -1433,18 +1772,29 @@ h5 small {
 
 		&__host-icon-wrapper {
 			position: absolute;
-			bottom: 0;
-			right: 0;
-			box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.75);
+			right: 100%;
+			align-items: center;
+			justify-content: center;
 			display: flex;
-			background-color: white;
-			border-radius: 50%;
-			padding: 2px;
+			width: 20px;
+			height: 20px;
+			top: 50%;
+			transform: translate3d(0, -50%, 0);
+		}
+
+		&__image-and-name {
+			display: flex;
+			// flex-basis: 100%;
+			position: relative;
 		}
 
 		&__payment {
-			width: 60%;
-			margin-left: 20px;
+			// width: 60%;
+			position: relative;
+			display: flex;
+			justify-content: flex-end;
+			margin-top: 5px;
+			// margin-left: 20px;
 
 			form {
 				margin-bottom: 0;
@@ -1472,21 +1822,117 @@ h5 small {
 				text-transform: uppercase;
 				border-color: #c08e52;
 				background-color: #c08e52;
+			}
 
-				&:hover {
-					border-color: #a65e09;
-					background-color: #a65e09;
+			& input[type='button'],
+			& input[type='submit'],
+			& input[type='number'] {
+				margin: 0 4px;
+
+				&:last-child {
+					margin-right: 0;
 				}
+			}
+
+			& input[type='button'] {
+				padding: 0 10px;
 			}
 		}
 
-		&--active {
-			&::before {
-				background-color: #347a2a;
+		&__checkbox-container {
+			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			right: 100%;
+			transform: translate3d(0, -50%, 0);
+			border: 1px solid black;
+			padding: 10px;
+			margin: 0;
+		}
+	}
+
+	&__popover-backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 301;
+	}
+
+	&__popover {
+		position: absolute;
+		z-index: 1;
+		background-color: $color-01;
+		border: 1px solid rgba($color-01, 0.2);
+		padding: 25px 10px 10px 10px;
+		top: 50%;
+		right: 50%;
+		transform: translate3d(50%, -50%, 0);
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.75);
+
+		&__form {
+			display: flex;
+		}
+
+		&__icon {
+			position: absolute;
+			right: 0;
+			top: 0;
+			padding: 5px;
+		}
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.users {
+		&__container {
+			padding-left: 0;
+			// top: $tabnav-h + 30px;
+		}
+
+		&__item-wrapper {
+			flex-wrap: nowrap;
+			border: none;
+			padding-bottom: 0;
+		}
+
+		&__item {
+			&__info {
+				width: 100%;
+			}
+
+			&__image-and-name {
+				flex-basis: 60%;
+			}
+
+			&__payment {
+				width: auto;
+				margin-top: 0;
 			}
 		}
 	}
 }
+
+@media screen and (min-width: 992px) {
+	.users {
+		&__item {
+			&__payment {
+				&__submit {
+					&:hover {
+						border-color: #a65e09;
+						background-color: #a65e09;
+					}
+				}
+			}
+		}
+	}
+}
+
+/*
+	PopupForm
+*/
+
 
 /**
  * Naucoin css
@@ -1525,6 +1971,29 @@ h5 small {
 		font-weight: 100;
 		text-transform: uppercase;
 		font-size: 11px;
+	}
+}
+
+.badge {
+	border: 1px solid $color-06;
+	padding: 0 2px;
+	font-size: 11px;
+	border-radius: 4px;
+	margin: 0 2px;
+	font-weight: 700;
+
+	&.warning {
+		background-color: #ffc107;
+	}
+
+	&.dark {
+		color: $color-01;
+		background-color: #343a40;
+	}
+
+	&.success {
+		color: $color-01;
+		background-color: #28a745;
 	}
 }
 
@@ -1656,6 +2125,67 @@ button.button-naucoin {
 
 	&__name {
 		font-weight: 400;
+	}
+}
+
+.dashboard {
+	max-width: 400px;
+	margin: 50px auto;
+
+	&__logo {
+		max-width: 200px;
+		display: block;
+		margin: 0 auto 30px;
+	}
+
+	&__room {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__login-block {
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
+	&__add-room {
+		text-align: center;
+	}
+
+	&__create-button {
+		margin-left: 20px;
+	}
+}
+
+.toaster {
+	position: fixed;
+	bottom: -100px;
+	left: 50%;
+	transform: translate3d(-50%, 0, 0);
+	transition: transform 1s ease;
+	padding: 10px 20px;
+	max-width: 100vw;
+	cursor: pointer;
+
+	&--open {
+		transform: translate3d(-50%, -110px, 0);
+	}
+
+	&--success {
+		background-color: #51a351;
+		color: $color-01;
+	}
+
+	&--error {
+		background-color: #e74c3c;
+		color: $color-01;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.toaster {
+		max-width: 600px;
 	}
 }
 

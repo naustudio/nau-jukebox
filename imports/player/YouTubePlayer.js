@@ -14,6 +14,7 @@ export default class YouTubePlayer {
 		this.song = null;
 		this.mainPlayer = mainPlayer;
 		this.videoEl = document.getElementById('youtube-player');
+		this.panelPlayer = document.querySelector('.player-panel');
 	}
 
 	getYTVideoId(url) {
@@ -79,12 +80,14 @@ export default class YouTubePlayer {
 
 		this.player.play();
 		if (this.container) {
+			this.panelPlayer.style.zIndex = 1;
 			this.container.style.display = 'block';
 		}
 	}
 
 	pause() {
 		if (this.container) {
+			this.panelPlayer.style.zIndex = -1;
 			this.container.style.display = 'none';
 		}
 		this.player.pause();

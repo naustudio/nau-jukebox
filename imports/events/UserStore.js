@@ -27,11 +27,9 @@ class UserStore extends ReduceStore {
 	// built-in ReduceStore hook
 	getInitialState() {
 		return {
-			listUser: [{ id: 1, toggleUser: false }, { id: 2, toggleUser: true }],
-			isSignIn: false,
 			errorSignIn: false,
-			userName: 'Sign in',
-			activeHost: false
+			errorSignInDashboard: false,
+			activeHost: false,
 		};
 	}
 
@@ -46,17 +44,17 @@ class UserStore extends ReduceStore {
 		switch (action.type) {
 			case AppActions.ERROR_SIGN_IN:
 				reducedState = {
-					errorSignIn: true
+					errorSignIn: true,
+				};
+				break;
+			case AppActions.ERROR_SIGN_IN_DASHBOARD:
+				reducedState = {
+					errorSignInDashboard: true,
 				};
 				break;
 			case AppActions.ACTIVE_HOST:
 				reducedState = {
-					activeHost: action.isActive
-				};
-				break;
-			case AppActions.SET_USER_LIST:
-				reducedState = {
-					userList: action.userList
+					activeHost: action.isActive,
 				};
 				break;
 			default:

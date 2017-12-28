@@ -4,11 +4,15 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import { UserStatus } from 'meteor/mizzao:user-status';
 import subDays from 'date-fns/sub_days';
-import { AppStates, Songs, Users } from '../imports/collections';
+
+import { slugify } from '../imports/helpers/utils';
+import { AppStates, Songs, Users, Rooms } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
 import getSongInfoZing from '../imports/parsers/getSongInfoZing';
 import getSongInfoSoundcloud from '../imports/parsers/getSongInfoSoundcloud';
 import getSongInfoYouTube from '../imports/parsers/getSongInfoYouTube';
+
+const cacheLatestSong = {};
 
 Meteor.startup(() => {
 	// migrate database
@@ -23,22 +27,6 @@ Meteor.startup(() => {
 		});
 		console.log('Insert AppStates.playingSongs key');
 	}
-
-	// Meteor.setInterval(() => {
-	// 	const passAMinute = moment()
-	// 		.add(-90, 'seconds')
-	// 		.toDate();
-	// 	Users.update(
-	// 		{ lastModified: { $lt: passAMinute } },
-	// 		{
-	// 			$set: {
-	// 				isOnline: false,
-	// 			},
-	// 		},
-	// 		{ multi: true }
-	// 	);
-	// 	console.log('Checking online status was run at: ', new Date());
-	// }, 90000);
 });
 
 UserStatus.events.on('connectionLogout', function(fields) {
@@ -46,7 +34,11 @@ UserStatus.events.on('connectionLogout', function(fields) {
 });
 
 Meteor.methods({
-	getSongInfo(songurl, authorId) {
+	getSongInfo(songurl, authorId, roomId) {
+		if (cacheLatestSong[roomId] === songurl) {
+			throw new Meteor.Error(403, 'This song is already booked');
+		}
+
 		// Set up a future for async callback sending to clients
 		let songInfo;
 
@@ -66,7 +58,9 @@ Meteor.methods({
 
 		if (songInfo && songInfo.streamURL) {
 			songInfo.author = authorId;
+			songInfo.roomId = roomId;
 			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
+			cacheLatestSong[roomId] = songurl;
 
 			return Songs.insert(songInfo);
 		}
@@ -82,33 +76,64 @@ Meteor.methods({
 		throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
 	},
 
-	changeHost(userId) {
-		console.log('changeHost', userId);
-		// switch all users isHost off
-		Users.update({}, { $set: { isHost: false } }, { multi: true }, () => {
-			// then switch sHost
-			Users.update(userId, {
-				$set: {
-					isHost: true,
-					lastModified: new Date(),
-				},
+	refetchSongInfo(song) {
+		// Set up a future for async callback sending to clients
+		let songInfo;
+
+		if (String(song.originalURL).includes('nhaccuatui')) {
+			console.log('Getting NCT song info');
+			songInfo = getSongInfoNct(song.originalURL);
+		} else if (String(song.originalURL).includes('mp3.zing')) {
+			console.log('Getting Zing song info');
+			songInfo = getSongInfoZing(song.originalURL);
+		}
+
+		if (songInfo && songInfo.streamURL) {
+			Songs.update(song._id, { $set: { streamURL: songInfo.streamURL, lastFetch: Date.now() } });
+
+			return songInfo.streamURL;
+		}
+
+		if (songInfo && songInfo.error) {
+			Songs.update(song._id, { $set: { badSong: true } }, { multi: true }, err => {
+				if (err) {
+					console.log(err);
+				}
 			});
+		}
+
+		return null;
+	},
+
+	removeSong(songId) {
+		return Songs.remove(songId);
+	},
+
+	createRoom(roomName, userId) {
+		return Rooms.insert({
+			name: roomName,
+			slug: slugify(roomName),
+			createdBy: userId,
+			hostId: userId,
 		});
+	},
+
+	changeHost(userId, roomId) {
+		return Rooms.update(roomId, { $set: { hostId: userId } });
 	},
 
 	updatePlayingStatus(userId, songId) {
 		Users.update(Meteor.userId(), { $set: { playing: songId } });
 	},
 
-	removePlayingStatus(userId) {
+	removePlayingStatus() {
 		Users.update(Meteor.userId(), { $set: { playing: null } });
 	},
 
-	updateStatus(userId) {
+	updateUserRoom(userId, roomId) {
 		return Users.update(userId, {
 			$set: {
-				isOnline: true,
-				lastModified: new Date(),
+				roomId,
 			},
 		});
 	},
@@ -125,11 +150,12 @@ Meteor.methods({
 		});
 	},
 
-	searchSong(searchString) {
+	searchSong(searchString, roomId) {
 		return _.uniq(
 			Songs.find(
 				{
 					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+					roomId,
 					badSong: { $ne: true },
 				},
 				{
@@ -141,18 +167,22 @@ Meteor.methods({
 			song => song.originalURL.trim()
 		);
 	},
+	toggleSongAuthor(songId, revealed) {
+		return Songs.update(songId, { $set: { isRevealed: revealed } });
+	},
 });
 
 Meteor.publish('Meteor.users.public', function() {
 	const options = {
 		fields: {
-			isHost: 1,
 			status: 1,
 			balance: 1,
 			profile: 1,
+			roomId: 1,
 			'services.facebook.id': 1,
 			'services.google.picture': 1,
 			playing: 1,
+			isHost: 1,
 		},
 	};
 
@@ -164,7 +194,7 @@ Meteor.publish('userData', function() {
 		return Meteor.users.find(
 			{ _id: this.userId },
 			{
-				fields: { isHost: 1, status: 1, balance: 1, playing: 1 },
+				fields: { status: 1, balance: 1, playing: 1, roomId: 1, services: 1, profile: 1, isHost: 1 },
 			}
 		);
 	}
@@ -181,4 +211,8 @@ Meteor.publish('Songs.public', function() {
 
 Meteor.publish('AppStates.public', function() {
 	return AppStates.find({});
+});
+
+Meteor.publish('Rooms.public', function() {
+	return Rooms.find({});
 });

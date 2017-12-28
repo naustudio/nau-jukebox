@@ -9,8 +9,6 @@ export const CHANGE_NHAP = 'CHANGE_NHAP';
 
 export const DELETE_SONG = 'DELETE_SONG';
 
-export const TOGGLE_USER_BOOK = 'TOGGLE_USER_BOOK';
-
 export const TOGGLE_BTN_PLAY = 'TOGGLE_BTN_PLAY';
 
 export const ACTIVE_BTN_PLAY = 'ACTIVE_BTN_PLAY';
@@ -25,6 +23,8 @@ export const FOCUS_SEARCH_BOX = 'FOCUS_SEARCH_BOX';
 
 export const ERROR_SIGN_IN = 'ERROR_SIGN_IN';
 
+export const ERROR_SIGN_IN_DASHBOARD = 'ERROR_SIGN_IN_DASHBOARD';
+
 export const TOGGLE_BTN_NAV = 'TOGGLE_BTN_NAV';
 
 export const UPDATE_LYRIC_POPUP = 'UPDATE_LYRIC_POPUP';
@@ -32,6 +32,10 @@ export const UPDATE_LYRIC_POPUP = 'UPDATE_LYRIC_POPUP';
 export const OPEN_POP_UP = 'OPEN_POP_UP';
 
 export const CLOSE_POP_UP = 'CLOSE_POP_UP';
+
+export const SET_ROOM = 'SET_ROOM';
+
+export const SET_TOASTER = 'SET_TOASTER';
 
 /**
  * @param  {String} tabIndex tab index of the new section
@@ -47,14 +51,6 @@ export function changeTab(tabIndex) {
  */
 export function deleleSong(id) {
 	dispatch({ type: DELETE_SONG, id });
-}
-
-/**
- * @param  {Number} id of song
- * @return {void}
- */
-export function toggleUserBook(id) {
-	dispatch({ type: TOGGLE_USER_BOOK, id });
 }
 
 /**
@@ -114,6 +110,15 @@ export function errorSignIn() {
  * @return {void}
  */
 
+export function errorSignInDashboard() {
+	dispatch({ type: ERROR_SIGN_IN_DASHBOARD });
+}
+
+/**
+ * @param
+ * @return {void}
+ */
+
 export function toggleBtnNav() {
 	dispatch({ type: TOGGLE_BTN_NAV });
 }
@@ -143,4 +148,22 @@ export function openPopUp(id) {
 
 export function closePopUp() {
 	dispatch({ type: CLOSE_POP_UP });
+}
+
+/**
+ * @param
+ * @return {void}
+ */
+
+export function setRoom(room) {
+	dispatch({ type: SET_ROOM, room });
+}
+
+/**
+ * @param
+ * @return {void}
+ */
+
+export function setToaster(open, text, toasterType) {
+	dispatch({ type: SET_TOASTER, open, text, toasterType });
 }

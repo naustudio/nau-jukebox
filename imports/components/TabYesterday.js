@@ -23,7 +23,7 @@ class TabYesterday extends Component {
 	}
 }
 
-export default withTracker(() => {
+export default withTracker(({ currentRoom }) => {
 	const today = new Date();
 	const yesterday = subDays(today, 1);
 
@@ -32,7 +32,10 @@ export default withTracker(() => {
 
 	return {
 		songs: Songs.find(
-			{ timeAdded: { $gt: yesterday.getTime(), $lt: today.getTime() } },
+			{
+				timeAdded: { $gt: yesterday.getTime(), $lt: today.getTime() },
+				roomId: currentRoom ? currentRoom._id : null,
+			},
 			{ sort: { timeAdded: 1 } }
 		).fetch(),
 	};

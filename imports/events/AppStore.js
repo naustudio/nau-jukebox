@@ -4,15 +4,17 @@
 import { Meteor } from 'meteor/meteor';
 import { ReduceStore } from 'flux/utils';
 
-import { Songs, AppStates } from '../collections';
+import { Songs, AppStates, Rooms } from '../collections';
 import AppDispatcher from './AppDispatcher';
 import * as AppActions from './AppActions';
 
 if (Meteor.isClient) {
 	Meteor.subscribe('Songs.public');
 	Meteor.subscribe('AppStates.public');
+	Meteor.subscribe('Rooms.public');
 	window.Songs = Songs;
 	window.AppStates = AppStates;
+	window.Rooms = Rooms;
 }
 
 /**
@@ -45,7 +47,11 @@ class AppStore extends ReduceStore {
 			openPopup: false,
 			songName: '',
 			songLyric: '',
-			revealedSongs: []
+			revealedSongs: [],
+			currentRoom: null,
+			toasterOpen: false,
+			toasterText: '',
+			toasterType: 'success',
 		};
 	}
 
@@ -63,28 +69,15 @@ class AppStore extends ReduceStore {
 			if (song) {
 				return {
 					songName: song.name,
-					songLyric: song.lyric
+					songLyric: song.lyric,
 				};
 			}
 		}
 
 		return {
 			songName: '',
-			songLyric: ''
+			songLyric: '',
 		};
-	}
-
-	toggleRevealedSongs(id, songList) {
-		const newArray = [...songList];
-		console.log(songList);
-		const songIndex = newArray.indexOf(id);
-		if (songIndex > -1) {
-			newArray.splice(songIndex, 1);
-		} else {
-			newArray.push(id);
-		}
-
-		return newArray;
 	}
 
 	/**
@@ -109,24 +102,34 @@ class AppStore extends ReduceStore {
 				reducedState = { focusSearchBox: action.isFocus };
 				break;
 			case AppActions.SELECT_SONG:
-				reducedState = { selectedSong: this.selectSong(action.id) };
+				reducedState = {
+					selectedSong: this.selectSong(action.id),
+					activeBtnPlay: true,
+				};
 				break;
 			case AppActions.OPEN_POP_UP:
 				reducedState = {
-					openPopup: true
+					openPopup: true,
 				};
 				break;
 			case AppActions.CLOSE_POP_UP:
 				reducedState = {
-					openPopup: false
+					openPopup: false,
 				};
 				break;
 			case AppActions.UPDATE_LYRIC_POPUP:
 				reducedState = this.getSongNameAndLyric(action.id);
 				break;
-			case AppActions.TOGGLE_USER_BOOK:
+			case AppActions.SET_ROOM:
 				reducedState = {
-					revealedSongs: this.toggleRevealedSongs(action.id, state.revealedSongs)
+					currentRoom: action.room,
+				};
+				break;
+			case AppActions.SET_TOASTER:
+				reducedState = {
+					toasterOpen: action.open,
+					toasterText: action.text ? action.text : state.toasterText,
+					toasterType: action.toasterType ? action.toasterType : state.toasterType,
 				};
 				break;
 			default:

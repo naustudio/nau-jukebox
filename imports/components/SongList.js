@@ -2,6 +2,8 @@
  * @author Tu Nguyen
  */
 
+/* eslint-disable no-alert */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
@@ -18,11 +20,13 @@ class SongList extends Component {
 	static propTypes = {
 		songs: PropTypes.arrayOf(PropTypes.object),
 		onlineUsers: PropTypes.arrayOf(PropTypes.object),
+		userId: PropTypes.string,
 	};
 
 	static defaultProps = {
 		songs: [],
 		onlineUsers: [],
+		userId: '',
 	};
 
 	static getStores() {
@@ -33,9 +37,23 @@ class SongList extends Component {
 		return {
 			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
-			activeHost: UserStore.getState()['activeHost'],
-			revealedSongs: AppStore.getState()['revealedSongs'],
+			currentRoom: AppStore.getState()['currentRoom'],
 		};
+	}
+
+	componentDidMount() {
+		if (this.interval) {
+			clearInterval(this.interval);
+		}
+		this.interval = setInterval(() => {
+			this.forceUpdate();
+		}, 60000);
+	}
+
+	componentWillUnmount() {
+		if (this.interval) {
+			clearInterval(this.interval);
+		}
 	}
 
 	onOpenLyricPopup = e => {
@@ -68,8 +86,9 @@ class SongList extends Component {
 	};
 
 	rebookSong = e => {
-		const userId = Meteor.userId();
 		const songUrl = e.currentTarget.dataset.url;
+		const { userId } = this.props;
+		const { currentRoom } = this.state;
 
 		if (!userId) {
 			AppActions.errorSignIn();
@@ -77,10 +96,12 @@ class SongList extends Component {
 			return;
 		}
 
-		if (songUrl) {
-			Meteor.call('getSongInfo', songUrl, userId, (error /*, result*/) => {
+		if (songUrl && currentRoom) {
+			Meteor.call('getSongInfo', songUrl, userId, currentRoom._id, (error /*, result*/) => {
 				if (error) {
-					alert(`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`);
+					AppActions.setToaster(true, `Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`, 'error');
+				} else {
+					AppActions.setToaster(true, `Song's added successfully`, 'success');
 				}
 			});
 		}
@@ -93,10 +114,29 @@ class SongList extends Component {
 		}
 	};
 
-	toggleUserBook = e => {
+	removeSong = e => {
 		const id = e.currentTarget.dataset.id;
 		if (id) {
-			AppActions.toggleUserBook(id);
+			const rs = window.confirm('Are you sure');
+			if (rs) {
+				Meteor.call('removeSong', id, err => {
+					if (err) {
+						console.log(err);
+					}
+				});
+			}
+		}
+	};
+
+	toggleUserBook = e => {
+		const id = e.currentTarget.dataset.id;
+		const revealed = e.currentTarget.dataset.revealed === 'true';
+		if (id) {
+			Meteor.call('toggleSongAuthor', id, !revealed, err => {
+				if (err) {
+					console.log(err);
+				}
+			});
 		}
 	};
 
@@ -104,10 +144,30 @@ class SongList extends Component {
 		for (let i = 0; i < this.props.onlineUsers.length; i++) {
 			if (id === this.props.onlineUsers[i].playing) {
 				if (this.props.onlineUsers[i]._id === Meteor.userId()) {
-					return <span className="playlist__item__active">&#9657;</span>;
+					return (
+						<span
+							className={`${
+								this.props.onlineUsers[i].isHost
+									? 'playlist__item__active playlist__item__active-host'
+									: 'playlist__item__active'
+							}`}
+						>
+							&#9656;
+						</span>
+					);
 				}
 
-				return <span className="playlist__item__active">&#9656;</span>;
+				return (
+					<span
+						className={`${
+							this.props.onlineUsers[i].isHost
+								? 'playlist__item__active playlist__item__active-host'
+								: 'playlist__item__active'
+						}`}
+					>
+						&#9657;
+					</span>
+				);
 			}
 		}
 
@@ -123,14 +183,15 @@ class SongList extends Component {
 	};
 
 	render() {
-		const { revealedSongs = [], activeHost } = this.state;
+		const { currentRoom } = this.state;
+		const { userId } = this.props;
 
 		return (
 			<section className="tab__body song">
 				<div className="container song__container">
 					<ul className="songs__list">
 						{this.props.songs.map(song => (
-							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper playlist__item">
+							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper">
 								{this.whoIsPlaying(song._id)}
 
 								<div className="songs__list-item">
@@ -145,25 +206,31 @@ class SongList extends Component {
 											</a>
 										</span>
 										<span className="songs__list-item__name">
-											<a className="songs__list-item__name--link" data-id={song._id} onClick={this.selectSong}>
+											<a
+												className="songs__list-item__name--link"
+												data-id={song._id}
+												onClick={this.selectSong}
+												title={song.name}
+											>
 												{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
 											</a>
 										</span>
 									</span>
 
-									{revealedSongs.indexOf(song._id) > -1 ? (
+									{song.isRevealed ? (
 										<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
 									) : null}
 
-									<span className="songs__list-item__container">
+									<span className="songs__list-item__container nau--hidden-xxs nau--hidden-xs">
 										<span className="songs__list-item__control">
 											<span className="songs__list-item__time">
 												<small>{this.getTime(song.timeAdded)}</small>
 											</span>
-											{activeHost ? (
+											{currentRoom && currentRoom.hostId === userId ? (
 												<span
 													className="songs__list-item__lyrics songs__list-item__icon"
 													data-id={song._id}
+													data-revealed={song.isRevealed}
 													onClick={this.toggleUserBook}
 												>
 													<i className="fa fa-eye" />
@@ -183,7 +250,56 @@ class SongList extends Component {
 											>
 												<i className="fa fa-retweet" />
 											</span>
+											{currentRoom && currentRoom.hostId === userId ? (
+												<span
+													className="songs__list-item__delete songs__list-item__icon"
+													data-id={song._id}
+													onClick={this.removeSong}
+												>
+													<i className="fa fa-close" />
+												</span>
+											) : null}
 										</span>
+									</span>
+								</div>
+								<div className="songs__list-item nau--hidden-sm nau--hidden-md nau--hidden-lg">
+									<span className="songs__list-item__control">
+										<span className="songs__list-item__time">
+											<small>{this.getTime(song.timeAdded)}</small>
+										</span>
+										{currentRoom && currentRoom.hostId === userId ? (
+											<span
+												className="songs__list-item__lyrics songs__list-item__icon"
+												data-id={song._id}
+												data-revealed={song.isRevealed}
+												onClick={this.toggleUserBook}
+											>
+												<i className="fa fa-eye" />
+											</span>
+										) : null}
+										<span
+											className="songs__list-item__lyrics songs__list-item__icon"
+											data-id={song._id}
+											onClick={this.onOpenLyricPopup}
+										>
+											<i className="fa fa-file-text" />
+										</span>
+										<span
+											className="songs__list-item__delete songs__list-item__icon"
+											data-url={song.originalURL}
+											onClick={this.rebookSong}
+										>
+											<i className="fa fa-retweet" />
+										</span>
+										{currentRoom && currentRoom.hostId === userId ? (
+											<span
+												className="songs__list-item__delete songs__list-item__icon"
+												data-id={song._id}
+												onClick={this.removeSong}
+											>
+												<i className="fa fa-close" />
+											</span>
+										) : null}
 									</span>
 								</div>
 							</li>
@@ -196,19 +312,15 @@ class SongList extends Component {
 }
 
 export default withTracker(() => {
-	if (Meteor.userId()) {
-		const onlineUsers = Users.find({ 'status.online': true, playing: { $ne: null } }).fetch();
+	const onlineUsers = Users.find({
+		'status.online': true,
+		playing: { $ne: null },
+	}).fetch();
 
-		// if (playingSong && playingSong.playing) {
-		// 	return { currentSongPlaying: playingSong.playing };
-		// }
-
-		return {
-			onlineUsers,
-		};
-	}
-
-	return {};
+	return {
+		onlineUsers,
+		userId: Meteor.userId(), // Must have this to keep tracker running, don't know why
+	};
 })(Container.create(SongList));
 
 // export default Container.create(SongList);

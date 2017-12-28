@@ -2,6 +2,8 @@
  * @author Eric
  */
 
+/* eslint-disable react/no-danger */
+
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { closePopUp } from '../events/AppActions';
@@ -24,7 +26,7 @@ class PopUpLyric extends Component {
 		const lyric = document.getElementById('divLyric');
 		const lyricBody = document.querySelector('.popup-lyric__body');
 		if (lyric) {
-			lyric.style.maxHeight = '70vh';
+			lyric.style.maxHeight = 'inherit';
 		}
 
 		if (lyricBody) {
@@ -32,18 +34,28 @@ class PopUpLyric extends Component {
 		}
 	}
 
-	closePopUp = () => {
-		closePopUp();
+	closePopUp = e => {
+		if (e.target === this.popupLyric) {
+			closePopUp();
+		}
+	};
+
+	refPopupLyric = ref => {
+		this.popupLyric = ref;
 	};
 
 	/* eslint-disable react/no-danger */
 	render() {
 		return (
-			<section onClick={this.closePopUp} className={`popup-lyric ${this.state.openPopUp ? 'popup-lyric--active' : ''}`}>
+			<section
+				onClick={this.closePopUp}
+				className={`popup-lyric ${this.state.openPopUp ? 'popup-lyric--active' : ''}`}
+				ref={this.refPopupLyric}
+			>
 				<div className="popup-lyric__wrap">
 					<header className="popup-lyric__header">
 						<h4 className="popup-lyric__title">Lyric</h4>
-						<span className="popup-lyric__close" onClick={this.closePopUp}>
+						<span className="popup-lyric__close" onClick={closePopUp}>
 							X
 						</span>
 					</header>

@@ -3,15 +3,33 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
+import { withTracker } from 'meteor/react-meteor-data';
 
+import { Rooms } from './collections';
 import AppHeader from './components/AppHeader';
 import AppBody from './components/AppBody';
+import { setRoom, activeHost, setToaster } from './events/AppActions';
 import AppStore from './events/AppStore';
 import UserStore from './events/UserStore';
 import JukeboxPlayer from './player/JukeboxPlayer';
+import Toaster from './components/Toaster';
 
 class App extends Component {
+	static propTypes = {
+		room: PropTypes.shape({}),
+		currentUserId: PropTypes.string,
+		history: PropTypes.shape({
+			replace: PropTypes.func,
+		}).isRequired,
+	};
+
+	static defaultProps = {
+		room: null,
+		currentUserId: '',
+	};
+
 	static getStores() {
 		return [AppStore, UserStore];
 	}
@@ -20,11 +38,34 @@ class App extends Component {
 		return {
 			selectedSong: AppStore.getState()['selectedSong'],
 			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
+			toasterOpen: AppStore.getState()['toasterOpen'],
+			toasterText: AppStore.getState()['toasterText'],
+			toasterType: AppStore.getState()['toasterType'],
 		};
 	}
 
 	componentDidMount() {
 		this.player = new JukeboxPlayer();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const { room, currentUserId } = nextProps;
+
+		if (!room) {
+			this.props.history.replace('/');
+		} else {
+			setRoom(room);
+			if (currentUserId) {
+				if (currentUserId === room.hostId) {
+					activeHost(true);
+				}
+				Meteor.call('updateUserRoom', currentUserId, room._id, err => {
+					if (err) {
+						console.log(err);
+					}
+				});
+			}
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -41,20 +82,35 @@ class App extends Component {
 		}
 	}
 
+	onToasterClose = () => {
+		setToaster(false);
+	};
+
 	player;
 
 	render() {
+		const { toasterOpen, toasterText, toasterType } = this.state;
+
 		return (
 			<div>
 				<AppHeader />
 				<AppBody />
-				<div className="player-panel">
+				<div className="player-panel" style={{ zIndex: -1 }}>
 					<audio id="audio-player" src="song.mp3" preload="none" width="300" />
 					<video id="youtube-player" preload="none" width="300" height="200" src="" />
 				</div>
+				<Toaster text={toasterText} open={toasterOpen} type={toasterType} onClose={this.onToasterClose} />
 			</div>
 		);
 	}
 }
 
-export default Container.create(App);
+export default withTracker(({ match }) => {
+	const slug = match.params.slug || '';
+
+	return {
+		currentUserId: Meteor.userId(),
+		rooms: Rooms.find().fetch(),
+		room: Rooms.findOne({ slug }),
+	};
+})(Container.create(App));

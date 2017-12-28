@@ -43,8 +43,19 @@ const songSchema = new SimpleSchema({
 	searchPattern: {
 		type: String,
 	},
+	roomId: {
+		type: String,
+	},
 	badSong: {
 		type: Boolean,
+		optional: true,
+	},
+	isRevealed: {
+		type: Boolean,
+		optional: true,
+	},
+	lastFetch: {
+		type: Number,
 		optional: true,
 	},
 });
@@ -54,6 +65,28 @@ Songs.attachSchema(songSchema);
 
 const AppStates = new Mongo.Collection('appstates');
 const Users = Meteor.users;
+
+const roomSchema = new SimpleSchema({
+	name: {
+		type: String,
+	},
+	slug: {
+		type: String,
+	},
+	createdBy: {
+		type: String,
+	},
+	hostId: {
+		type: String,
+	},
+	password: {
+		type: String,
+		optional: true,
+	},
+});
+
+const Rooms = new Mongo.Collection('rooms');
+Rooms.attachSchema(roomSchema);
 
 /**
  * AppStates helper: update playing songs, from any clients
@@ -96,4 +129,4 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 	AppStates.update(playingSongs._id, { key: 'playingSongs', songs });
 };
 
-export { Songs, AppStates, Users };
+export { Songs, AppStates, Users, Rooms };

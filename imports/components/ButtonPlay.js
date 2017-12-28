@@ -11,10 +11,15 @@ class ButtonPlay extends Component {
 	static calculateState(/*prevState*/) {
 		return {
 			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
+			selectedSong: AppStore.getState()['selectedSong'],
 		};
 	}
 
 	toggleButton = () => {
+		if (!this.state.selectedSong) {
+			return;
+		}
+
 		if (this.state.activeBtnPlay) {
 			AppActions.deactiveBtnPlay();
 		} else {
