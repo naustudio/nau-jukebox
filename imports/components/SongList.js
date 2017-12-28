@@ -82,7 +82,9 @@ class SongList extends Component {
 		if (songUrl && currentRoom) {
 			Meteor.call('getSongInfo', songUrl, userId, currentRoom._id, (error /*, result*/) => {
 				if (error) {
-					alert(`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`);
+					AppActions.setToaster(true, `Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`, 'error');
+				} else {
+					AppActions.setToaster(true, `Song's added successfully`, 'success');
 				}
 			});
 		}

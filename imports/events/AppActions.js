@@ -35,6 +35,8 @@ export const CLOSE_POP_UP = 'CLOSE_POP_UP';
 
 export const SET_ROOM = 'SET_ROOM';
 
+export const SET_TOASTER = 'SET_TOASTER';
+
 /**
  * @param  {String} tabIndex tab index of the new section
  * @return {void}
@@ -155,4 +157,13 @@ export function closePopUp() {
 
 export function setRoom(room) {
 	dispatch({ type: SET_ROOM, room });
+}
+
+/**
+ * @param
+ * @return {void}
+ */
+
+export function setToaster(open, text, toasterType) {
+	dispatch({ type: SET_TOASTER, open, text, toasterType });
 }

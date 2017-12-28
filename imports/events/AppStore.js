@@ -49,6 +49,9 @@ class AppStore extends ReduceStore {
 			songLyric: '',
 			revealedSongs: [],
 			currentRoom: null,
+			toasterOpen: false,
+			toasterText: '',
+			toasterType: 'success',
 		};
 	}
 
@@ -120,6 +123,13 @@ class AppStore extends ReduceStore {
 			case AppActions.SET_ROOM:
 				reducedState = {
 					currentRoom: action.room,
+				};
+				break;
+			case AppActions.SET_TOASTER:
+				reducedState = {
+					toasterOpen: action.open,
+					toasterText: action.text ? action.text : state.toasterText,
+					toasterType: action.toasterType ? action.toasterType : state.toasterType,
 				};
 				break;
 			default:

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import AppStore from '../events/AppStore';
-import { focusSearchBox, errorSignIn } from '../events/AppActions';
+import { focusSearchBox, errorSignIn, setToaster } from '../events/AppActions';
 
 class SearchBox extends Component {
 	static getStores() {
@@ -84,7 +84,9 @@ class SearchBox extends Component {
 
 		Meteor.call('getSongInfo', songUrl, userId, currentRoom._id, (error /*, result*/) => {
 			if (error) {
-				alert(`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`);
+				setToaster(true, `Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`, 'error');
+			} else {
+				setToaster(true, `Song's added successfully`, 'success');
 			}
 		});
 

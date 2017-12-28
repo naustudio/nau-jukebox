@@ -10,10 +10,11 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Rooms } from './collections';
 import AppHeader from './components/AppHeader';
 import AppBody from './components/AppBody';
-import { setRoom, activeHost } from './events/AppActions';
+import { setRoom, activeHost, setToaster } from './events/AppActions';
 import AppStore from './events/AppStore';
 import UserStore from './events/UserStore';
 import JukeboxPlayer from './player/JukeboxPlayer';
+import Toaster from './components/Toaster';
 
 class App extends Component {
 	static propTypes = {
@@ -37,6 +38,9 @@ class App extends Component {
 		return {
 			selectedSong: AppStore.getState()['selectedSong'],
 			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
+			toasterOpen: AppStore.getState()['toasterOpen'],
+			toasterText: AppStore.getState()['toasterText'],
+			toasterType: AppStore.getState()['toasterType'],
 		};
 	}
 
@@ -78,9 +82,15 @@ class App extends Component {
 		}
 	}
 
+	onToasterClose = () => {
+		setToaster(false);
+	};
+
 	player;
 
 	render() {
+		const { toasterOpen, toasterText, toasterType } = this.state;
+
 		return (
 			<div>
 				<AppHeader />
@@ -89,6 +99,7 @@ class App extends Component {
 					<audio id="audio-player" src="song.mp3" preload="none" width="300" />
 					<video id="youtube-player" preload="none" width="300" height="200" src="" />
 				</div>
+				<Toaster text={toasterText} open={toasterOpen} type={toasterType} onClose={this.onToasterClose} />
 			</div>
 		);
 	}
