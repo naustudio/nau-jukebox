@@ -2,8 +2,6 @@
  * @author Eric
  */
 
-/* eslint-disable no-alert */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
@@ -139,6 +137,49 @@ class Dashboard extends Component {
 					</form>
 				</div>
 				<Toaster type="error" open={toasterOpen} text={toasterText} onClose={this.onToasterClose} />
+				<details>
+					<summary>What is this?</summary>
+					<p>
+						A simple web app which allows group of people (co-workers, friends gathering, house-mates) collectively book
+						and play continuously a list of songs.
+					</p>
+				</details>
+				<details>
+					<summary>How to?</summary>
+					<ul>
+						<li>First user login with either Facebook or Google account.</li>
+						<li>First user will create a room for the group and become the room&#039;s host.</li>
+						<li>Once the room is created, everyone can join the room by visiting the unique URL.</li>
+						<li>To book songs, users must login.</li>
+						<li>Copy the URL to a single song from supported services and paste it to the search box.</li>
+						<li>Or search from known songs in Nau Jukebox database and book quickly.</li>
+					</ul>
+				</details>
+				<details>
+					<summary>Supported sources for booking?</summary>
+					<ul>
+						<li>
+							<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+								youtube.com
+							</a>
+						</li>
+						<li>
+							<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
+								soundcloud.com
+							</a>
+						</li>
+						<li>
+							<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
+								nhaccuatui.com
+							</a>
+						</li>
+						<li>
+							<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
+								mp3.zing.vn
+							</a>
+						</li>
+					</ul>
+				</details>
 			</div>
 		);
 	}
