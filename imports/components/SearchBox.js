@@ -31,16 +31,9 @@ class SearchBox extends Component {
 
 	onDocumentClick = e => {
 		const $target = $(e.target);
-		if ($target.closest('.search-box').length) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			return false;
+		if (!$target.closest('.search-box').length) {
+			this.blurSearchBox();
 		}
-
-		this.blurSearchBox();
-
-		return true;
 	};
 
 	onFormSubmit = e => {

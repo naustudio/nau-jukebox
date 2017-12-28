@@ -1995,6 +1995,11 @@ h5 small {
 		color: $color-01;
 		background-color: #28a745;
 	}
+
+	&.primary {
+		color: $color-01;
+		background-color: $color-nau;
+	}
 }
 
 // $btn-color: #A75265;

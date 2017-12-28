@@ -42,18 +42,27 @@ class TabUsers extends Component {
 		const form = e.currentTarget;
 		const amount = form.amount && form.amount.value;
 		const userId = form.userid && form.userid.value;
-		if (amount && userId) {
+
+		if (amount) {
 			Meteor.call('naucoinPay', userId, amount, (/*err, result*/) => {
 				form.amount.value = '';
+
+				if (this.state.isPopoverShow) {
+					this.togglePopover();
+				}
 			});
-			this.togglePopover();
 		}
 	};
 
 	onSetHost = e => {
+		const userId = e.currentTarget.dataset.userid;
+
+		if (userId === this.state.currentRoom.hostId) {
+			return;
+		}
+
 		const confirm = window.confirm('Are you sure?');
 		if (confirm) {
-			const userId = e.currentTarget.dataset.userid;
 			const { currentRoom } = this.state;
 			if (userId && currentRoom) {
 				Meteor.call('changeHost', userId, currentRoom._id, err => {
@@ -115,6 +124,7 @@ class TabUsers extends Component {
 								<div className="users__item__name-wrapper">
 									<p className="users__item__name">{user.profile && user.profile.name}</p>
 									{currentRoom && currentRoom.hostId === user._id ? <Badge type="dark" message="Host" /> : null}
+									{user._id === Meteor.userId() ? <Badge type="primary" message="Me" /> : null}
 									{this.showBadges(user)}
 								</div>
 							</div>

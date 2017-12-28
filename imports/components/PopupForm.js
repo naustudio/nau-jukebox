@@ -12,6 +12,11 @@ export default class PopupForm extends Component {
 
 	state = {};
 
+	componentDidMount() {
+		const input = document.querySelector('#input-popup-js');
+		input.focus();
+	}
+
 	setRef = node => {
 		this.popupBackDrop = node;
 	};
@@ -35,7 +40,7 @@ export default class PopupForm extends Component {
 								className="users__item__payment__input"
 								type="number"
 								name="amount"
-								id="users__item__payment__input"
+								id="input-popup-js"
 								placeholder="AMOUNT OF PAYMENT (+/-)"
 							/>
 							<input hidden value={id} readOnly type="text" name="userid" />
