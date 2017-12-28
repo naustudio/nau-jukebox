@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
+import he from 'he';
 import AppStore from '../events/AppStore';
 import { focusSearchBox, errorSignIn, setToaster } from '../events/AppActions';
 
@@ -178,11 +179,15 @@ class SearchBox extends Component {
 								{this.state.searchResult.map((song, index) => (
 									<li
 										key={song._id}
-										className={`song-result__item ${selectedIndex === index ? 'song-result__item--selected' : null}`}
+										className={`song-result__item ${
+											selectedIndex === index ? 'song-result__item--selected' : null
+										}`}
 										onClick={this.onSearchResultClick}
 										data-href={song.originalURL}
-										dangerouslySetInnerHTML={{ __html: `${song.name} • ${song.artist} • ${song.origin}` }}
-									/>
+										title="Click to book this song"
+									>
+										{he.decode(song.name)} • {song.artist} • {song.origin}
+									</li>
 								))}
 							</ul>
 						</div>

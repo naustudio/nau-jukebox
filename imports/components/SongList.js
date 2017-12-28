@@ -10,6 +10,7 @@ import { Container } from 'flux/utils';
 import { distanceInWordsStrict } from 'date-fns';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
+import he from 'he';
 
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
@@ -100,7 +101,11 @@ class SongList extends Component {
 		if (songUrl && currentRoom) {
 			Meteor.call('getSongInfo', songUrl, userId, currentRoom._id, (error /*, result*/) => {
 				if (error) {
-					AppActions.setToaster(true, `Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`, 'error');
+					AppActions.setToaster(
+						true,
+						`Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`,
+						'error'
+					);
 				} else {
 					AppActions.setToaster(true, `Song's added successfully`, 'success');
 				}
@@ -218,9 +223,10 @@ class SongList extends Component {
 												className="songs__list-item__name--link"
 												data-id={song._id}
 												onClick={this.selectSong}
-												title={song.name}
-												dangerouslySetInnerHTML={{__html: `${song.name} &nbsp; • &nbsp; ${song.artist}`}}
-											/>
+												title={`${he.decode(song.name)} • ${song.artist}`}
+											>
+												{he.decode(song.name)} • {song.artist}
+											</a>
 										</span>
 									</span>
 
@@ -239,6 +245,7 @@ class SongList extends Component {
 													data-id={song._id}
 													data-revealed={song.isRevealed}
 													onClick={this.toggleUserBook}
+													title="Reveal who booked this song"
 												>
 													<i className="fa fa-eye" />
 												</span>
@@ -249,6 +256,7 @@ class SongList extends Component {
 												}`}
 												data-id={song._id}
 												onClick={song.lyric ? this.onOpenLyricPopup : null}
+												title="View lyrics"
 											>
 												<i className="fa fa-file-text" />
 											</span>
@@ -256,6 +264,7 @@ class SongList extends Component {
 												className="songs__list-item__delete songs__list-item__icon"
 												data-url={song.originalURL}
 												onClick={this.rebookSong}
+												title="Re-book this song"
 											>
 												<i className="fa fa-retweet" />
 											</span>
@@ -264,6 +273,7 @@ class SongList extends Component {
 													className="songs__list-item__delete songs__list-item__icon"
 													data-id={song._id}
 													onClick={this.removeSong}
+													title="Remove this song"
 												>
 													<i className="fa fa-close" />
 												</span>
@@ -282,6 +292,7 @@ class SongList extends Component {
 												data-id={song._id}
 												data-revealed={song.isRevealed}
 												onClick={this.toggleUserBook}
+												title="Reveal who booked this song"
 											>
 												<i className="fa fa-eye" />
 											</span>
@@ -292,6 +303,7 @@ class SongList extends Component {
 											}`}
 											data-id={song._id}
 											onClick={song.lyric ? this.onOpenLyricPopup : null}
+											title="View lyrics"
 										>
 											<i className="fa fa-file-text" />
 										</span>
@@ -299,6 +311,7 @@ class SongList extends Component {
 											className="songs__list-item__delete songs__list-item__icon"
 											data-url={song.originalURL}
 											onClick={this.rebookSong}
+											title="Re-book this song"
 										>
 											<i className="fa fa-retweet" />
 										</span>
@@ -307,6 +320,7 @@ class SongList extends Component {
 												className="songs__list-item__delete songs__list-item__icon"
 												data-id={song._id}
 												onClick={this.removeSong}
+												title="Remove this song"
 											>
 												<i className="fa fa-close" />
 											</span>
