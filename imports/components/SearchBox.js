@@ -21,8 +21,32 @@ class SearchBox extends Component {
 		selectedIndex: -1,
 	};
 
+	componentDidMount() {
+		document.addEventListener('click', this.onDocumentClick);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('click', this.onDocumentClick);
+	}
+
+	onDocumentClick = e => {
+		const $target = $(e.target);
+		if ($target.closest('.search-box').length) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			return false;
+		}
+
+		this.blurSearchBox();
+
+		return true;
+	};
+
 	onFormSubmit = e => {
-		e.preventDefault();
+		if (e) {
+			e.preventDefault();
+		}
 		const { selectedIndex, searchResult } = this.state;
 		if (selectedIndex >= 0) {
 			this.submitSong(searchResult[selectedIndex].originalURL);
@@ -53,6 +77,9 @@ class SearchBox extends Component {
 				break;
 			case 27:
 				this.setState({ searchResult: [], selectedIndex: -1 });
+				break;
+			case 13:
+				this.onFormSubmit();
 				break;
 			default:
 				if (e.keyCode !== 13 && currentRoom) {
@@ -137,7 +164,6 @@ class SearchBox extends Component {
 								placeholder="Search old song or add new NCT, Zing, YouTube, SoundClound URL"
 								onKeyUp={this.keyUpSearchSong}
 								onFocus={this.focusSearchBox}
-								onBlur={this.blurSearchBox}
 								ref={this.refSearchInput}
 							/>
 						</div>
