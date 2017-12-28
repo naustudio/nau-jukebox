@@ -41,6 +41,21 @@ class SongList extends Component {
 		};
 	}
 
+	componentDidMount() {
+		if (this.interval) {
+			clearInterval(this.interval);
+		}
+		this.interval = setInterval(() => {
+			this.forceUpdate();
+		}, 60000);
+	}
+
+	componentWillUnmount() {
+		if (this.interval) {
+			clearInterval(this.interval);
+		}
+	}
+
 	onOpenLyricPopup = e => {
 		const id = e.currentTarget.dataset.id;
 		if (id) {
@@ -191,7 +206,12 @@ class SongList extends Component {
 											</a>
 										</span>
 										<span className="songs__list-item__name">
-											<a className="songs__list-item__name--link" data-id={song._id} onClick={this.selectSong}>
+											<a
+												className="songs__list-item__name--link"
+												data-id={song._id}
+												onClick={this.selectSong}
+												title={song.name}
+											>
 												{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
 											</a>
 										</span>
