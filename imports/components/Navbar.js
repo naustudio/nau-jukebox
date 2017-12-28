@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
+import { Link } from 'react-router-dom';
 // import Host from './Host';
 
 import SearchBox from './SearchBox';
@@ -56,9 +57,9 @@ class NavBar extends Component {
 				<div className="container navbar-container">
 					<ul className="navbar__list noselect">
 						<li className="navbar__item navbar__item-logo">
-							<a href="https://naustud.io" target="_blank" rel="noopener noreferrer">
+							<Link to="/">
 								<img className="navbar__img" src="/nau-jukebox.svg" alt="logo" />
-							</a>
+							</Link>
 						</li>
 						<SearchBox />
 						<ButtonPlay />
