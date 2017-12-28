@@ -237,9 +237,11 @@ class SongList extends Component {
 												</span>
 											) : null}
 											<span
-												className="songs__list-item__lyrics songs__list-item__icon"
+												className={`songs__list-item__lyrics songs__list-item__icon ${
+													!song.lyric ? 'songs__list-item__icon--disable' : ''
+												}`}
 												data-id={song._id}
-												onClick={this.onOpenLyricPopup}
+												onClick={song.lyric ? this.onOpenLyricPopup : null}
 											>
 												<i className="fa fa-file-text" />
 											</span>
@@ -278,9 +280,11 @@ class SongList extends Component {
 											</span>
 										) : null}
 										<span
-											className="songs__list-item__lyrics songs__list-item__icon"
+											className={`songs__list-item__lyrics songs__list-item__icon ${
+												!song.lyric ? 'songs__list-item__icon--disable' : ''
+											}`}
 											data-id={song._id}
-											onClick={this.onOpenLyricPopup}
+											onClick={song.lyric ? this.onOpenLyricPopup : null}
 										>
 											<i className="fa fa-file-text" />
 										</span>

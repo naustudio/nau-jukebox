@@ -1233,6 +1233,15 @@ h5 small {
 			&:hover {
 				color: #000;
 			}
+
+			&--disable {
+				cursor: default;
+				opacity: 0.4;
+
+				&:hover {
+					color: grey;
+				}
+			}
 		}
 	}
 }
