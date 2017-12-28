@@ -11,7 +11,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import blockWords from './helpers/block-words.json';
 import { errorSignInDashboard } from './events/AppActions';
-import { Rooms } from './collections';
+import { Rooms, Users } from './collections';
 import AccountsUIWrapper from './components/AccountUIWrapper';
 import AppStore from './events/AppStore';
 import UserStore from './events/UserStore';
@@ -144,7 +144,14 @@ class Dashboard extends Component {
 	}
 }
 
-export default withTracker(() => ({
-	isSignedIn: !!Meteor.userId(),
-	rooms: Rooms.find({ hostId: Meteor.userId() }).fetch(),
-}))(Container.create(Dashboard));
+export default withTracker(() => {
+	const _id = Meteor.userId();
+	let joinedRooms = [];
+	const currentUser = Meteor.userId() ? Users.findOne({ _id }) : undefined;
+	joinedRooms = (currentUser && currentUser.joinedRooms) || [];
+
+	return {
+		isSignedIn: !!Meteor.userId(),
+		rooms: Rooms.find({ _id: { $in: joinedRooms } }).fetch(),
+	};
+})(Container.create(Dashboard));

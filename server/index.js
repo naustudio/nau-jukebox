@@ -137,9 +137,14 @@ Meteor.methods({
 	},
 
 	updateUserRoom(userId, roomId) {
+		const joinedRooms = Users.findOne(userId).joinedRooms;
+
+		joinedRooms.push(roomId);
+
 		return Users.update(userId, {
 			$set: {
 				roomId,
+				joinedRooms,
 			},
 		});
 	},
@@ -198,9 +203,7 @@ Meteor.publish('userData', function() {
 	if (this.userId) {
 		return Meteor.users.find(
 			{ _id: this.userId },
-			{
-				fields: { status: 1, balance: 1, playing: 1, roomId: 1, services: 1, profile: 1, isHost: 1 },
-			}
+			{ fields: { status: 1, balance: 1, playing: 1, roomId: 1, services: 1, profile: 1, isHost: 1, joinedRooms: 1 } }
 		);
 	}
 
