@@ -116,13 +116,13 @@ class Dashboard extends Component {
 					</div>
 					{rooms && rooms.length ? (
 						<div className="dashboard__room-container">
-							<h5 className="dashboard__room-header">Rooms of which I am the host</h5>
+							<h5 className="dashboard__room-header">Joined Rooms</h5>
 							<ul className="dashboard__room-list">
 								{rooms.map(room => (
 									<li className="dashboard__room" key={room._id}>
 										<span className="dashboard__room-name">{room.name}</span>
 										<a href={`/room/${room.slug}`} className="dashboard__join-button button">
-											JOIN
+											{Meteor.userId() === room.hostId ? 'JOIN AS HOST' : 'JOIN'}
 										</a>
 									</li>
 								))}

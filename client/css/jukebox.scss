@@ -1181,7 +1181,7 @@ summary {
 
 			&:first-child {
 				padding-left: 0;
-				width: 370px;
+				width: calc(100% - 245px);
 			}
 		}
 	}
@@ -1210,7 +1210,6 @@ summary {
 
 			&:first-child {
 				padding-left: 0;
-				width: calc(100% - 220px);
 			}
 
 			&:last-child {
@@ -2063,6 +2062,14 @@ summary {
 // $btn-color: #A75265;
 $btn-color: #c08e52;
 $btn-color-active: #a65e09;
+
+.button, button {
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: none;
+	}
+}
 
 button.button-naucoin {
 	background-color: $btn-color;
