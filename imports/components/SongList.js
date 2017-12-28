@@ -21,6 +21,7 @@ class SongList extends Component {
 		songs: PropTypes.arrayOf(PropTypes.object),
 		onlineUsers: PropTypes.arrayOf(PropTypes.object),
 		userId: PropTypes.string,
+		isPlayingList: PropTypes.bool.isRequired,
 	};
 
 	static defaultProps = {
@@ -185,12 +186,18 @@ class SongList extends Component {
 	render() {
 		const { currentRoom } = this.state;
 		const { userId } = this.props;
+		const songs = this.props.songs;
+		const emptyMessage = this.props.isPlayingList
+			? 'Please book your first song of the day.'
+			: 'No songs available. ¯\\_(ツ)_/¯';
 
+		// prettier-ignore
 		return (
 			<section className="tab__body song">
 				<div className="container song__container">
 					<ul className="songs__list">
-						{this.props.songs.map(song => (
+						{songs && songs.length ?
+						songs.map(song => (
 							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper">
 								{this.whoIsPlaying(song._id)}
 
@@ -201,6 +208,7 @@ class SongList extends Component {
 												href={`${song.originalURL}`}
 												target="_blank"
 												className={`songs__list-item__thumbnail--link ${this.getThumbnailClass(song.origin)}`}
+												title={`Open original URL at ${song.origin}`}
 											>
 												<img src={`${this.fallbackImage(song.thumbURL, song._id)}`} alt={`${song.name}`} />
 											</a>
@@ -237,9 +245,11 @@ class SongList extends Component {
 												</span>
 											) : null}
 											<span
-												className="songs__list-item__lyrics songs__list-item__icon"
+												className={`songs__list-item__lyrics songs__list-item__icon ${
+													!song.lyric ? 'songs__list-item__icon--disable' : ''
+												}`}
 												data-id={song._id}
-												onClick={this.onOpenLyricPopup}
+												onClick={song.lyric ? this.onOpenLyricPopup : null}
 											>
 												<i className="fa fa-file-text" />
 											</span>
@@ -278,9 +288,11 @@ class SongList extends Component {
 											</span>
 										) : null}
 										<span
-											className="songs__list-item__lyrics songs__list-item__icon"
+											className={`songs__list-item__lyrics songs__list-item__icon ${
+												!song.lyric ? 'songs__list-item__icon--disable' : ''
+											}`}
 											data-id={song._id}
-											onClick={this.onOpenLyricPopup}
+											onClick={song.lyric ? this.onOpenLyricPopup : null}
 										>
 											<i className="fa fa-file-text" />
 										</span>
@@ -303,7 +315,10 @@ class SongList extends Component {
 									</span>
 								</div>
 							</li>
-						))}
+						))
+						:
+						emptyMessage
+						}
 					</ul>
 				</div>
 			</section>
