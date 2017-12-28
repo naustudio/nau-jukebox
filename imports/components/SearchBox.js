@@ -76,7 +76,7 @@ class SearchBox extends Component {
 				break;
 			default:
 				if (e.keyCode !== 13 && currentRoom) {
-					Meteor.call('searchSong', this.searchInput.value, currentRoom._id, (err, result) => {
+					Meteor.call('searchSong', this.searchInput.value, (err, result) => {
 						if (err) {
 							console.log(err);
 						} else {

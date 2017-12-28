@@ -71,7 +71,7 @@ class TabNav extends Component {
 
 	render() {
 		return (
-			<nav className="tab__nav">
+			<nav className="tab__nav noselect">
 				<div className="container tab__nav__container tab__nav--mobile-no-pd">
 					<ul className={`tab__nav__playlist ${this.state.navbarIsShown ? 'tab__nav__playlist--active' : ''}`}>
 						{this._renderTabNav()}

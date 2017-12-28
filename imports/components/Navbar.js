@@ -49,9 +49,12 @@ class NavBar extends Component {
 		return (
 			<nav className="navbar" ref={this.refNav}>
 				{/* <Host /> */}
-				<h6 className="host">Room: {this.state.currentRoom ? this.state.currentRoom.name : ''}</h6>
+				<h6 className="host">
+					Room: {this.state.currentRoom ? this.state.currentRoom.name : ''} <br />
+					<small>{window.location.href.split('#')[0]}</small>
+				</h6>
 				<div className="container navbar-container">
-					<ul className="navbar__list">
+					<ul className="navbar__list noselect">
 						<li className="navbar__item navbar__item-logo">
 							<a href="https://naustud.io" target="_blank" rel="noopener noreferrer">
 								<img className="navbar__img" src="/nau-jukebox.svg" alt="logo" />
