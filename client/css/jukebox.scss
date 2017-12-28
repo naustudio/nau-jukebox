@@ -325,7 +325,7 @@ h5 small {
 	border-radius: 4px;
 	border: 1px solid $color-06; // margin-top: 4px;
 	overflow: hidden;
-	background-color: rgba(255, 255, 255, 0.5);
+	background-color: rgba($color-01, 0.8);
 
 	&--focus {
 		background-color: rgba(255, 255, 255, 0.8);
@@ -611,14 +611,6 @@ h5 small {
 	}
 }
 
-.search-box {
-	width: 100%;
-	background-color: rgba($color-01, 0.8);
-	border-radius: 4px;
-	overflow: hidden;
-	border: 1px solid $color-06;
-}
-
 .search-box--focus {
 	background-color: rgba(255, 255, 255, 0.9);
 	border-color: rgba(0, 0, 0, 0.4);
@@ -805,18 +797,6 @@ h5 small {
 =          AppBody/TabNav                      =
 ============================================= */
 
-@media screen and (max-width: 767px) {
-	.login-block {
-		background: #f7f7f7;
-		z-index: 2;
-		border-bottom: 1px solid #eee;
-		padding: 10px 15px;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-}
-
 .tab {
 	padding-top: 190px;
 
@@ -894,7 +874,42 @@ h5 small {
 	}
 }
 
+.tab__nav .login-block__error {
+	position: absolute;
+	margin-left: 20px;
+	transform: translateX(100%);
+	width: 100px;
+}
+
+.tab__nav .login-block__error::before {
+	position: absolute;
+	content: '';
+	display: block;
+	width: 5px;
+	height: 5px;
+	border-radius: 100%;
+	background-color: #f00;
+	top: 50%;
+	opacity: 1;
+	margin-left: -15px;
+	animation: blink-animation 1s infinite;
+}
+
+.tab__nav .login-block__error p {
+	margin-bottom: 0;
+}
+
 @media screen and (max-width: 767px) {
+	.login-block {
+		background: #f7f7f7;
+		z-index: 2;
+		border-bottom: 1px solid #eee;
+		padding: 10px 15px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
 	.container {
 		margin: 0;
 		padding: 15px;
@@ -924,8 +939,6 @@ h5 small {
 	}
 
 	.tab__nav {
-		position: fixed;
-		width: 100%;
 		z-index: 100;
 		background-color: $color-01;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -987,31 +1000,6 @@ h5 small {
 			}
 		}
 	}
-
-	.tab__nav .login-block__error {
-		position: absolute;
-		margin-left: 20px;
-		transform: translateX(100%);
-		width: 100px;
-	}
-
-	.tab__nav .login-block__error::before {
-		position: absolute;
-		content: '';
-		display: block;
-		width: 5px;
-		height: 5px;
-		border-radius: 100%;
-		background-color: #f00;
-		top: 50%;
-		opacity: 1;
-		margin-left: -15px;
-		animation: blink-animation 1s infinite;
-	}
-
-	.tab__nav .login-block__error p {
-		margin-bottom: 0;
-	}
 }
 
 /* =============================================
@@ -1046,7 +1034,6 @@ h5 small {
 	align-items: center;
 	justify-content: space-between;
 	margin: 0;
-	cursor: pointer;
 	background-color: $color-01;
 
 	&__container {
@@ -1127,10 +1114,6 @@ h5 small {
 		cursor: pointer;
 		color: gray;
 		transition: all 0.4s;
-
-		&:hover {
-			color: #000;
-		}
 	}
 
 	&__author {
@@ -1165,18 +1148,12 @@ h5 small {
 	}
 
 	.songs__list-item {
-		position: relative;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
 		margin: 0;
 		cursor: pointer;
 		background-color: $color-01;
 
 		&__container {
 			position: relative;
-			display: flex;
-			align-items: center;
 			padding: 0 10px;
 			width: auto;
 
@@ -1236,42 +1213,10 @@ h5 small {
 			}
 		}
 
-		&__name {
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
-			margin-left: 15px;
-
-			&--link {
-				color: black;
-				text-decoration: none;
-			}
-		}
-
-		&__control {
-			display: flex;
-			align-items: center;
-
-			& span {
-				padding: 0 7px;
-			}
-		}
-
 		&__icon {
-			cursor: pointer;
-			color: gray;
-			transition: all 0.4s;
-
 			&:hover {
 				color: #000;
 			}
-		}
-
-		&__author {
-			position: absolute;
-			right: 101%;
-			display: block;
-			white-space: nowrap;
 		}
 	}
 }
@@ -1775,18 +1720,6 @@ h5 small {
 	&__item {
 		list-style: none;
 
-		&::before {
-			content: '';
-			width: 8px;
-			height: 8px;
-			position: absolute;
-			left: 0;
-			border-radius: 100%;
-			background-color: $color-01;
-			top: 50%;
-			transform: translate3d(0, -50%, 0);
-		}
-
 		&__avt {
 			margin-left: 15px;
 		}
@@ -1806,36 +1739,16 @@ h5 small {
 			justify-content: space-between;
 		}
 
+		&__name-wrapper {
+			display: flex;
+			align-items: center;
+		}
+
 		&__name {
 			margin-bottom: 0;
-			margin-right: 20px;
+			margin-right: 10px;
 			margin-left: 6px;
 			position: relative;
-
-			&::before {
-				content: '';
-				width: 8px;
-				height: 8px;
-				position: absolute;
-				left: 100%;
-				border-radius: 100%;
-				background-color: $color-01;
-				top: 50%;
-				transform: translate3d(0, -50%, 0);
-				margin-left: 5px;
-			}
-		}
-
-		&--active {
-			&::before {
-				background-color: #347a2a;
-			}
-		}
-
-		&--idle {
-			&::before {
-				background-color: #f4ff57;
-			}
 		}
 
 		&__coin {
@@ -1870,13 +1783,13 @@ h5 small {
 
 		&__image-and-name {
 			display: flex;
-			flex-basis: 100%;
+			// flex-basis: 100%;
 			position: relative;
 		}
 
 		&__payment {
-			width: 100%;
 			// width: 60%;
+			position: relative;
 			display: flex;
 			justify-content: flex-end;
 			margin-top: 5px;
@@ -1908,11 +1821,6 @@ h5 small {
 				text-transform: uppercase;
 				border-color: #c08e52;
 				background-color: #c08e52;
-
-				&:hover {
-					border-color: #a65e09;
-					background-color: #a65e09;
-				}
 			}
 
 			& input[type='button'],
@@ -1923,6 +1831,10 @@ h5 small {
 				&:last-child {
 					margin-right: 0;
 				}
+			}
+
+			& input[type='button'] {
+				padding: 0 10px;
 			}
 		}
 
@@ -1937,6 +1849,38 @@ h5 small {
 			margin: 0;
 		}
 	}
+
+	&__popover-backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 301;
+	}
+
+	&__popover {
+		position: absolute;
+		z-index: 1;
+		background-color: $color-01;
+		border: 1px solid rgba($color-01, 0.2);
+		padding: 25px 10px 10px 10px;
+		top: 50%;
+		right: 50%;
+		transform: translate3d(50%, -50%, 0);
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.75);
+
+		&__form {
+			display: flex;
+		}
+
+		&__icon {
+			position: absolute;
+			right: 0;
+			top: 0;
+			padding: 5px;
+		}
+	}
 }
 
 @media screen and (min-width: 768px) {
@@ -1945,15 +1889,6 @@ h5 small {
 			padding-left: 0;
 			// top: $tabnav-h + 30px;
 		}
-
-		// &__title {
-		// 	span {
-		// 	}
-		// }
-
-		// &__info {
-
-		// }
 
 		&__item-wrapper {
 			flex-wrap: nowrap;
@@ -1977,6 +1912,26 @@ h5 small {
 		}
 	}
 }
+
+@media screen and (min-width: 992px) {
+	.users {
+		&__item {
+			&__payment {
+				&__submit {
+					&:hover {
+						border-color: #a65e09;
+						background-color: #a65e09;
+					}
+				}
+			}
+		}
+	}
+}
+
+/*
+	PopupForm
+*/
+
 
 /**
  * Naucoin css
@@ -2015,6 +1970,29 @@ h5 small {
 		font-weight: 100;
 		text-transform: uppercase;
 		font-size: 11px;
+	}
+}
+
+.badge {
+	border: 1px solid $color-06;
+	padding: 0 2px;
+	font-size: 11px;
+	border-radius: 4px;
+	margin: 0 2px;
+	font-weight: 700;
+
+	&.warning {
+		background-color: #ffc107;
+	}
+
+	&.dark {
+		color: $color-01;
+		background-color: #343a40;
+	}
+
+	&.success {
+		color: $color-01;
+		background-color: #28a745;
 	}
 }
 
