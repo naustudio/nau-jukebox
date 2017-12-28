@@ -23,3 +23,7 @@ trim_trailing_whitespace = false
 # package.json adhere to --save-dev manipulation styles
 indent_style = space
 indent_size = 2
+
+[*.yml]
+indent_style = space
+indent_size = 2
