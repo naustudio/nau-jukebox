@@ -2,7 +2,7 @@
  * @author Tu Nguyen
  */
 
-/* eslint-disable no-alert */
+/* eslint-disable no-alert, react/no-danger */
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -219,9 +219,8 @@ class SongList extends Component {
 												data-id={song._id}
 												onClick={this.selectSong}
 												title={song.name}
-											>
-												{`${song.name}`} &nbsp; • &nbsp; {`${song.artist}`}
-											</a>
+												dangerouslySetInnerHTML={{__html: `${song.name} &nbsp; • &nbsp; ${song.artist}`}}
+											/>
 										</span>
 									</span>
 

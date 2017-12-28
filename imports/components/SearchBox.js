@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import AppStore from '../events/AppStore';
@@ -171,9 +172,8 @@ class SearchBox extends Component {
 										className={`song-result__item ${selectedIndex === index ? 'song-result__item--selected' : null}`}
 										onClick={this.onSearchResultClick}
 										data-href={song.originalURL}
-									>
-										{song.name} • {song.artist} • {song.origin}
-									</li>
+										dangerouslySetInnerHTML={{ __html: `${song.name} • ${song.artist} • ${song.origin}` }}
+									/>
 								))}
 							</ul>
 						</div>
