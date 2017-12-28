@@ -1,8 +1,16 @@
 # Nau Jukebox Changelog
 
+## 2017-12-29
+
+* **(BIG CHANGE)** Multi rooms feature
+* New landing page with info and room creation
+* Search pattern for existing songs enhancement
+* Users list enhancement
+* Many bug fixes
+
 ## 2017-12-26
 
-* **(BIG CHANG)** Migrate Client side to React and Flux architecture
+* **(BIG CHANGE)** Migrate Client side to React and Flux architecture
 * Optimize synced songs to client (play list now sync much faster)
 * Search logic moved to server
 * Mark bad songs if re-book with now-invalid URL

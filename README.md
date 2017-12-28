@@ -4,7 +4,7 @@
 
 A simple webapp which allows group of people (co-workers, friends gathering, house-mates) collectively suggest and play continuously a pending list of songs.
 
-Currently users can book songs from well-known online music providers including: nhaccuatui.com, mp3.zing.com, soundcloud.com, and youtube.com. You can add more music providers by sending us a pull request.
+Currently users can book songs from well-known online music providers including: nhaccuatui.com, mp3.zing.vn, soundcloud.com, and youtube.com. You can add more music providers by sending us a pull requests.
 
 The app is built with [Meteor](http://meteor.com/) which allows real-time interactions among active users.
 
@@ -48,7 +48,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Contributors
 
 <!-- prettier-ignore -->
-| ![github.com/trongthanh](https://avatars3.githubusercontent.com/u/234226?s=128) | ![github.com/tampham47](https://avatars3.githubusercontent.com/u/5687992?s=128) | ![github.com/tttt-conan](https://avatars3.githubusercontent.com/u/8154402?s=128) | ![github.com/TDiNguyen](https://api.adorable.io/avatars/128/TDiNguyen@github.png "18071187") | ![github.com/leptco](https://api.adorable.io/avatars/128/leptco@github.png "26835659") |
+| ![github.com/trongthanh](https://avatars3.githubusercontent.com/u/234226?s=128) | ![github.com/tampham47](https://avatars3.githubusercontent.com/u/5687992?s=128) | ![github.com/tttt-conan](https://avatars3.githubusercontent.com/u/8154402?s=128) | ![github.com/TDiNguyen](https://avatars3.githubusercontent.com/u/18071187?s=128) | ![github.com/leptco](https://api.adorable.io/avatars/128/leptco@github.png "26835659") |
 | --- | --- | --- | --- | --- |
 | [@trongthanh](https://github.com/trongthanh) | [@tampham47](https://github.com/tampham47) | [@tttt-conan](https://github.com/tttt-conan) | [@TDiNguyen](https://github.com/TDiNguyen) | [@leptco](https://github.com/leptco) |
 
