@@ -40,7 +40,7 @@ class TabSongs extends Component {
 			);
 		}
 
-		return <SongList songs={this.props.songs} />;
+		return <SongList songs={this.props.songs} isPlayingList />;
 	}
 }
 

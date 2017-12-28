@@ -21,6 +21,7 @@ class SongList extends Component {
 		songs: PropTypes.arrayOf(PropTypes.object),
 		onlineUsers: PropTypes.arrayOf(PropTypes.object),
 		userId: PropTypes.string,
+		isPlayingList: PropTypes.bool.isRequired,
 	};
 
 	static defaultProps = {
@@ -186,6 +187,9 @@ class SongList extends Component {
 		const { currentRoom } = this.state;
 		const { userId } = this.props;
 		const songs = this.props.songs;
+		const emptyMessage = this.props.isPlayingList
+			? 'Please book your first song of the day.'
+			: 'No songs available. ¯\\_(ツ)_/¯';
 
 		// prettier-ignore
 		return (
@@ -313,7 +317,7 @@ class SongList extends Component {
 							</li>
 						))
 						:
-						'No songs available. ¯\\_(ツ)_/¯'
+						emptyMessage
 						}
 					</ul>
 				</div>
