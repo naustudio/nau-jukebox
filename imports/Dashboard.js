@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
+import { Link } from 'react-router-dom';
 
 import blockWords from './helpers/block-words.json';
 import { errorSignInDashboard } from './events/AppActions';
@@ -121,27 +122,41 @@ class Dashboard extends Component {
 								{rooms.map(room => (
 									<li className="dashboard__room" key={room._id}>
 										<span className="dashboard__room-name">{room.name}</span>
-										<a href={`/room/${room.slug}`} className="dashboard__join-button button">
+										<Link to={`/room/${room.slug}`} className="dashboard__join-button button">
 											{Meteor.userId() === room.hostId ? 'JOIN AS HOST' : 'JOIN'}
-										</a>
+										</Link>
 									</li>
 								))}
 							</ul>
 						</div>
 					) : null}
 					<form className="dashboard__add-room" onSubmit={this.onCreateRoom}>
-						<input type="text" placeholder="Room name" required name="name" minLength="4" onInput={this.onInputName} />
+						<label>NEW ROOM</label>
+						<input
+							type="text"
+							placeholder="Room name"
+							required
+							name="name"
+							minLength="4"
+							onInput={this.onInputName}
+						/>
 						<button type="submit" className="dashboard__create-button">
 							CREATE
 						</button>
 					</form>
 				</div>
 				<Toaster type="error" open={toasterOpen} text={toasterText} onClose={this.onToasterClose} />
+				<hr />
 				<details>
-					<summary>What is this?</summary>
+					<summary>Introduction / Giới thiệu</summary>
 					<p>
-						A simple web app which allows group of people (co-workers, friends gathering, house-mates) collectively book
-						and play continuously a list of songs.
+						A simple web app which allows group of people (co-workers, friends gathering, house-mates)
+						collectively book and play continuously a list of songs.
+					</p>
+					<p>
+						(TV) Đây là một ứng dụng web đơn giản cho phép một nhóm user cùng đăng ký bài hát vào một danh
+						sách chung và nghe cùng với nhau. Nâu Jukebox rất phù hợp với một nhóm người đang nghe nhạc cùng
+						nhau: tại công sở, quán cà phê, bạn bè cùng lớp, cùng phòng...
 					</p>
 				</details>
 				<details>
@@ -153,30 +168,79 @@ class Dashboard extends Component {
 						<li>To book songs, users must login.</li>
 						<li>Copy the URL to a single song from supported services and paste it to the search box.</li>
 						<li>Or search from known songs in Nau Jukebox database and book quickly.</li>
+						<li>
+							Supported services whose song can be book from:
+							<ul>
+								<li>
+									<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+										youtube.com
+									</a>
+								</li>
+								<li>
+									<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
+										soundcloud.com
+									</a>
+								</li>
+								<li>
+									<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
+										nhaccuatui.com
+									</a>
+								</li>
+								<li>
+									<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
+										mp3.zing.vn
+									</a>
+								</li>
+							</ul>
+						</li>
 					</ul>
 				</details>
 				<details>
-					<summary>Supported sources for booking?</summary>
+					<summary>Hướng dẫn</summary>
 					<ul>
+						<li>Đầu tiên bạn cần phải đăng nhập với tài khoản Facebook hoặc Google</li>
+						<li>Tiếp theo, bạn tạo một phòng nghe nhạc chung, và trở thành Host (chủ phòng).</li>
 						<li>
-							<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-								youtube.com
-							</a>
+							Một khi phòng nghe nhạc đã được tạo, mọi người đều có thể vào phòng xem danh sách bài hát
+							thông qua một địa chỉ URL dành riêng cho Phòng.
 						</li>
 						<li>
-							<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
-								soundcloud.com
-							</a>
+							Để đăng ký bài hát, các user khác cần đăng nhập. Danh sách những user đã đăng nhập vào phòng
+							sẽ hiện lên bên danh sách Users.
 						</li>
 						<li>
-							<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
-								nhaccuatui.com
-							</a>
+							Copy đường link trên thanh địa chỉ tại trang bài hát (trang đơn, không phải playlist) của
+							một trong các website nghe nhạc được hỗ trợ.
+						</li>
+						<li>Dán vào ô tìm kiếm và Enter (hoặc bấm Search)</li>
+						<li>
+							<strong>HOẶC</strong> bạn có thể nhập vào từ khoá để tìm kiếm bài hát sẵng có trong cơ sở dữ
+							liệu của Jukebox.
 						</li>
 						<li>
-							<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
-								mp3.zing.vn
-							</a>
+							Các trang nghe nhạc đang được hỗ trợ là:
+							<ul>
+								<li>
+									<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+										youtube.com
+									</a>
+								</li>
+								<li>
+									<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
+										soundcloud.com
+									</a>
+								</li>
+								<li>
+									<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
+										nhaccuatui.com
+									</a>
+								</li>
+								<li>
+									<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
+										mp3.zing.vn
+									</a>
+								</li>
+							</ul>
 						</li>
 					</ul>
 				</details>
