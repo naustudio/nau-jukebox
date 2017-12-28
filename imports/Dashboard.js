@@ -15,6 +15,7 @@ import { Rooms } from './collections';
 import AccountsUIWrapper from './components/AccountUIWrapper';
 import AppStore from './events/AppStore';
 import UserStore from './events/UserStore';
+import Toaster from './components/Toaster';
 
 class Dashboard extends Component {
 	static propTypes = {
@@ -40,6 +41,11 @@ class Dashboard extends Component {
 			errorSignIn: UserStore.getState()['errorSignInDashboard'],
 		};
 	}
+
+	state = {
+		toasterOpen: false,
+		toasterText: 'Toaster',
+	};
 
 	onInputName = e => {
 		const input = e.target;
@@ -77,17 +83,26 @@ class Dashboard extends Component {
 		if (form.name && form.name.value) {
 			Meteor.call('createRoom', form.name.value, Meteor.userId(), (err, id) => {
 				if (err) {
-					alert(err);
+					this.setState({
+						toasterText: err.toString(),
+						toasterOpen: true,
+					});
 				} else {
-					this.props.history.push(`/rooms/${Rooms.findOne(id).slug}`);
+					this.props.history.push(`/room/${Rooms.findOne(id).slug}`);
 				}
 			});
 		}
 	};
 
+	onToasterClose = () => {
+		this.setState({
+			toasterOpen: false,
+		});
+	};
+
 	render() {
 		const { rooms, isSignedIn } = this.props;
-		const { errorSignIn } = this.state;
+		const { errorSignIn, toasterOpen, toasterText } = this.state;
 
 		return (
 			<div className="dashboard">
@@ -108,7 +123,7 @@ class Dashboard extends Component {
 								{rooms.map(room => (
 									<li className="dashboard__room" key={room._id}>
 										<span className="dashboard__room-name">{room.name}</span>
-										<a href={`/rooms/${room.slug}`} className="dashboard__join-button button">
+										<a href={`/room/${room.slug}`} className="dashboard__join-button button">
 											JOIN
 										</a>
 									</li>
@@ -123,6 +138,7 @@ class Dashboard extends Component {
 						</button>
 					</form>
 				</div>
+				<Toaster type="error" open={toasterOpen} text={toasterText} onClose={this.onToasterClose} />
 			</div>
 		);
 	}
