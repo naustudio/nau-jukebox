@@ -2,6 +2,8 @@
  * @author Eric
  */
 
+/* eslint-disable react/no-danger */
+
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { closePopUp } from '../events/AppActions';

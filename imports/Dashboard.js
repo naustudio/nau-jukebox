@@ -2,6 +2,8 @@
  * @author Eric
  */
 
+/* eslint-disable no-alert */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
