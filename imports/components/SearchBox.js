@@ -84,6 +84,11 @@ class SearchBox extends Component {
 							if (err) {
 								console.log(err);
 							} else {
+								if (result.length && result.length > 15) {
+									// reduce number of results
+									// eslint-disable-next-line no-param-reassign
+									result.length = 15;
+								}
 								this.setState({ searchResult: result, selectedIndex: -1 });
 							}
 						});

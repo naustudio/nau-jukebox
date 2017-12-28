@@ -162,14 +162,19 @@ Meteor.methods({
 	},
 
 	searchSong(searchString) {
+		const words = searchString
+			.toLowerCase()
+			.trim()
+			.split(' ');
+
 		return _.uniq(
 			Songs.find(
 				{
-					searchPattern: { $regex: `${searchString.toLowerCase()}*` },
+					searchPattern: { $regex: `${words.join('.*?')}`, $options: 'xi' },
 					badSong: { $ne: true },
 				},
 				{
-					limit: 50, // we remove duplicated result and limit further
+					limit: 100, // just a relative limit to reduce DB access overheads
 					reactive: false,
 				}
 			).fetch(),
