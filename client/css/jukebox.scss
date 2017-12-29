@@ -1052,9 +1052,13 @@ summary {
 	position: relative;
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: space-between;
 	margin: 0;
 	background-color: $color-01;
+
+	&:last-child {
+		justify-content: flex-end;
+	}
 
 	&__container {
 		display: flex;
@@ -1149,29 +1153,20 @@ summary {
 		z-index: 1;
 		font-size: 12.5px;
 	}
+
+	&__time {
+		white-space: nowrap;
+	}
 }
 
 @media screen and (min-width: 480px) {
 	.songs__list-item {
-		justify-content: space-between;
-
 		&__container {
 			width: auto;
 
 			&:first-child {
 				padding-left: 0;
-				width: calc(100% - 245px);
 			}
-		}
-
-		&__author {
-			top: 50%;
-			left: 0;
-			transform: translate3d(-50%, -50%, 0);
-			font-size: 15px;
-			line-height: 1;
-			display: block;
-			white-space: nowrap;
 		}
 	}
 }
@@ -1205,6 +1200,8 @@ summary {
 
 			&:first-child {
 				padding-left: 0;
+				min-width: 0;
+				padding-right: 20px;
 			}
 
 			&:last-child {

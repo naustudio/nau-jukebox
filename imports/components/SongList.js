@@ -237,7 +237,7 @@ class SongList extends Component {
 										<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
 									) : null}
 
-									<span className="songs__list-item__container nau--hidden-xxs nau--hidden-xs">
+									<span className="songs__list-item__container nau--hidden-xxs nau--hidden-xs nau--hidden-sm">
 										<span className="songs__list-item__control">
 											<span className="songs__list-item__time">
 												<small>{this.getTime(song.timeAdded)}</small>
@@ -284,7 +284,7 @@ class SongList extends Component {
 										</span>
 									</span>
 								</div>
-								<div className="songs__list-item nau--hidden-sm nau--hidden-md nau--hidden-lg">
+								<div className="songs__list-item nau--hidden-md nau--hidden-lg">
 									<span className="songs__list-item__control">
 										<span className="songs__list-item__time">
 											<small>{this.getTime(song.timeAdded)}</small>
