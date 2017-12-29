@@ -89,7 +89,7 @@ class NavBar extends Component {
 						</li>
 					</ul>
 
-					<div className="nau--hidden-sm nau--hidden-md nau--hidden-lg navbar__search-wrapper">
+					<div className="nau--hidden-md nau--hidden-lg navbar__search-wrapper">
 						<SearchBox />
 					</div>
 				</div>

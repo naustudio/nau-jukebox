@@ -11,6 +11,7 @@ import { distanceInWordsStrict } from 'date-fns';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import he from 'he';
+import ReactGA from 'react-ga';
 
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
@@ -100,6 +101,10 @@ class SongList extends Component {
 		}
 
 		if (songUrl && currentRoom) {
+			ReactGA.event({
+				category: 'Playlist',
+				action: 'Booked an existing song',
+			});
 			Meteor.call('getSongInfo', songUrl, userId, currentRoom._id, (error /*, result*/) => {
 				if (error) {
 					AppActions.setToaster(true, `Cannot add the song at:\n${songUrl}\nReason: ${error.reason}`, 'error');
