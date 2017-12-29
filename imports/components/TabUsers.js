@@ -8,6 +8,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Container } from 'flux/utils';
+import ReactGA from 'react-ga';
+
 import { Users } from '../collections';
 import UserStore from '../events/UserStore';
 import AppStore from '../events/AppStore';
@@ -44,6 +46,10 @@ class TabUsers extends Component {
 		const userId = form.userid && form.userid.value;
 
 		if (amount) {
+			ReactGA.event({
+				category: 'Host',
+				action: 'Set new Naucoin value',
+			});
 			Meteor.call('naucoinPay', userId, amount, (/*err, result*/) => {
 				form.amount.value = '';
 
@@ -65,6 +71,10 @@ class TabUsers extends Component {
 		if (confirm) {
 			const { currentRoom } = this.state;
 			if (userId && currentRoom) {
+				ReactGA.event({
+					category: 'Host',
+					action: 'Assign host',
+				});
 				Meteor.call('changeHost', userId, currentRoom._id, err => {
 					if (err) {
 						console.log(err);

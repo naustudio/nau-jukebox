@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import he from 'he';
+import ReactGA from 'react-ga';
+
 import AppStore from '../events/AppStore';
 import { focusSearchBox, errorSignIn, setToaster } from '../events/AppActions';
 
@@ -44,19 +46,46 @@ class SearchBox extends Component {
 		}
 		const { selectedIndex, searchResult } = this.state;
 		if (selectedIndex >= 0) {
+			ReactGA.event({
+				category: 'Playlist',
+				action: 'Booked an existing song',
+			});
 			this.submitSong(searchResult[selectedIndex].originalURL);
 
 			return;
 		}
 
 		if (this.searchInput && this.searchInput.value) {
-			this.submitSong(this.searchInput.value);
+			const songurl = this.searchInput.value;
+			let origin = '';
+
+			this.submitSong(songurl);
+			if (String(songurl).includes('nhaccuatui')) {
+				origin = 'NhacCuaTui';
+			} else if (String(songurl).includes('mp3.zing')) {
+				origin = 'Zing';
+			} else if (String(songurl).includes('soundcloud')) {
+				origin = 'SoundCloud';
+			} else if (String(songurl).includes('youtube')) {
+				origin = 'Youtube';
+			}
+			if (origin) {
+				ReactGA.event({
+					category: 'Playlist',
+					action: 'Booked song with URL',
+					label: origin,
+				});
+			}
 		}
 	};
 
 	onSearchResultClick = e => {
 		const songUrl = e.currentTarget.dataset.href;
 		if (songUrl) {
+			ReactGA.event({
+				category: 'Playlist',
+				action: 'Booked an existing song',
+			});
 			this.submitSong(songUrl);
 		}
 	};
@@ -179,9 +208,7 @@ class SearchBox extends Component {
 								{this.state.searchResult.map((song, index) => (
 									<li
 										key={song._id}
-										className={`song-result__item ${
-											selectedIndex === index ? 'song-result__item--selected' : null
-										}`}
+										className={`song-result__item ${selectedIndex === index ? 'song-result__item--selected' : null}`}
 										onClick={this.onSearchResultClick}
 										data-href={song.originalURL}
 										title="Click to book this song"
