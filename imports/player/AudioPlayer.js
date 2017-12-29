@@ -21,8 +21,12 @@ export default class AudioPlayer {
 	play(song) {
 		if (song) {
 			const zingTimeout = 5 * 60 * 60 * 1000;
+			const nctTimeout = 23 * 60 * 60 * 1000;
 			const songFetchTime = song.lastFetch || song.timeAdded;
-			if (song.origin === 'Zing' && songFetchTime + zingTimeout < Date.now()) {
+			if (
+				(song.origin === 'Zing' && songFetchTime + zingTimeout < Date.now()) ||
+				(song.origin === 'NCT' && songFetchTime + nctTimeout < Date.now())
+			) {
 				Meteor.call('refetchSongInfo', song, (err, result) => {
 					if (err) {
 						console.log(err);
