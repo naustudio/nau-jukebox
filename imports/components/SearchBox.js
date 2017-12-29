@@ -107,21 +107,24 @@ class SearchBox extends Component {
 				break;
 			default:
 				if (e.keyCode !== 13 && currentRoom) {
+					clearTimeout(this.throttleSearch);
 					if (!this.searchInput.value) {
 						this.setState({ searchResult: [], selectedIndex: -1 });
 					} else {
-						Meteor.call('searchSong', this.searchInput.value, (err, result) => {
-							if (err) {
-								console.log(err);
-							} else {
-								if (result.length && result.length > 15) {
-									// reduce number of results
-									// eslint-disable-next-line no-param-reassign
-									result.length = 15;
+						this.throttleSearch = setTimeout(() => {
+							Meteor.call('searchSong', this.searchInput.value, (err, result) => {
+								if (err) {
+									console.log(err);
+								} else {
+									if (result.length && result.length > 15) {
+										// reduce number of results
+										// eslint-disable-next-line no-param-reassign
+										result.length = 15;
+									}
+									this.setState({ searchResult: result, selectedIndex: -1 });
 								}
-								this.setState({ searchResult: result, selectedIndex: -1 });
-							}
-						});
+							});
+						}, 200);
 					}
 				}
 				break;
