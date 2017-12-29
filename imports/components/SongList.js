@@ -22,13 +22,14 @@ class SongList extends Component {
 		songs: PropTypes.arrayOf(PropTypes.object),
 		onlineUsers: PropTypes.arrayOf(PropTypes.object),
 		userId: PropTypes.string,
-		isPlayingList: PropTypes.bool.isRequired,
+		isPlayingList: PropTypes.bool,
 	};
 
 	static defaultProps = {
 		songs: [],
 		onlineUsers: [],
 		userId: '',
+		isPlayingList: false,
 	};
 
 	static getStores() {
@@ -200,10 +201,11 @@ class SongList extends Component {
 						{songs && songs.length ?
 						songs.map(song => (
 							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper">
-								{this.whoIsPlaying(song._id)}
-
 								<div className="songs__list-item">
+
 									<span className="songs__list-item__container">
+										{this.whoIsPlaying(song._id)}
+
 										<span className="songs__list-item__thumbnail">
 											<a
 												href={`${song.originalURL}`}

@@ -28,18 +28,19 @@ class ButtonPlay extends Component {
 	};
 
 	render() {
+		// <div className="play-button__item play-button__top" />
+		// <div className="play-button__item play-button__top" />
+		// <div className="play-button__item play-button__right" />
+		// <div className="play-button__item play-button__bottom" />
+		// <div className="play-button__item play-button__left" />
+
+		console.log('state button', this.state.activeBtnPlay);
+
 		return (
-			<li className="navbar__item">
-				<div
-					className={`play-button play-button--play ${this.state.activeBtnPlay ? 'play-button--pause' : ''}`}
-					onClick={this.toggleButton}
-				>
-					<div className="play-button__item play-button__top" />
-					<div className="play-button__item play-button__right" />
-					<div className="play-button__item play-button__bottom" />
-					<div className="play-button__item play-button__left" />
-				</div>
-			</li>
+			<button
+				className={`play-button ${this.state.activeBtnPlay ? 'play-button--paused' : ''}`}
+				onClick={this.toggleButton}
+			/>
 		);
 	}
 }

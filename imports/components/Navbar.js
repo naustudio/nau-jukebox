@@ -19,6 +19,7 @@ class NavBar extends Component {
 	static calculateState(/*prevState*/) {
 		return {
 			currentRoom: AppStore.getState()['currentRoom'],
+			toggleSearchInput: AppStore.getState()['toggleSearchInput'],
 		};
 	}
 
@@ -46,11 +47,25 @@ class NavBar extends Component {
 		this.navBar = ref;
 	};
 
+	calculateNavPadding = () => {
+		if (this.state.toggleSearchInput) {
+			$('.tab').addClass('tab--big');
+			$('.navbar').addClass('navbar--big');
+			$('.navbar__search-wrapper').addClass('navbar__search-wrapper--active');
+		} else {
+			$('.tab').removeClass('tab--big');
+			$('.navbar').removeClass('navbar--big');
+			$('.navbar__search-wrapper').removeClass('navbar__search-wrapper--active');
+		}
+	};
+
 	render() {
+		this.calculateNavPadding();
+
 		return (
 			<nav className="navbar" ref={this.refNav}>
 				{/* <Host /> */}
-				<h6 className="host">
+				<h6 className="host nau--hidden-xxs nau--hidden-xs nau--hidden-sm">
 					Room: {this.state.currentRoom ? this.state.currentRoom.name : ''} <br />
 					<small>{window.location.href.split('#')[0]}</small>
 				</h6>
@@ -61,9 +76,22 @@ class NavBar extends Component {
 								<img className="navbar__img" src="/nau-jukebox.svg" alt="logo" />
 							</Link>
 						</li>
-						<SearchBox />
-						<ButtonPlay />
+						<li className="navbar__item nau--hidden-md nau--hidden-lg navbar__item__host-wrapper">
+							<h6 className="navbar__item__host">Room: {this.state.currentRoom ? this.state.currentRoom.name : ''}</h6>
+						</li>
+
+						<li className="col col--7 navbar__item navbar__item--input nau--hidden-xxs nau--hidden-xs">
+							<SearchBox />
+						</li>
+
+						<li className="navbar__item navbar__item__button-wrapper">
+							<ButtonPlay />
+						</li>
 					</ul>
+
+					<div className="nau--hidden-sm nau--hidden-md nau--hidden-lg navbar__search-wrapper">
+						<SearchBox />
+					</div>
 				</div>
 			</nav>
 		);

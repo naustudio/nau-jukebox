@@ -127,6 +127,9 @@ class TabUsers extends Component {
 									{user._id === Meteor.userId() ? <Badge type="primary" message="Me" /> : null}
 									{this.showBadges(user)}
 								</div>
+								{currentRoom && currentRoom.hostId !== Meteor.userId() ? (
+									<span className="users__item__coin">{user.balance ? user.balance.toFixed(2) : 0}</span>
+								) : null}
 							</div>
 						</div>
 					</div>

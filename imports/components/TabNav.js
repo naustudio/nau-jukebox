@@ -11,7 +11,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
 import AccountsUIWrapper from './AccountUIWrapper';
-import { changeTab /* closeBtnNav */ } from '../events/AppActions';
+import { changeTab, toggleSearch } from '../events/AppActions';
 
 class TabNav extends Component {
 	static propTypes = {
@@ -78,12 +78,21 @@ class TabNav extends Component {
 					</ul>
 					<div className="tab__nav__login-outter login-block">
 						<AccountsUIWrapper />
-						<button
-							className={`tab__nav__button tab__collapse nau--hidden-md nau--hidden-lg`}
-							onClick={this.toggleNavbar}
-						>
-							<i className="fa fa-bars tab__nav__icon" aria-hidden="true" />
-						</button>
+
+						<div className="tab__nav__buttons-wrapper">
+							<i
+								className="fa fa-search tab__nav__search nau--hidden-sm nau--hidden-md nau--hidden-lg"
+								aria-hidden="true"
+								onClick={toggleSearch}
+							/>
+							<button
+								className={`tab__nav__button tab__collapse nau--hidden-md nau--hidden-lg`}
+								onClick={this.toggleNavbar}
+							>
+								<i className="fa fa-bars tab__nav__icon" aria-hidden="true" />
+							</button>
+						</div>
+
 						{this.state.errorSignIn && !this.props.isSignedIn ? (
 							<div className="login-block__error">
 								<p>Please login first!</p>

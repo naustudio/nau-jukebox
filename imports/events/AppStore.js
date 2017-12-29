@@ -52,6 +52,7 @@ class AppStore extends ReduceStore {
 			toasterOpen: false,
 			toasterText: '',
 			toasterType: 'success',
+			toggleSearchInput: false,
 		};
 	}
 
@@ -102,34 +103,30 @@ class AppStore extends ReduceStore {
 				reducedState = { focusSearchBox: action.isFocus };
 				break;
 			case AppActions.SELECT_SONG:
-				reducedState = {
-					selectedSong: this.selectSong(action.id),
-					activeBtnPlay: true,
-				};
+				reducedState = { selectedSong: this.selectSong(action.id), activeBtnPlay: true };
 				break;
 			case AppActions.OPEN_POP_UP:
-				reducedState = {
-					openPopup: true,
-				};
+				reducedState = { openPopup: true };
 				break;
 			case AppActions.CLOSE_POP_UP:
-				reducedState = {
-					openPopup: false,
-				};
+				reducedState = { openPopup: false };
 				break;
 			case AppActions.UPDATE_LYRIC_POPUP:
 				reducedState = this.getSongNameAndLyric(action.id);
 				break;
 			case AppActions.SET_ROOM:
-				reducedState = {
-					currentRoom: action.room,
-				};
+				reducedState = { currentRoom: action.room };
 				break;
 			case AppActions.SET_TOASTER:
 				reducedState = {
 					toasterOpen: action.open,
 					toasterText: action.text ? action.text : state.toasterText,
 					toasterType: action.toasterType ? action.toasterType : state.toasterType,
+				};
+				break;
+			case AppActions.TOGGLE_SEARCH:
+				reducedState = {
+					toggleSearchInput: !state.toggleSearchInput,
 				};
 				break;
 			default:

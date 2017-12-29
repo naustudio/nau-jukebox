@@ -234,125 +234,104 @@ summary {
 	padding-bottom: 0;
 	position: fixed;
 	top: 0;
-	z-index: 300;
+	z-index: 3;
 	background-size: cover;
 	border-bottom: 1px solid $color-06;
 	box-shadow: 1px 1px 1px $color-06;
-	transition: all 0.5s;
+	transition: all 0.4s;
 	background-repeat: no-repeat;
+
+	&--big {
+		height: 130px !important;
+	}
 
 	&__list {
 		list-style-type: none;
 		margin: 0;
 		display: flex;
-		padding-top: 15px;
 		flex-wrap: wrap;
-		justify-content: center;
-		// flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__search-wrapper {
+		opacity: 0;
+		height: 0;
+		transition: all 0.4s;
+
+		&--active {
+			opacity: 1;
+			height: 40px;
+		}
 	}
 
 	&__img {
 		mix-blend-mode: multiply;
-		height: 40px;
+		height: 30px;
 	}
 
 	&__item {
 		&--input {
 			width: 100%;
+			display: none;
+		}
+
+		&__host-wrapper {
+			width: 50%;
+			text-align: center;
+		}
+
+		&__host {
+			line-height: 1;
+			z-index: 10;
+			font-weight: 700;
+			color: #fff;
+			text-shadow: 1px 1px #060201;
+			margin: 0;
+		}
+
+		&__button-wrapper {
+			width: 45px;
+			height: 45px;
+			position: relative;
 		}
 	}
 }
 
 // playbutton's animation was referenced by this pen http://codepen.io/tampham47/pen/wGoJqY
+//https://css-tricks.com/making-pure-css-playpause-button/
 .play-button {
-	position: relative;
-	width: $playbutton-h;
-	height: $playbutton-h; // margin-top: 1 * $gutter;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 0;
+	background: transparent;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	border-color: transparent transparent transparent #202020;
+	transition: 200ms all ease;
 	cursor: pointer;
+	border-style: solid;
+	border-width: 22px 0 22px 37px;
+	padding: 0;
+	border-radius: 3px;
 
-	&__element {
-		border-radius: $playbutton-w / 2;
-		background: $color-01;
-		transition: 0.5s;
-		position: absolute;
+	&--paused {
+		border-style: double;
+		border-width: 0 0 0 43px;
 	}
 
-	&__elm-top {
-		width: $playbutton-h;
-		height: $playbutton-w;
-		top: 0;
-		left: 0;
-	}
-
-	&__elm-right {
-		width: $playbutton-w;
-		height: $playbutton-h;
-		top: 0;
-		left: $playbutton-h - $playbutton-w;
-	}
-
-	&__elm-bottom {
-		width: $playbutton-h;
-		height: $playbutton-w;
-		top: $playbutton-h - $playbutton-w;
-		left: 0;
-	}
-
-	&__elm-left {
-		width: $playbutton-w;
-		height: $playbutton-h;
-		top: 0;
-		left: 0;
-	}
-
-	&._play,
-	&._pause,
-	&._stop {
-		transition: 1s;
-	}
-
-	&._play {
-		transform: rotate(270deg);
-
-		.play-button__elm-right {
-			transform-origin: center top;
-			transform: rotate(29deg) translate($playbutton-w/4, $playbutton-w/8) scaleY(1);
-		}
-
-		.play-button__elm-bottom {
-			display: none;
-		}
-
-		.play-button__elm-left {
-			transform-origin: center top;
-			transform: rotate(-29deg) translate(-$playbutton-w/4, $playbutton-w/8) scaleY(1);
-		}
-	}
-
-	&._pause {
-		transform: rotate(0deg);
-
-		.play-button__elm-top {
-			opacity: 0;
-		}
-
-		.play-button__elm-right {
-			transform: translateX(-$playbutton-w) scaleY(0.8);
-		}
-
-		.play-button__elm-bottom {
-			opacity: 0;
-		}
-
-		.play-button__elm-left {
-			transform: translateX($playbutton-w) scaleY(0.8);
-		}
+	&:focus,
+	&:hover {
+		border-color: transparent transparent transparent #404040;
 	}
 }
 
 .search-box {
 	$search-w: 90px;
 
+	height: 100%;
 	width: 100%;
 	border-radius: 4px;
 	border: 1px solid $color-06; // margin-top: 4px;
@@ -473,9 +452,8 @@ summary {
 			}
 
 			&--input {
-				width: 60%; // padding: 0.5 * $gutter 0;
-				position: relative;
-				margin-left: 64px;
+				width: 60%;
+				display: block;
 			}
 
 			&--icon {
@@ -496,35 +474,16 @@ summary {
 				float: right;
 			}
 		}
+
+		&__img {
+			height: 40px;
+		}
 	}
 
 	.search-box {
 		$search-w: 90px;
 
-		position: absolute;
-		width: 100%;
-		border-radius: 4px;
-		border: 1px solid $color-06; // margin-top: 4px;
-		overflow: hidden;
-		background-color: rgba(255, 255, 255, 0.5);
-
-		&--focus {
-			background-color: rgba(255, 255, 255, 0.8);
-			border-color: rgba(0, 0, 0, 0.4);
-		}
-
-		&--active {
-			background-color: rgba(255, 255, 255, 0.95);
-			border-color: rgba(0, 0, 0, 0.4);
-
-			.search-box__result-wrapper {
-				display: block;
-			}
-
-			.search-box__control {
-				border-bottom: 1px solid gray;
-			}
-		}
+		position: relative;
 
 		&__control {
 			position: relative;
@@ -599,24 +558,24 @@ summary {
 		width: 100%;
 	}
 
-	.play-button {
-		position: relative;
-		width: $playbutton-h;
-		height: $playbutton-h; // margin-top: 1 * $gutter;
-		margin-left: 4 * $gutter;
-		cursor: pointer;
+	// .play-button {
+	// 	position: relative;
+	// 	width: $playbutton-h;
+	// 	height: $playbutton-h; // margin-top: 1 * $gutter;
+	// 	margin-left: 4 * $gutter;
+	// 	cursor: pointer;
 
-		&:hover {
-			.play-button__element {
-				background: $color-09;
-			}
-		}
-	}
+	// 	&:hover {
+	// 		.play-button__element {
+	// 			background: $color-09;
+	// 		}
+	// 	}
+	// }
 }
 
 @media screen and (max-width: 767px) {
 	.navbar {
-		height: 190px;
+		height: 80px;
 	}
 }
 
@@ -681,8 +640,7 @@ summary {
 
 .play-button {
 	position: relative;
-	width: 40px;
-	height: 40px;
+
 	// margin-left: 60px;
 	margin-bottom: 0;
 	cursor: pointer;
@@ -845,17 +803,22 @@ summary {
 ============================================= */
 
 .tab {
-	padding-top: 190px;
+	padding-top: 80px;
+	transition: all 0.4s;
 
 	& ul {
 		margin: 0;
+	}
+
+	&--big {
+		padding-top: 130px !important;
 	}
 }
 
 .tab__nav {
 	position: fixed;
 	width: 100%;
-	z-index: 1;
+	z-index: 2;
 
 	&__playlist {
 		position: absolute;
@@ -871,6 +834,11 @@ summary {
 		}
 	}
 
+	&__buttons-wrapper {
+		display: flex;
+		align-items: center;
+	}
+
 	&__button {
 		background: transparent;
 		border: 1px solid rgba(0, 0, 0, 0.3);
@@ -878,6 +846,11 @@ summary {
 		padding: 2px 5px;
 		margin: 0;
 		float: right;
+	}
+
+	&__search {
+		padding: 10px;
+		margin-right: 15px;
 	}
 
 	&__icon {
@@ -959,7 +932,7 @@ summary {
 
 	.container {
 		margin: 0;
-		padding: 15px;
+		padding: 20px 15px;
 		width: 100%;
 	}
 
@@ -1071,6 +1044,7 @@ summary {
 
 	& .playlist__item__active-host {
 		font-size: 30px;
+		left: 5px;
 	}
 }
 
@@ -1078,7 +1052,7 @@ summary {
 	position: relative;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-end;
 	margin: 0;
 	background-color: $color-01;
 
@@ -1139,6 +1113,7 @@ summary {
 
 		&--link {
 			color: black;
+			font-size: 14px;
 
 			&:hover {
 				text-decoration: none;
@@ -1167,17 +1142,19 @@ summary {
 
 	&__author {
 		position: absolute;
-		top: 50%;
-		right: 100%;
-		transform: translate3d(-50%, -50%, 0);
-		line-height: 1;
-		display: block;
-		white-space: nowrap;
+		left: 0;
+		top: 100%;
+		transform: translate3d(0, 100%, 0);
+		line-height: 0.9;
+		z-index: 1;
+		font-size: 12.5px;
 	}
 }
 
 @media screen and (min-width: 480px) {
 	.songs__list-item {
+		justify-content: space-between;
+
 		&__container {
 			width: auto;
 
@@ -1185,6 +1162,16 @@ summary {
 				padding-left: 0;
 				width: calc(100% - 245px);
 			}
+		}
+
+		&__author {
+			top: 50%;
+			left: 0;
+			transform: translate3d(-50%, -50%, 0);
+			font-size: 15px;
+			line-height: 1;
+			display: block;
+			white-space: nowrap;
 		}
 	}
 }
@@ -1198,6 +1185,13 @@ summary {
 	.songs__list-item-wrapper {
 		border: none;
 		margin-bottom: 4px;
+
+		& .playlist__item__active-host {
+			left: 0;
+			display: flex;
+			align-items: center;
+			height: 100%;
+		}
 	}
 
 	.songs__list-item {
@@ -1207,7 +1201,6 @@ summary {
 
 		&__container {
 			position: relative;
-			padding: 0 10px;
 			width: auto;
 
 			&:first-child {
@@ -1277,6 +1270,22 @@ summary {
 				&:hover {
 					color: grey;
 				}
+			}
+		}
+
+		&__author {
+			top: 50%;
+			left: 0;
+			transform: translate3d(-150%, -50%, 0);
+			font-size: 15px;
+			line-height: 1;
+			display: block;
+			white-space: nowrap;
+		}
+
+		&__name {
+			&--link {
+				font-size: 15px;
 			}
 		}
 	}
@@ -2155,7 +2164,7 @@ button.button-naucoin {
 		position: fixed;
 		bottom: -70vh;
 		left: 50%;
-		width: 50vw;
+		width: 80vw;
 		height: 70vh;
 		transform: translate(-50%, -50%);
 		z-index: 2000;
@@ -2197,6 +2206,14 @@ button.button-naucoin {
 
 	&__name {
 		font-weight: 400;
+	}
+}
+
+@media screen and (min-width: 767px) {
+	.popup-lyric {
+		&__wrap {
+			width: 50vw;
+		}
 	}
 }
 

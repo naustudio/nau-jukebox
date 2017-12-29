@@ -37,6 +37,8 @@ export const SET_ROOM = 'SET_ROOM';
 
 export const SET_TOASTER = 'SET_TOASTER';
 
+export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
+
 /**
  * @param  {String} tabIndex tab index of the new section
  * @return {void}
@@ -166,4 +168,8 @@ export function setRoom(room) {
 
 export function setToaster(open, text, toasterType) {
 	dispatch({ type: SET_TOASTER, open, text, toasterType });
+}
+
+export function toggleSearch() {
+	dispatch({ type: TOGGLE_SEARCH });
 }

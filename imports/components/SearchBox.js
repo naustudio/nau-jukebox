@@ -153,47 +153,43 @@ class SearchBox extends Component {
 		const { selectedIndex } = this.state;
 
 		return (
-			<li className="col col--7 navbar__item navbar__item--input">
-				<form
-					onSubmit={this.onFormSubmit}
-					className={`search-box ${this.state.focusSearchBox ? 'search-box--focus' : ''} ${
-						this.state.searchResult ? 'search-box--active' : ''
-					}`}
-				>
-					<div className="search-box__wrap">
-						<div className="search-box__input">
-							<input
-								type="text"
-								className="search-box__input"
-								placeholder="Search old song or add new NCT, Zing, YouTube, SoundClound URL"
-								onKeyUp={this.keyUpSearchSong}
-								onFocus={this.focusSearchBox}
-								ref={this.refSearchInput}
-							/>
-						</div>
-						<button type="submit" className="search-box__submit" />
+			<form
+				onSubmit={this.onFormSubmit}
+				className={`search-box ${this.state.focusSearchBox ? 'search-box--focus' : ''} ${
+					this.state.searchResult ? 'search-box--active' : ''
+				}`}
+			>
+				<div className="search-box__wrap">
+					<div className="search-box__input">
+						<input
+							type="text"
+							className="search-box__input"
+							placeholder="Search old song or add new NCT, Zing, YouTube, SoundClound URL"
+							onKeyUp={this.keyUpSearchSong}
+							onFocus={this.focusSearchBox}
+							ref={this.refSearchInput}
+						/>
 					</div>
-					{this.state.searchResult && this.state.searchResult.length ? (
-						<div className="search-box__result-wrapper">
-							<ul className="song-result__list">
-								{this.state.searchResult.map((song, index) => (
-									<li
-										key={song._id}
-										className={`song-result__item ${
-											selectedIndex === index ? 'song-result__item--selected' : null
-										}`}
-										onClick={this.onSearchResultClick}
-										data-href={song.originalURL}
-										title="Click to book this song"
-									>
-										{he.decode(song.name)} • {song.artist} • {song.origin}
-									</li>
-								))}
-							</ul>
-						</div>
-					) : null}
-				</form>
-			</li>
+					<button type="submit" className="search-box__submit" />
+				</div>
+				{this.state.searchResult && this.state.searchResult.length ? (
+					<div className="search-box__result-wrapper">
+						<ul className="song-result__list">
+							{this.state.searchResult.map((song, index) => (
+								<li
+									key={song._id}
+									className={`song-result__item ${selectedIndex === index ? 'song-result__item--selected' : null}`}
+									onClick={this.onSearchResultClick}
+									data-href={song.originalURL}
+									title="Click to book this song"
+								>
+									{he.decode(song.name)} • {song.artist} • {song.origin}
+								</li>
+							))}
+						</ul>
+					</div>
+				) : null}
+			</form>
 		);
 	}
 }
