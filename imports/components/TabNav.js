@@ -8,6 +8,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
+import ReactGA from 'react-ga';
+
 import AppStore from '../events/AppStore';
 import UserStore from '../events/UserStore';
 import AccountsUIWrapper from './AccountUIWrapper';
@@ -37,6 +39,16 @@ class TabNav extends Component {
 	state = {
 		navbarIsShown: false,
 	};
+
+	componentDidUpdate(prevProps, prevState) {
+		if (prevState.tabIndex !== this.state.tabIndex) {
+			ReactGA.event({
+				category: 'Navigation',
+				action: 'Switched tab',
+				label: this.tabList[this.state.tabIndex],
+			});
+		}
+	}
 
 	onTabClick = e => {
 		const index = parseInt(e.currentTarget.dataset.index, 10);
