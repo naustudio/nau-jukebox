@@ -65,13 +65,11 @@ Meteor.methods({
 			return Songs.insert(songInfo);
 		}
 
-		if (songInfo && songInfo.error) {
-			Songs.update({ originalURL: songurl }, { $set: { badSong: true } }, { multi: true }, err => {
-				if (err) {
-					console.log(err);
-				}
-			});
-		}
+		Songs.update({ originalURL: songurl }, { $set: { badSong: true } }, { multi: true }, err => {
+			if (err) {
+				console.log(err);
+			}
+		});
 
 		throw new Meteor.Error(403, songInfo ? songInfo.error : 'Invalid URL');
 	},
@@ -94,13 +92,11 @@ Meteor.methods({
 			return songInfo.streamURL;
 		}
 
-		if (songInfo && songInfo.error) {
-			Songs.update(song._id, { $set: { badSong: true } }, { multi: true }, err => {
-				if (err) {
-					console.log(err);
-				}
-			});
-		}
+		Songs.update(song._id, { $set: { badSong: true } }, { multi: true }, err => {
+			if (err) {
+				console.log(err);
+			}
+		});
 
 		return null;
 	},
