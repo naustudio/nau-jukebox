@@ -213,7 +213,7 @@ class SongList extends Component {
 
 										<div className="songs__list__player-info">
 											{song.isRevealed ? (
-												<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
+												<span className="songs__list-item__author nau--hidden-xxs nau--hidden-xs nau--hidden-sm">{Users.findOne(song.author).profile.name}</span>
 											) : null}
 											<div className="songs__list-item__playing-wrapper">
 												{this.whoIsPlaying(song._id)}
