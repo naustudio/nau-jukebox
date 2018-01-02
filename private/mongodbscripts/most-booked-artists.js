@@ -12,6 +12,7 @@ db.getCollection('songs').aggregate([
 		$group: {
 			_id: '$artist',
 			count: { $sum: 1 },
+			from: { $push: '$name' },
 		},
 	},
 	{

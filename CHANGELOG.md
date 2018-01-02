@@ -3,6 +3,7 @@
 ## 2017-12-29
 
 * **(BIG CHANGE)** Multi rooms feature
+* New mobile-friendly UI
 * New landing page with info and room creation
 * Search pattern for existing songs enhancement
 * Users list enhancement

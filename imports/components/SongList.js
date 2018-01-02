@@ -39,9 +39,10 @@ class SongList extends Component {
 
 	static calculateState(/*prevState*/) {
 		return {
-			toggleBtnPlay: AppStore.getState()['toggleBtnPlay'],
 			isSignIn: UserStore.getState()['isSignIn'],
 			currentRoom: AppStore.getState()['currentRoom'],
+			selectedSong: AppStore.getState()['selectedSong'],
+			activeBtnPlay: AppStore.getState()['activeBtnPlay'],
 		};
 	}
 
@@ -149,26 +150,26 @@ class SongList extends Component {
 	};
 
 	whoIsPlaying = id => {
+		const { currentRoom, selectedSong, activeBtnPlay } = this.state;
+		if (activeBtnPlay && selectedSong && id === selectedSong._id) {
+			return (
+				<span
+					className={`${
+						Meteor.userId() === currentRoom.hostId
+							? 'playlist__item__active playlist__item__active-host'
+							: 'playlist__item__active'
+					}`}
+				>
+					&#9656;
+				</span>
+			);
+		}
 		for (let i = 0; i < this.props.onlineUsers.length; i++) {
 			if (id === this.props.onlineUsers[i].playing) {
-				if (this.props.onlineUsers[i]._id === Meteor.userId()) {
-					return (
-						<span
-							className={`${
-								this.props.onlineUsers[i].isHost
-									? 'playlist__item__active playlist__item__active-host'
-									: 'playlist__item__active'
-							}`}
-						>
-							&#9656;
-						</span>
-					);
-				}
-
 				return (
 					<span
 						className={`${
-							this.props.onlineUsers[i].isHost
+							this.props.onlineUsers[i]._id === currentRoom.hostId
 								? 'playlist__item__active playlist__item__active-host'
 								: 'playlist__item__active'
 						}`}
