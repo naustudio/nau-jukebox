@@ -259,9 +259,17 @@ summary {
 		height: 0;
 		transition: all 0.4s;
 
+		& .search-box {
+			display: none;
+		}
+
 		&--active {
 			opacity: 1;
 			height: 40px;
+
+			& .search-box {
+				display: block;
+			}
 		}
 	}
 
@@ -272,8 +280,10 @@ summary {
 
 	&__item {
 		&--input {
+			position: relative;
 			width: 100%;
 			display: none;
+			height: 40px;
 		}
 
 		&__host-wrapper {
@@ -331,7 +341,6 @@ summary {
 .search-box {
 	$search-w: 90px;
 
-	height: 100%;
 	width: 100%;
 	border-radius: 4px;
 	border: 1px solid $color-06; // margin-top: 4px;
@@ -483,6 +492,7 @@ summary {
 	.search-box {
 		$search-w: 90px;
 
+		height: auto;
 		position: relative;
 
 		&__control {
@@ -556,6 +566,14 @@ summary {
 	.search-box__input {
 		margin-right: 90px;
 		width: 100%;
+	}
+
+	.song-result {
+		&__item {
+			&:hover {
+				background-color: $color-07;
+			}
+		}
 	}
 
 	// .play-button {
@@ -1064,6 +1082,10 @@ summary {
 		display: flex;
 		align-items: center;
 		width: 100%;
+
+		&:first-child {
+			min-width: 100%;
+		}
 	}
 
 	&__thumbnail {
@@ -1309,6 +1331,11 @@ summary {
 
 	&__inner {
 		margin-bottom: 0;
+
+		.column,
+		.columns {
+			margin-left: 4%;
+		}
 	}
 
 	&__image {

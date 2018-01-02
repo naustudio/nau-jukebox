@@ -188,7 +188,7 @@ class SearchBox extends Component {
 			<form
 				onSubmit={this.onFormSubmit}
 				className={`search-box ${this.state.focusSearchBox ? 'search-box--focus' : ''} ${
-					this.state.searchResult ? 'search-box--active' : ''
+					this.state.searchResult.length > 0 ? 'search-box--active' : ''
 				}`}
 			>
 				<div className="search-box__wrap">
@@ -210,7 +210,7 @@ class SearchBox extends Component {
 							{this.state.searchResult.map((song, index) => (
 								<li
 									key={song._id}
-									className={`song-result__item ${selectedIndex === index ? 'song-result__item--selected' : null}`}
+									className={`song-result__item ${selectedIndex === index ? 'song-result__item--selected' : ''}`}
 									onClick={this.onSearchResultClick}
 									data-href={song.originalURL}
 									title="Click to book this song"
