@@ -95,6 +95,16 @@ a:hover {
 summary {
 	font-weight: bold;
 	cursor: pointer;
+	counter-reset: questions;
+}
+
+dt {
+	font-weight: bold;
+}
+
+dt::before {
+	counter-increment: questions;
+	content: counter(questions) '. ';
 }
 
 .u-hide {
