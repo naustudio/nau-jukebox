@@ -209,8 +209,16 @@ class SongList extends Component {
 							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper">
 								<div className="songs__list-item">
 
-									<span className="songs__list-item__container">
-										{this.whoIsPlaying(song._id)}
+									<span className="songs__list-item__container songs__list-item__left">
+
+										<div className="songs__list__player-info">
+											{song.isRevealed ? (
+												<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
+											) : null}
+											<div className="songs__list-item__playing-wrapper">
+												{this.whoIsPlaying(song._id)}
+											</div>
+										</div>
 
 										<span className="songs__list-item__thumbnail">
 											<a
@@ -234,11 +242,11 @@ class SongList extends Component {
 										</span>
 									</span>
 
-									{song.isRevealed ? (
-										<span className="songs__list-item__author">{Users.findOne(song.author).profile.name}</span>
-									) : null}
+									<span className="songs__list-item__container songs__list-item__right">
+										{song.isRevealed ? (
+											<span className="songs__list-item__author--mobile nau--hidden-md nau--hidden-lg">{Users.findOne(song.author).profile.name}</span>
+										) : null}
 
-									<span className="songs__list-item__container nau--hidden-xxs nau--hidden-xs nau--hidden-sm">
 										<span className="songs__list-item__control">
 											<span className="songs__list-item__time">
 												<small>{this.getTime(song.timeAdded)}</small>
@@ -285,52 +293,7 @@ class SongList extends Component {
 										</span>
 									</span>
 								</div>
-								<div className="songs__list-item nau--hidden-md nau--hidden-lg">
-									<span className="songs__list-item__control">
-										<span className="songs__list-item__time">
-											<small>{this.getTime(song.timeAdded)}</small>
-										</span>
-										{currentRoom && currentRoom.hostId === userId ? (
-											<span
-												className="songs__list-item__lyrics songs__list-item__icon"
-												data-id={song._id}
-												data-revealed={song.isRevealed}
-												onClick={this.toggleUserBook}
-												title="Reveal who booked this song"
-											>
-												<i className="fa fa-eye" />
-											</span>
-										) : null}
-										<span
-											className={`songs__list-item__lyrics songs__list-item__icon ${
-												!song.lyric ? 'songs__list-item__icon--disable' : ''
-											}`}
-											data-id={song._id}
-											onClick={song.lyric ? this.onOpenLyricPopup : null}
-											title="View lyrics"
-										>
-											<i className="fa fa-file-text" />
-										</span>
-										<span
-											className="songs__list-item__delete songs__list-item__icon"
-											data-url={song.originalURL}
-											onClick={this.rebookSong}
-											title="Re-book this song"
-										>
-											<i className="fa fa-retweet" />
-										</span>
-										{currentRoom && currentRoom.hostId === userId ? (
-											<span
-												className="songs__list-item__delete songs__list-item__icon"
-												data-id={song._id}
-												onClick={this.removeSong}
-												title="Remove this song"
-											>
-												<i className="fa fa-close" />
-											</span>
-										) : null}
-									</span>
-								</div>
+
 							</li>
 						))
 						:

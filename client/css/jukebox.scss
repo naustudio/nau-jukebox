@@ -1048,6 +1048,21 @@ summary {
 	padding-top: 55px;
 }
 
+.songs__list {
+	&__player-info {
+		width: 70px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		position: absolute;
+		top: 50%;
+		right: 100%;
+		height: 100%;
+		transform: translate3d(0, -50%, 0);
+		overflow: hidden;
+	}
+}
+
 .songs__list-item-wrapper {
 	position: relative;
 	list-style: none;
@@ -1068,24 +1083,22 @@ summary {
 
 .songs__list-item {
 	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
 	margin: 0;
 	background-color: $color-01;
-
-	&:last-child {
-		justify-content: flex-end;
-	}
 
 	&__container {
 		display: flex;
 		align-items: center;
 		width: 100%;
+	}
 
-		&:first-child {
-			min-width: 100%;
-		}
+	&__left {
+		position: relative;
+	}
+
+	&__right {
+		position: relative;
+		justify-content: flex-end;
 	}
 
 	&__thumbnail {
@@ -1166,14 +1179,24 @@ summary {
 		transition: all 0.4s;
 	}
 
+	&__playing-wrapper {
+		width: 20px;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
 	&__author {
-		position: absolute;
-		left: 0;
-		top: 100%;
-		transform: translate3d(0, 100%, 0);
 		line-height: 0.9;
 		z-index: 1;
 		font-size: 12.5px;
+
+		&--mobile {
+			font-size: 12.5px;
+			position: absolute;
+			left: 0;
+		}
 	}
 
 	&__time {
@@ -1183,12 +1206,13 @@ summary {
 
 @media screen and (min-width: 480px) {
 	.songs__list-item {
+
 		&__container {
 			width: auto;
+		}
 
-			&:first-child {
-				padding-left: 0;
-			}
+		&__left {
+			padding-left: 0;
 		}
 	}
 }
@@ -1215,20 +1239,23 @@ summary {
 		margin: 0;
 		cursor: pointer;
 		background-color: $color-01;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 
 		&__container {
 			position: relative;
 			width: auto;
+		}
 
-			&:first-child {
-				padding-left: 0;
-				min-width: 0;
-				padding-right: 20px;
-			}
+		&__left {
+			padding-left: 0;
+			min-width: 0;
+			padding-right: 20px;
+		}
 
-			&:last-child {
-				padding-right: 0;
-			}
+		&__right {
+			padding-right: 0;
 		}
 
 		&:hover {
@@ -1293,9 +1320,6 @@ summary {
 		}
 
 		&__author {
-			top: 50%;
-			left: 0;
-			transform: translate3d(-150%, -50%, 0);
 			font-size: 15px;
 			line-height: 1;
 			display: block;
@@ -1538,12 +1562,12 @@ summary {
 		}
 
 		&__active {
-			position: absolute;
+			// position: absolute;
+			// transform: translate(-100%, -50%);
+			// margin-left: -7.5px;
 			left: 0;
 			top: 50%;
-			margin-left: -7.5px;
 			opacity: 0;
-			transform: translate(-100%, -50%);
 		}
 
 		&__author {
