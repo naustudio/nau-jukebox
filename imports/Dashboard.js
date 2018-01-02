@@ -148,50 +148,14 @@ class Dashboard extends Component {
 				<details>
 					<summary>Introduction / Giới thiệu</summary>
 					<p>
-						A simple web app which allows group of people (co-workers, friends gathering, house-mates) collectively book
+						A simple web app which allows groups of people (co-workers, gathering friends, housemates) collectively book
 						and play continuously a list of songs.
 					</p>
 					<p>
-						(TV) Đây là một ứng dụng web đơn giản cho phép một nhóm user cùng đăng ký bài hát vào một danh sách chung và
-						nghe cùng với nhau. Nâu Jukebox rất phù hợp với một nhóm người đang nghe nhạc cùng nhau: tại công sở, quán
-						cà phê, bạn bè cùng lớp, cùng phòng...
+						(TV) Đây là một ứng dụng web đơn giản cho phép một nhóm người dùng cùng đăng ký bài hát vào một danh sách
+						chung và nghe cùng với nhau. Nâu Jukebox rất phù hợp với một nhóm người đang nghe nhạc cùng nhau: tại công
+						sở, quán cà phê, bạn bè cùng lớp, cùng phòng...
 					</p>
-				</details>
-				<details>
-					<summary>How to?</summary>
-					<ul>
-						<li>First user login with either Facebook or Google account.</li>
-						<li>First user will create a room for the group and become the room&#039;s host.</li>
-						<li>Once the room is created, everyone can join the room by visiting the unique URL.</li>
-						<li>To book songs, users must login.</li>
-						<li>Copy the URL to a single song from supported services and paste it to the search box.</li>
-						<li>Or search from known songs in Nau Jukebox database and book quickly.</li>
-						<li>
-							Supported services whose song can be book from:
-							<ul>
-								<li>
-									<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-										youtube.com
-									</a>
-								</li>
-								<li>
-									<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
-										soundcloud.com
-									</a>
-								</li>
-								<li>
-									<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
-										nhaccuatui.com
-									</a>
-								</li>
-								<li>
-									<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
-										mp3.zing.vn
-									</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
 				</details>
 				<details>
 					<summary>Hướng dẫn</summary>
@@ -212,35 +176,83 @@ class Dashboard extends Component {
 						</li>
 						<li>Dán vào ô tìm kiếm và Enter (hoặc bấm Search)</li>
 						<li>
-							<strong>HOẶC</strong> bạn có thể nhập vào từ khoá để tìm kiếm bài hát sẵng có trong cơ sở dữ liệu của
+							<strong>HOẶC</strong> bạn có thể nhập vào từ khoá để tìm kiếm bài hát sẵn có trong cơ sở dữ liệu của
 							Jukebox.
 						</li>
 						<li>
-							Các trang nghe nhạc đang được hỗ trợ là:
-							<ul>
-								<li>
-									<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-										youtube.com
-									</a>
-								</li>
-								<li>
-									<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
-										soundcloud.com
-									</a>
-								</li>
-								<li>
-									<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
-										nhaccuatui.com
-									</a>
-								</li>
-								<li>
-									<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
-										mp3.zing.vn
-									</a>
-								</li>
-							</ul>
+							Các trang nghe nhạc đang được hỗ trợ là:{' '}
+							<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+								youtube.com
+							</a>,{' '}
+							<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
+								soundcloud.com
+							</a>,{' '}
+							<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
+								nhaccuatui.com
+							</a>,{' '}
+							<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
+								mp3.zing.vn
+							</a>
 						</li>
 					</ul>
+				</details>
+				<details>
+					<summary>How to?</summary>
+					<ul>
+						<li>First user login with either Facebook or Google account.</li>
+						<li>Next, user will create a room for the group and become the room&#039;s host.</li>
+						<li>Once the room is created, everyone can join the room by visiting a unique URL.</li>
+						<li>To book songs, users must login.</li>
+						<li>Copy the URL to a single song from supported services and paste it to the search box.</li>
+						<li>
+							<strong>Or</strong> search from known songs in Nau Jukebox database and book quickly.
+						</li>
+						<li>
+							Supported services whose song can be booked from:{' '}
+							<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+								youtube.com
+							</a>,{' '}
+							<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
+								soundcloud.com
+							</a>,{' '}
+							<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
+								nhaccuatui.com
+							</a>,{' '}
+							<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
+								mp3.zing.vn
+							</a>
+						</li>
+					</ul>
+				</details>
+				<details>
+					<summary>Hỏi Đáp</summary>
+					<dl>
+						<dt>Nâu Jukebox miễn phí hay có thu phí?</dt>
+						<dd>Nâu Jukebox sẽ luôn miễn phí.</dd>
+						<dt>Tại sao không có thanh tiến trình để qua nhanh?</dt>
+						<dd>
+							Chúng tôi cho rằng mỗi bài hát được book một khi đã chơi, cần được chơi trọn vẹn. Người Host vẫn có quyền
+							bỏ qua bài hát khác.
+						</dd>
+						<dt>Tôi có thể book nhạc từ website X?</dt>
+						<dd>
+							Hiện tại Nâu Jukebox hỗ trợ book nhạc từ các trang:{' '}
+							<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+								youtube.com
+							</a>,{' '}
+							<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
+								soundcloud.com
+							</a>,{' '}
+							<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
+								nhaccuatui.com
+							</a>,{' '}
+							<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
+								mp3.zing.vn
+							</a>. Nếu bạn muốn chúng tôi hỗ trợ thêm một trang nhạc khác ngoài các trang trên, vui lòng tạo một
+							feature request tại <a href="https://github.com/naustudio/nau-jukebox/issues">github</a> của Nâu Jukebox
+							hoặc gửi email về địa chỉ: <a href="mailto:jukebox@naustud.io">jukebox@naustud.io</a>
+						</dd>
+					</dl>
 				</details>
 			</div>
 		);
