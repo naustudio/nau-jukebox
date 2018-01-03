@@ -54,4 +54,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-© 2017 Nâu Studio and contributors. Licensed under MIT license.
+© 2018 Nâu Studio and contributors. Licensed under MIT license.
