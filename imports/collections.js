@@ -1,9 +1,13 @@
 /* © 2017 NauStud.io
  * @author Thanh
  */
+/* eslint-disable consistent-return */
+
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
+
+SimpleSchema.extendOptions(['denyUpdate']);
 
 const songSchema = new SimpleSchema({
 	timeAdded: {
@@ -72,6 +76,19 @@ const roomSchema = new SimpleSchema({
 	},
 	slug: {
 		type: String,
+	},
+	createdAt: {
+		type: Date,
+		label: 'Created date time',
+		denyUpdate: true,
+		autoValue() {
+			if (this.isInsert) {
+				return new Date();
+			} else if (this.isUpsert) {
+				return { $setOnInsert: new Date() };
+			}
+			this.unset(); // Prevent user from supplying their own value
+		},
 	},
 	createdBy: {
 		type: String,
