@@ -1253,6 +1253,10 @@ dt::before {
 		align-items: center;
 		justify-content: space-between;
 
+		&--playing {
+			background-color: #fafafa;
+		}
+
 		&__container {
 			position: relative;
 			width: auto;
