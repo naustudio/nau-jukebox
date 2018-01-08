@@ -199,6 +199,8 @@ class SongList extends Component {
 			? 'Please book your first song of the day.'
 			: 'No songs available. ¯\\_(ツ)_/¯';
 
+		console.log('Playing songs is ', this.state.selectedSong);
+
 		// prettier-ignore
 		return (
 			<section className="tab__body song">
