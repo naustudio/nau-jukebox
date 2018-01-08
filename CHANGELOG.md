@@ -1,5 +1,12 @@
 # Nau Jukebox Changelog
 
+## 2018-01-08
+
+* (Backend) Record room's created date
+* Additionally hightlight currently playing song
+* FAQ & documentation updates
+* Bug fixes
+
 ## 2017-12-29
 
 * **(BIG CHANGE)** Multi rooms feature

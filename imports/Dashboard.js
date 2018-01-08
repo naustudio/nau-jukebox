@@ -180,19 +180,29 @@ class Dashboard extends Component {
 							Jukebox.
 						</li>
 						<li>
-							Các trang nghe nhạc đang được hỗ trợ là:{' '}
-							<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-								youtube.com
-							</a>,{' '}
-							<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
-								soundcloud.com
-							</a>,{' '}
-							<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
-								nhaccuatui.com
-							</a>,{' '}
-							<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
-								mp3.zing.vn
-							</a>
+							Các trang nghe nhạc đang được hỗ trợ là:
+							<ul>
+								<li>
+									<a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+										youtube.com
+									</a>: Nhạc quốc tế, nhạc underground, MV mới nhất từ các nghệ sỹ trong và ngoài Việt Nam
+								</li>
+								<li>
+									<a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer">
+										soundcloud.com
+									</a>: Nhạc indie, nhạc underground...
+								</li>
+								<li>
+									<a href="https://www.nhaccuatui.com" target="_blank" rel="noopener noreferrer">
+										nhaccuatui.com
+									</a>: V-pop, nhạc xưa, nhạc Hàn, nhạc Âu Mỹ...
+								</li>
+								<li>
+									<a href="https://mp3.zing.vn" target="_blank" rel="noopener noreferrer">
+										mp3.zing.vn
+									</a>: V-pop, nhạc xưa, nhạc Hàn, nhạc Âu Mỹ...
+								</li>
+							</ul>
 						</li>
 					</ul>
 				</details>
@@ -233,6 +243,13 @@ class Dashboard extends Component {
 						<dd>
 							Chúng tôi cho rằng mỗi bài hát được book một khi đã chơi, cần được chơi trọn vẹn. Người Host vẫn có quyền
 							bỏ qua bài hát khác.
+						</dd>
+						<dt>Naucoin (trong tab Users) là gì?</dt>
+						<dd>
+							Naucoin là đơn vị tiền ảo (không phải tiền crypto 🙂) được chúng tôi tạo ra để các nhóm có thể dùng làm
+							điểm để thưởng cho các trò chơi trong room. Người host cũng với vai trò là trọng tài có quyền set Naucoin
+							cho bất kỳ ai trong room. Luật chơi do nhóm tự đặt ra, ví dụ, đặt cược và đoán xem ai vừa book bài đang
+							phát.
 						</dd>
 						<dt>Tôi có thể book nhạc từ website X?</dt>
 						<dd>

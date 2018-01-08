@@ -48,7 +48,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Contributors
 
 <!-- prettier-ignore -->
-| ![github.com/trongthanh](https://avatars3.githubusercontent.com/u/234226?s=128) | ![github.com/tampham47](https://avatars3.githubusercontent.com/u/5687992?s=128) | ![github.com/tttt-conan](https://avatars3.githubusercontent.com/u/8154402?s=128) | ![github.com/TDiNguyen](https://avatars3.githubusercontent.com/u/18071187?s=128) | ![github.com/leptco](https://api.adorable.io/avatars/128/leptco@github.png "26835659") |
+| ![github.com/trongthanh](https://avatars3.githubusercontent.com/u/234226?s=128) | ![github.com/tampham47](https://avatars3.githubusercontent.com/u/5687992?s=128) | ![github.com/tttt-conan](https://avatars3.githubusercontent.com/u/8154402?s=128) | ![github.com/TDiNguyen](https://avatars3.githubusercontent.com/u/18071187?s=128) | ![github.com/leptco](https://avatars3.githubusercontent.com/u/26835659?s=128) |
 | --- | --- | --- | --- | --- |
 | [@trongthanh](https://github.com/trongthanh) | [@tampham47](https://github.com/tampham47) | [@tttt-conan](https://github.com/tttt-conan) | [@TDiNguyen](https://github.com/TDiNguyen) | [@leptco](https://github.com/leptco) |
 
