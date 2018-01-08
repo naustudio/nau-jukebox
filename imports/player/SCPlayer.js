@@ -54,7 +54,7 @@ export default class SCPlayer {
 					this.player.play();
 				});
 			}
-		} else {
+		} else if (this.player && this.song) {
 			this.player.play();
 		}
 	}
