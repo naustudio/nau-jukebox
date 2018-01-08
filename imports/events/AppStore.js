@@ -130,7 +130,7 @@ class AppStore extends ReduceStore {
 				};
 				break;
 			default:
-				console.log(action.type, 'does nothing');
+				// console.log(action.type, 'does nothing');
 		}
 
 		// return a new object, to immitate pure function

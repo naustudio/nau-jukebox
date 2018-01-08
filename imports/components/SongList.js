@@ -207,7 +207,7 @@ class SongList extends Component {
 						{songs && songs.length ?
 						songs.map(song => (
 							<li key={`${song._id}_${song.timeAdded}`} className="songs__list-item-wrapper">
-								<div className="songs__list-item">
+								<div className={`songs__list-item ${this.state.selectedSong && this.state.selectedSong._id === song._id ? 'songs__list-item--playing' : ''}`}>
 
 									<span className="songs__list-item__container songs__list-item__left">
 
