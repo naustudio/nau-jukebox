@@ -27,3 +27,18 @@ ServiceConfiguration.configurations.upsert(
 		},
 	}
 );
+
+ServiceConfiguration.configurations.upsert(
+	{
+		service: 'goalify',
+	},
+
+	{
+		$set: {
+			clientId: '5a7a851ba09c92497ac0',
+			secret: 'c62462c1-b02f-4052-9b9a-3d5035a7f7e5',
+			loginStyle: 'popup',
+			apiHost: 'https://api.goalify.plus',
+		},
+	}
+);

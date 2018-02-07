@@ -192,6 +192,7 @@ Meteor.publish('Meteor.users.public', function() {
 			roomId: 1,
 			'services.facebook.id': 1,
 			'services.google.picture': 1,
+			'services.goalify.avatar': 1,
 			playing: 1,
 			isHost: 1,
 		},
