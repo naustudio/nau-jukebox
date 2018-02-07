@@ -221,9 +221,11 @@ export default withTracker(({ currentRoom }) => ({
 				let picture = `https://api.adorable.io/avatar/${user.profile.name}`;
 				if (user.services) {
 					if (user.services.google) {
-						picture = user.services.google.picture || '';
-					} else {
-						picture = `https://graph.facebook.com/v2.10/${user.services.facebook.id}/picture?type=square`;
+						picture = user.services.google.picture || picture;
+					} else if (user.services.goalify) {
+						picture = user.services.goalify.avatar || picture;
+					} else if (user.services.facebook) {
+						picture = `https://graph.facebook.com/v2.10/${user.services.facebook.id}/picture?type=square`;						
 					}
 				}
 				/* eslint-disable no-param-reassign */

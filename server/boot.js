@@ -32,10 +32,11 @@ ServiceConfiguration.configurations.upsert(
 	{
 		service: 'goalify',
 	},
+
 	{
 		$set: {
-			clientId: '5a74395e2bde1064ad58', //Meteor.settings.goalify.clientId,
-			secret: '4fc7d2f6-d8c5-4df8-ab9a-78ee0a63a94b', //Meteor.settings.goalify.secret
+			clientId: '5a7a851ba09c92497ac0',
+			secret: 'c62462c1-b02f-4052-9b9a-3d5035a7f7e5',
 			loginStyle: 'popup',
 			apiHost: 'https://api.goalify.plus',
 		},
