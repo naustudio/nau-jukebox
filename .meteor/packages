@@ -37,3 +37,4 @@ percolate:migrations
 react-meteor-data
 aldeed:collection2-core
 mizzao:user-status
+erictran:accounts-goalify

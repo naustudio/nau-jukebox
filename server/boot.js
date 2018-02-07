@@ -2,6 +2,7 @@
  * @author Thanh Tran
  */
 import { ServiceConfiguration } from 'meteor/service-configuration';
+import { Meteor } from 'meteor/meteor';
 
 ServiceConfiguration.configurations.upsert(
 	{
@@ -9,9 +10,9 @@ ServiceConfiguration.configurations.upsert(
 	},
 	{
 		$set: {
-			appId: '1944697045808357', //Meteor.settings.facebook.appId,
+			appId: Meteor.settings.facebook.appId,
 			loginStyle: 'popup',
-			secret: '5d01be11dcc52563b75ed18f2201fbe2', //Meteor.settings.facebook.secret
+			secret: Meteor.settings.facebook.secret,
 		},
 	}
 );
@@ -22,8 +23,22 @@ ServiceConfiguration.configurations.upsert(
 	},
 	{
 		$set: {
-			clientId: '349578608446-pb173i52g2gavcb50r1pv0trm2poastc.apps.googleusercontent.com', //Meteor.settings.google.clientId,
-			secret: 'wJQUTj6TohUYLiS_PUy_-LHe', //Meteor.settings.google.secret
+			clientId: Meteor.settings.google.clientId,
+			secret: Meteor.settings.google.secret
+		},
+	}
+);
+
+ServiceConfiguration.configurations.upsert(
+	{
+		service: 'goalify',
+	},
+	{
+		$set: {
+			clientId: Meteor.settings.goalify.clientId,
+			secret: Meteor.settings.goalify.secret,
+			loginStyle: 'popup',
+			apiHost: 'https://api.goalify.plus',
 		},
 	}
 );
