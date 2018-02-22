@@ -50,8 +50,10 @@ const getSongInfoZing = songurl => {
 
 	if (thumb) {
 		thumb = thumb[1];
-		console.log('Thumb URL', thumb);
+	} else {
+		thumb = '/default-singer-300x300.jpg';
 	}
+	console.log('Thumb URL', thumb);
 
 	const lyricResults = lyricReg.exec(linkRes);
 	if (lyricResults) {
