@@ -1114,14 +1114,10 @@ dt::before {
 	&__thumbnail {
 		display: flex;
 		position: relative;
-		width: 40px;
-
-		& img {
-			width: 40px;
-			height: 40px;
-		}
 
 		&--link {
+			width: 40px;
+			height: 40px;
 			display: flex;
 		}
 
@@ -1279,11 +1275,6 @@ dt::before {
 		&__thumbnail {
 			display: flex;
 			position: relative;
-
-			& img {
-				width: 40px;
-				height: 40px;
-			}
 
 			&--link {
 				display: flex;

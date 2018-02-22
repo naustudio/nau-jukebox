@@ -228,9 +228,11 @@ class SongList extends Component {
 												target="_blank"
 												className={`songs__list-item__thumbnail--link ${this.getThumbnailClass(song.origin)}`}
 												title={`Open original URL at ${song.origin}`}
-											>
-												<img src={`${this.fallbackImage(song.thumbURL, song._id)}`} alt={`${song.name}`} />
-											</a>
+												style={{
+													background: `url(${this.fallbackImage(song.thumbURL, song._id)}) no-repeat center center`,
+													backgroundSize: '75px',
+												}}
+											/>
 										</span>
 										<span className="songs__list-item__name">
 											<a
