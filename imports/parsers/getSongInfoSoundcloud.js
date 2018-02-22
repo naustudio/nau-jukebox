@@ -4,7 +4,7 @@
  * Soudcloud URL parser module
  */
 import { HTTP } from 'meteor/http';
-import { SongOrigin } from '../constants.js';
+import { SongOrigin, defaultThumbnailUrl } from '../constants.js';
 
 /**
  * Get NCT stream URL and other info
@@ -29,7 +29,7 @@ const getSongInfoSoundcloud = songurl => {
 				name: json.data.title,
 				artist: json.data.user.username,
 				streamURL: `/tracks/${json.data.id}`,
-				thumbURL: json.data.user.avatar_url,
+				thumbURL: json.data.user.avatar_url || defaultThumbnailUrl,
 				play: 0,
 			};
 		}

@@ -7,3 +7,5 @@ export const SongOrigin = {
 	ZING: 'Zing',
 	YOUTUBE: 'YouTube',
 };
+
+export const defaultThumbnailUrl = '/default-singer-300x300.jpg';
