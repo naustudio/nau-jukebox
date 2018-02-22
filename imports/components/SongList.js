@@ -125,10 +125,11 @@ class SongList extends Component {
 
 	removeSong = e => {
 		const id = e.currentTarget.dataset.id;
-		if (id) {
+		const roomId = this.state.currentRoom._id;
+		if (id && roomId) {
 			const rs = window.confirm('Are you sure');
 			if (rs) {
-				Meteor.call('removeSong', id, err => {
+				Meteor.call('removeSong', id, roomId, err => {
 					if (err) {
 						console.log(err);
 					}
