@@ -86,13 +86,17 @@ const getSongInfoZing = songurl => {
 		//Not so soon, some Zing URL are blocked due to copyright issue
 		if (jsonItem.source['128'] && String(json.err) === '0') {
 			console.log('URL is valid. Adding new song.');
+			let artist = jsonItem.artist ? jsonItem.artist.name : jsonItem.performer;
+			if (jsonItem.artists && jsonItem.artists.length) {
+				artist = jsonItem.artists.map((a) => a.name.trim()).join(', ');
+			}
 
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
 				origin: SongOrigin.ZING,
 				name: jsonItem.name,
-				artist: jsonItem.artist ? jsonItem.artist.name : jsonItem.performer,
+				artist,
 				streamURL: jsonItem.source['128'],
 				thumbURL: thumb || defaultThumbnailUrl,
 				lyric,
