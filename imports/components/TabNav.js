@@ -59,7 +59,7 @@ class TabNav extends Component {
 		}
 	};
 
-	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users', 'History'];
+	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users', 'My Bookings'];
 	_renderTabNav = () => {
 		const lst = this.tabList.map((item, index) => {
 			const listItem = (
@@ -73,7 +73,7 @@ class TabNav extends Component {
 				</li>
 			);
 
-			if (item !== 'History') {
+			if (index !== 5) {
 				return listItem;
 			} else if (this.props.isSignedIn) {
 				return listItem;

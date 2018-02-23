@@ -28,6 +28,7 @@ class TabHistory extends Component {
 	state = {
 		songList: [],
 		querySkip: queryLimit,
+		currentSongsAmount: this.props.songs.length,
 	};
 
 	_loadMoreSong = () => {
@@ -49,21 +50,24 @@ class TabHistory extends Component {
 			songs = this.props.songs.slice();
 		}
 
+		songs = songs.concat(querySongs);
+
 		this.setState({
-			songList: songs.concat(querySongs),
+			songList: songs,
 			querySkip: this.state.querySkip + queryLimit,
+			currentSongsAmount: songs.length,
 		});
 	};
 
 	render() {
 		const { totalSongs, songs } = this.props;
-		const { songList } = this.state;
+		const { songList, currentSongsAmount } = this.state;
 
 		return (
 			<div>
 				<SongList historyTab songs={songList.length > 0 ? songList : songs} />
 				<div className="container">
-					{totalSongs !== 0 && totalSongs !== songList.length ? (
+					{totalSongs !== 0 && totalSongs !== currentSongsAmount ? (
 						<div className="songs__list--center songs__list__control">
 							<button onClick={this._loadMoreSong}>Load more</button>
 						</div>
