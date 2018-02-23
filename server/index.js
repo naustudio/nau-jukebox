@@ -34,38 +34,45 @@ UserStatus.events.on('connectionLogout', function(fields) {
 });
 
 Meteor.methods({
-	getSongInfo(songurl, authorId, roomId) {
-		if (cacheLatestSong[roomId] === songurl) {
+	getSongInfo(songUrl, authorId, roomId) {
+		if (cacheLatestSong[roomId] && cacheLatestSong[roomId].songUrl === songUrl) {
 			throw new Meteor.Error(403, 'This song is already booked');
 		}
 
 		// Set up a future for async callback sending to clients
 		let songInfo;
 
-		if (String(songurl).includes('nhaccuatui')) {
+		if (String(songUrl).includes('nhaccuatui')) {
 			console.log('Getting NCT song info');
-			songInfo = getSongInfoNct(songurl);
-		} else if (String(songurl).includes('mp3.zing')) {
+			songInfo = getSongInfoNct(songUrl);
+		} else if (String(songUrl).includes('mp3.zing')) {
 			console.log('Getting Zing song info');
-			songInfo = getSongInfoZing(songurl);
-		} else if (String(songurl).includes('soundcloud')) {
+			songInfo = getSongInfoZing(songUrl);
+		} else if (String(songUrl).includes('soundcloud')) {
 			console.log('Getting Soundclound song info');
-			songInfo = getSongInfoSoundcloud(songurl);
-		} else if (String(songurl).includes('youtube')) {
+			songInfo = getSongInfoSoundcloud(songUrl);
+		} else if (String(songUrl).includes('youtube')) {
 			console.log('Getting YouTube song info');
-			songInfo = getSongInfoYouTube(songurl);
+			songInfo = getSongInfoYouTube(songUrl);
 		}
 
 		if (songInfo && songInfo.streamURL) {
 			songInfo.author = authorId;
 			songInfo.roomId = roomId;
 			songInfo.searchPattern = `${songInfo.name.toLowerCase()} - ${songInfo.artist.toLowerCase()}`;
-			cacheLatestSong[roomId] = songurl;
 
-			return Songs.insert(songInfo);
+			return Songs.insert(songInfo, (err, id) => {
+				if (err) {
+					throw new Meteor.Error(403, err);
+				}
+				cacheLatestSong[roomId] = {
+					songUrl,
+					songId: id,
+				};
+			});
 		}
 
-		Songs.update({ originalURL: songurl }, { $set: { badSong: true } }, { multi: true }, err => {
+		Songs.update({ originalURL: songUrl }, { $set: { badSong: true } }, { multi: true }, err => {
 			if (err) {
 				console.log(err);
 			}
@@ -101,7 +108,11 @@ Meteor.methods({
 		return null;
 	},
 
-	removeSong(songId) {
+	removeSong(songId, roomId) {
+		if (cacheLatestSong[roomId] && cacheLatestSong[roomId].songId === songId) {
+			cacheLatestSong[roomId] = {};
+		}
+
 		return Songs.remove(songId);
 	},
 

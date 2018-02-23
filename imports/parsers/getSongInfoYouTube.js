@@ -2,7 +2,7 @@
  * @author Thanh Tran
  */
 import { HTTP } from 'meteor/http';
-import { SongOrigin } from '../constants.js';
+import { SongOrigin, defaultThumbnailUrl } from '../constants.js';
 
 /**
  * Youtube URL parser module
@@ -47,7 +47,7 @@ const getSongInfoYouTube = songurl => {
 			name: title[1],
 			artist: user[1], // this is not really means artist, this is the uploader field from youtube page
 			streamURL: songurl, // media element can play youtube URL directly
-			thumbURL,
+			thumbURL: thumbURL || defaultThumbnailUrl,
 			play: 0,
 		};
 	}
