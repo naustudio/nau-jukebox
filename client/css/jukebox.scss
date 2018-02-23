@@ -1071,6 +1071,11 @@ dt::before {
 		transform: translate3d(0, -50%, 0);
 		overflow: hidden;
 	}
+
+	&--center {
+		display: flex;
+		justify-content: center;
+	}
 }
 
 .songs__list-item-wrapper {
@@ -1227,6 +1232,12 @@ dt::before {
 	.app-body__container {
 		padding-top: 155px;
 		min-height: calc(100vh - 75px);
+	}
+
+	.songs__list {
+		&__control {
+			margin-top: 2rem;
+		}
 	}
 
 	.songs__list-item-wrapper {
