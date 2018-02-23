@@ -24,6 +24,7 @@ class SongList extends Component {
 		onlineUsers: PropTypes.arrayOf(PropTypes.object),
 		userId: PropTypes.string,
 		isPlayingList: PropTypes.bool,
+		historyTab: PropTypes.bool,
 	};
 
 	static defaultProps = {
@@ -31,6 +32,7 @@ class SongList extends Component {
 		onlineUsers: [],
 		userId: '',
 		isPlayingList: false,
+		historyTab: false,
 	};
 
 	static getStores() {
@@ -141,6 +143,7 @@ class SongList extends Component {
 	toggleUserBook = e => {
 		const id = e.currentTarget.dataset.id;
 		const revealed = e.currentTarget.dataset.revealed === 'true';
+
 		if (id) {
 			Meteor.call('toggleSongAuthor', id, !revealed, err => {
 				if (err) {
@@ -194,13 +197,11 @@ class SongList extends Component {
 
 	render() {
 		const { currentRoom } = this.state;
-		const { userId } = this.props;
+		const { userId, historyTab } = this.props;
 		const songs = this.props.songs;
 		const emptyMessage = this.props.isPlayingList
 			? 'Please book your first song of the day.'
 			: 'No songs available. ¯\\_(ツ)_/¯';
-
-		console.log('Playing songs is ', this.state.selectedSong);
 
 		// prettier-ignore
 		return (
@@ -215,7 +216,7 @@ class SongList extends Component {
 									<span className="songs__list-item__container songs__list-item__left">
 
 										<div className="songs__list__player-info">
-											{song.isRevealed ? (
+											{!historyTab && song.isRevealed ? (
 												<span className="songs__list-item__author nau--hidden-xxs nau--hidden-xs nau--hidden-sm">{Users.findOne(song.author).profile.name}</span>
 											) : null}
 											<div className="songs__list-item__playing-wrapper">
@@ -256,7 +257,7 @@ class SongList extends Component {
 											<span className="songs__list-item__time">
 												<small>{this.getTime(song.timeAdded)}</small>
 											</span>
-											{currentRoom && currentRoom.hostId === userId ? (
+											{!historyTab && currentRoom && currentRoom.hostId === userId ? (
 												<span
 													className="songs__list-item__lyrics songs__list-item__icon"
 													data-id={song._id}
@@ -285,7 +286,7 @@ class SongList extends Component {
 											>
 												<i className="fa fa-retweet" />
 											</span>
-											{currentRoom && currentRoom.hostId === userId ? (
+											{!historyTab && currentRoom && currentRoom.hostId === userId ? (
 												<span
 													className="songs__list-item__delete songs__list-item__icon"
 													data-id={song._id}
