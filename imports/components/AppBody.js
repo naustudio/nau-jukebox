@@ -14,6 +14,7 @@ import TabUsers from './TabUsers';
 import TabTopList from './TabTopList';
 import TabSongs from './TabSongs';
 import TabYesterday from './TabYesterday';
+import TabHistory from './TabHistory';
 import TabLast7Days from './TabLast7Days';
 import PopUpLyric from './PopUpLyric';
 
@@ -44,6 +45,8 @@ class AppBody extends Component {
 				return <TabTopList currentRoom={currentRoom} />;
 			case 4:
 				return <TabUsers currentRoom={currentRoom} />;
+			case 5:
+				return <TabHistory currentRoom={currentRoom} />;
 			default:
 				break;
 		}

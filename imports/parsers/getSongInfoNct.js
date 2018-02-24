@@ -5,7 +5,7 @@
  */
 import { xml2js } from 'meteor/vjau:xml2js';
 import getGzipURL from './getGzipURL';
-import { SongOrigin } from '../constants.js';
+import { SongOrigin, defaultThumbnailUrl } from '../constants.js';
 
 // Utility / Private functions
 const xmlURLReg = /https?:\/\/(?:www)?.nhaccuatui.com\/flash\/xml\?.*?key1=(\w+)/;
@@ -105,7 +105,7 @@ const getSongInfoNct = songurl => {
 				name: track.title[0],
 				artist: track.creator[0],
 				streamURL: track.location[0],
-				thumbURL: track.avatar[0],
+				thumbURL: track.avatar[0] || defaultThumbnailUrl,
 				lyric,
 				play: 0,
 			};

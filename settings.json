@@ -1,0 +1,14 @@
+{
+	"facebook": {
+		"appId": "1944697045808357",
+		"secret": ""
+	},
+	"google": {
+		"clientId": "349578608446-pb173i52g2gavcb50r1pv0trm2poastc.apps.googleusercontent.com",
+		"secret": ""
+	},
+	"goalify": {
+		"clientId": "5a7a851ba09c92497ac0",
+		"secret": ""
+	}
+}

@@ -59,18 +59,28 @@ class TabNav extends Component {
 		}
 	};
 
-	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users'];
+	tabList = ['Play List', 'Yesterday', 'Last 7 day', 'Top Lists', 'Users', 'My Bookings'];
 	_renderTabNav = () => {
-		const lst = this.tabList.map((item, index) => (
-			<li
-				key={index}
-				data-index={index}
-				className={`tab__nav__list-item ${this.state.tabIndex === index ? 'tab__nav__list-item--active' : ''}`}
-				onClick={this.onTabClick}
-			>
-				<a href="#">{item}</a>
-			</li>
-		));
+		const lst = this.tabList.map((item, index) => {
+			const listItem = (
+				<li
+					key={index}
+					data-index={index}
+					className={`tab__nav__list-item ${this.state.tabIndex === index ? 'tab__nav__list-item--active' : ''}`}
+					onClick={this.onTabClick}
+				>
+					<a href="#">{item}</a>
+				</li>
+			);
+
+			if (index !== 5) {
+				return listItem;
+			} else if (this.props.isSignedIn) {
+				return listItem;
+			}
+
+			return '';
+		});
 
 		return lst;
 	};

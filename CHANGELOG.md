@@ -1,5 +1,12 @@
 # Nau Jukebox Changelog
 
+## 2018-02-24
+
+* NEW: My bookings history tab
+* Update Zing parser to keep multiple artist names
+* Use Youtube video thumbnail instead of uploader's
+* Bug and stability fixes
+
 ## 2018-01-08
 
 * (Backend) Record room's created date

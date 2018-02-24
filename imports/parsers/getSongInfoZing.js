@@ -3,7 +3,7 @@
  *
  * Zing MP3 URL parser module
  */
-import { SongOrigin } from '../constants.js';
+import { SongOrigin, defaultThumbnailUrl } from '../constants.js';
 import getGzipURL from './getGzipURL';
 
 const jsonURLReg = /\/media\/get-source\?[A-z0-9?=&]+/;
@@ -50,7 +50,6 @@ const getSongInfoZing = songurl => {
 
 	if (thumb) {
 		thumb = thumb[1];
-		console.log('Thumb URL', thumb);
 	}
 
 	const lyricResults = lyricReg.exec(linkRes);
@@ -87,15 +86,19 @@ const getSongInfoZing = songurl => {
 		//Not so soon, some Zing URL are blocked due to copyright issue
 		if (jsonItem.source['128'] && String(json.err) === '0') {
 			console.log('URL is valid. Adding new song.');
+			let artist = jsonItem.artist ? jsonItem.artist.name : jsonItem.performer;
+			if (jsonItem.artists && jsonItem.artists.length) {
+				artist = jsonItem.artists.map((a) => a.name.trim()).join(', ');
+			}
 
 			return {
 				timeAdded: Date.now(),
 				originalURL: songurl,
 				origin: SongOrigin.ZING,
 				name: jsonItem.name,
-				artist: jsonItem.artist ? jsonItem.artist.name : jsonItem.performer,
+				artist,
 				streamURL: jsonItem.source['128'],
-				thumbURL: thumb,
+				thumbURL: thumb || defaultThumbnailUrl,
 				lyric,
 				play: 0,
 			};

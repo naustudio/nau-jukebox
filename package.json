@@ -1,13 +1,13 @@
 {
   "name": "nau-jukebox",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Nau Studio",
   "license": "MIT",
   "repository": "https://github.com/naustudio/nau-jukebox",
   "scripts": {
     "eslint-check": "eslint --print-config .eslintrc | eslint-config-prettier-check",
     "lint": "eslint .",
-    "start": "meteor",
+    "start": "meteor --settings settings.json",
     "test": "npm run lint"
   },
   "browserslist": [
