@@ -1,6 +1,7 @@
 # NÂU JUKEBOX
 
-[![Travis CI build status](https://travis-ci.org/naustudio/nau-jukebox.svg?branch=develop "Travis CI build status")](https://travis-ci.org/naustudio/nau-jukebox)
+[![By Nau Studio](https://img.shields.io/badge/By-Nau%20Studio-977857.svg)](https://naustud.io)
+[![Travis CI build status](https://travis-ci.org/naustudio/nau-jukebox.svg "Travis CI build status")](https://travis-ci.org/naustudio/nau-jukebox)
 
 A simple webapp which allows group of people (co-workers, friends gathering, house-mates) collectively suggest and play continuously a pending list of songs.
 
