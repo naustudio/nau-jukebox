@@ -48,6 +48,8 @@ class TabHistory extends Component {
 
 		if (this.state.songList.length === 0) {
 			songs = this.props.songs.slice();
+		} else {
+			songs = this.state.songList.slice();
 		}
 
 		songs = songs.concat(querySongs);
