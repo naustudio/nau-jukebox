@@ -17,6 +17,7 @@ import TabYesterday from './TabYesterday';
 import TabHistory from './TabHistory';
 import TabLast7Days from './TabLast7Days';
 import PopUpLyric from './PopUpLyric';
+import ChatBox from './ChatBox';
 
 class AppBody extends Component {
 	static getStores() {
@@ -60,6 +61,7 @@ class AppBody extends Component {
 				<TabNav />
 				<PopUpLyric />
 				<div className="app-body__container">{this._renderTabItem()}</div>
+				<ChatBox />
 			</main>
 		);
 	}

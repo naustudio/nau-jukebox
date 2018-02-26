@@ -53,6 +53,7 @@ class AppStore extends ReduceStore {
 			toasterText: '',
 			toasterType: 'success',
 			toggleSearchInput: false,
+			isChatboxOpen: true,
 		};
 	}
 
@@ -129,8 +130,13 @@ class AppStore extends ReduceStore {
 					toggleSearchInput: !state.toggleSearchInput,
 				};
 				break;
+			case AppActions.TOGGLE_CHATBOX:
+				reducedState = {
+					isChatboxOpen: !state.isChatboxOpen,
+				};
+				break;
 			default:
-				// console.log(action.type, 'does nothing');
+			// console.log(action.type, 'does nothing');
 		}
 
 		// return a new object, to immitate pure function
