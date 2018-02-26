@@ -6,7 +6,7 @@ import { UserStatus } from 'meteor/mizzao:user-status';
 import subDays from 'date-fns/sub_days';
 
 import { slugify } from '../imports/helpers/utils';
-import { AppStates, Songs, Users, Rooms } from '../imports/collections';
+import { AppStates, Songs, Users, Rooms, Messages } from '../imports/collections';
 import getSongInfoNct from '../imports/parsers/getSongInfoNct';
 import getSongInfoZing from '../imports/parsers/getSongInfoZing';
 import getSongInfoSoundcloud from '../imports/parsers/getSongInfoSoundcloud';
@@ -146,7 +146,9 @@ Meteor.methods({
 	updateUserRoom(userId, roomId) {
 		const joinedRooms = Users.findOne(userId).joinedRooms || [];
 
-		joinedRooms.push(roomId);
+		if (joinedRooms.indexOf(roomId) < 0) {
+			joinedRooms.push(roomId);
+		}
 
 		return Users.update(userId, {
 			$set: {
@@ -192,6 +194,9 @@ Meteor.methods({
 	toggleSongAuthor(songId, revealed) {
 		return Songs.update(songId, { $set: { isRevealed: revealed } });
 	},
+	sendMessage(message, userId, roomId) {
+		return Messages.insert({ createdBy: userId, message, roomId });
+	},
 });
 
 Meteor.publish('Meteor.users.public', function() {
@@ -236,4 +241,8 @@ Meteor.publish('AppStates.public', function() {
 
 Meteor.publish('Rooms.public', function() {
 	return Rooms.find({});
+});
+
+Meteor.publish('Messages.public', function() {
+	return Messages.find({});
 });
