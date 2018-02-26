@@ -1,5 +1,6 @@
 private/dump/
 package-lock.json
+settings.local.json
 
 # NodeJS #
 ####################

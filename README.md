@@ -1,6 +1,7 @@
 # NÂU JUKEBOX
 
-[![Travis CI build status](https://travis-ci.org/naustudio/nau-jukebox.svg?branch=develop "Travis CI build status")](https://travis-ci.org/naustudio/nau-jukebox)
+[![By Nau Studio](https://img.shields.io/badge/By-Nau%20Studio-977857.svg)](https://naustud.io)
+[![Travis CI build status](https://travis-ci.org/naustudio/nau-jukebox.svg "Travis CI build status")](https://travis-ci.org/naustudio/nau-jukebox)
 
 A simple webapp which allows group of people (co-workers, friends gathering, house-mates) collectively suggest and play continuously a pending list of songs.
 
@@ -19,7 +20,8 @@ The app is built with [Meteor](http://meteor.com/) which allows real-time intera
 * See today's playlist, yesterday's and last 7 days'
 * See top songs of the week
 * See current room's user list
-* **Host** user role who is allowed to remove booked songs
+* See user's own booking history
+* **Host** user is allowed to remove booked songs, reveal who booked, and switch their role to another
 * Simple and manual points system to reward users (Room set own rules and host will be the referee)
 
 ## Roadmap:
