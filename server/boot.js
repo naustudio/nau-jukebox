@@ -24,7 +24,7 @@ ServiceConfiguration.configurations.upsert(
 	{
 		$set: {
 			clientId: Meteor.settings.google.clientId,
-			secret: Meteor.settings.google.secret
+			secret: Meteor.settings.google.secret,
 		},
 	}
 );
@@ -37,6 +37,7 @@ ServiceConfiguration.configurations.upsert(
 		$set: {
 			clientId: Meteor.settings.goalify.clientId,
 			secret: Meteor.settings.goalify.secret,
+			redirectUri: Meteor.settings.goalify.redirectUri,
 			loginStyle: 'popup',
 			apiHost: 'https://api.goalify.plus',
 		},
