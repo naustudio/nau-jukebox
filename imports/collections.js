@@ -105,6 +105,33 @@ const roomSchema = new SimpleSchema({
 const Rooms = new Mongo.Collection('rooms');
 Rooms.attachSchema(roomSchema);
 
+const messageSchema = new SimpleSchema({
+	createdAt: {
+		type: Date,
+		label: 'Created date time',
+		denyUpdate: true,
+		autoValue() {
+			if (this.isInsert) {
+				return new Date();
+			} else if (this.isUpsert) {
+				return { $setOnInsert: new Date() };
+			}
+			this.unset(); // Prevent user from supplying their own value
+		},
+	},
+	createdBy: {
+		type: String,
+	},
+	message: {
+		type: String,
+	},
+	roomId: {
+		type: String,
+	},
+});
+const Messages = new Mongo.Collection('messages');
+Messages.attachSchema(messageSchema);
+
 /**
  * AppStates helper: update playing songs, from any clients
  *
