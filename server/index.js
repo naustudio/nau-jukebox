@@ -146,7 +146,9 @@ Meteor.methods({
 	updateUserRoom(userId, roomId) {
 		const joinedRooms = Users.findOne(userId).joinedRooms || [];
 
-		joinedRooms.push(roomId);
+		if (joinedRooms.indexOf(roomId) < 0) {
+			joinedRooms.push(roomId);
+		}
 
 		return Users.update(userId, {
 			$set: {
