@@ -9,6 +9,7 @@
 	},
 	"goalify": {
 		"clientId": "5a7a851ba09c92497ac0",
-		"secret": ""
+		"secret": "",
+		"redirectUri": "https://jukebox.naustud.io/_oauth/goalify"
 	}
 }
