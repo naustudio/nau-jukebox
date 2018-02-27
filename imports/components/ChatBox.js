@@ -129,12 +129,13 @@ class ChatBox extends Component {
 	};
 
 	openChatbox = e => {
-		if (
-			(e.currentTarget.dataset.section === 'chatbox__tab' && !this.state.isChatboxOpen) ||
-			(e.currentTarget.dataset.section === 'chatbox__icon' && this.state.isChatboxOpen)
-		) {
-			toggleChatbox();
-		}
+		// if (
+		// 	(e.currentTarget.dataset.section === 'chatbox__tab' && !this.state.isChatboxOpen) ||
+		// 	(e.currentTarget.dataset.section === 'chatbox__icon' && this.state.isChatboxOpen)
+		// ) {
+		// 	toggleChatbox();
+		// }
+		toggleChatbox();
 	};
 
 	renderMessage = (message, index) => {
@@ -170,50 +171,49 @@ class ChatBox extends Component {
 
 		return (
 			<div className="chatbox">
-				<div
-					className={`chatbox__tab ${isChatboxOpen ? 'chatbox__tab--no-hover' : ''}`}
-					onClick={this.openChatbox}
-					data-section="chatbox__tab"
-				>
-					<span className="chatbox__title">Chatbox</span>
-					<span className="chatbox__icon-wrapper" onClick={this.openChatbox} data-section="chatbox__icon">
-						<i className={`fa fa-angle-${isChatboxOpen ? 'down' : 'up'} chatbox__icon`} />
-					</span>
-				</div>
-
-				{isChatboxOpen && (
-					<div className="chatbox__conversation-container">
-						<div className="chatbox__conversation-inner">
-							<div className="chatbox__conversation-content">
-								<ul
-									className="chatbox__message-list"
-									data-element="messageList"
-									ref={this.setRef}
-									style={messageListStyle}
-								>
-									{messages && messages.map((message, index) => this.renderMessage(message, index))}
-								</ul>
-							</div>
-							<form
-								className="chatbox__composer"
-								action=""
-								data-element="messageComposer"
-								ref={this.setRef}
-								style={messageComposerStyle}
-							>
-								<textarea
-									placeholder="Type and press [enter].."
-									className="chatbox__composer__content"
-									name="message"
-									type="text"
-									data-element="messageInput"
-									ref={this.setRef}
-									onKeyDown={this.checkUserTyping}
-									onKeyUp={this.checkUserTyping}
-									style={messageInputStyle}
-								/>
-							</form>
+				{isChatboxOpen ? (
+					<div className="chatbox-container">
+						<div className="chatbox__tab" onClick={this.openChatbox}>
+							<span className="chatbox__title">Chatbox</span>
 						</div>
+
+						<div className="chatbox__conversation-container">
+							<div className="chatbox__conversation-inner">
+								<div className="chatbox__conversation-content">
+									<ul
+										className="chatbox__message-list"
+										data-element="messageList"
+										ref={this.setRef}
+										style={messageListStyle}
+									>
+										{messages && messages.map((message, index) => this.renderMessage(message, index))}
+									</ul>
+								</div>
+								<form
+									className="chatbox__composer"
+									action=""
+									data-element="messageComposer"
+									ref={this.setRef}
+									style={messageComposerStyle}
+								>
+									<textarea
+										placeholder="Type and press [enter].."
+										className="chatbox__composer__content"
+										name="message"
+										type="text"
+										data-element="messageInput"
+										ref={this.setRef}
+										onKeyDown={this.checkUserTyping}
+										onKeyUp={this.checkUserTyping}
+										style={messageInputStyle}
+									/>
+								</form>
+							</div>
+						</div>
+					</div>
+				) : (
+					<div className="chatbox__icon-opener-container" onClick={this.openChatbox}>
+						<i className="fa fa-envelope-o chatbox__icon-opener" aria-hidden="true" />
 					</div>
 				)}
 			</div>
