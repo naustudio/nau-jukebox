@@ -14,6 +14,9 @@ import AppStore from '../events/AppStore';
 import { toggleChatbox } from '../events/AppActions';
 import { Messages, Users } from '../collections';
 
+const maximumHeightOfInput = 140;
+const baseHeightOfInput = 40;
+
 class ChatBox extends Component {
 	static propTypes = {
 		messages: PropTypes.arrayOf(PropTypes.shape()),
@@ -38,8 +41,18 @@ class ChatBox extends Component {
 		};
 	}
 
-	getRef = node => {
-		this.messageInput = node;
+	state = {
+		messageListStyle: {},
+		messageComposerStyle: {},
+		messageInputStyle: {},
+	};
+
+	setRef = node => {
+		this[`${node.dataset.element}`] = node;
+
+		if (node.dataset.element === 'messageInput') {
+			this.messageInputPrevHeight = this.messageInput.scrollHeight;
+		}
 	};
 
 	getUserFromId = (index, id, className) => {
@@ -60,11 +73,40 @@ class ChatBox extends Component {
 		return img;
 	};
 
-	checkUserTyping = e => {
-		if (e.keyCode === 13) {
-			this.submitMessage();
+	changeHeight(composerHeight) {
+		const numberOfSpace = composerHeight - this.messageInputPrevHeight;
+
+		if (composerHeight < maximumHeightOfInput) {
+			this.setState({
+				messageListStyle: {
+					maxHeight: this.messageList.clientHeight - numberOfSpace,
+				},
+				messageComposerStyle: {
+					height: composerHeight,
+				},
+				messageInputStyle: {
+					overflowY: composerHeight === baseHeightOfInput && 'hidden',
+				},
+			});
+			this.messageInputPrevHeight = composerHeight;
 		} else {
-			console.log('asdasd', this.messageInput.clientHeight);
+			this.setState({
+				messageComposerStyle: {
+					height: this.messageInputPrevHeight,
+				},
+				messageInputStyle: {
+					overflowY: 'scroll',
+				},
+			});
+		}
+	}
+
+	checkUserTyping = e => {
+		if (e.keyCode === 13 && !e.shiftKey) {
+			this.submitMessage();
+			this.changeHeight(baseHeightOfInput);
+		} else if (this.messageInputPrevHeight !== this.messageInput.scrollHeight) {
+			this.changeHeight(this.messageInput.scrollHeight);
 		}
 	};
 
@@ -119,7 +161,7 @@ class ChatBox extends Component {
 	};
 
 	render() {
-		const { isChatboxOpen } = this.state;
+		const { isChatboxOpen, messageComposerStyle, messageListStyle, messageInputStyle } = this.state;
 		const { messages } = this.props;
 
 		return (
@@ -139,18 +181,32 @@ class ChatBox extends Component {
 					<div className="chatbox__conversation-container">
 						<div className="chatbox__conversation-inner">
 							<div className="chatbox__conversation-content">
-								<ul className="chatbox__message-list">
+								<ul
+									className="chatbox__message-list"
+									data-element="messageList"
+									ref={this.setRef}
+									style={messageListStyle}
+								>
 									{messages && messages.map((message, index) => this.renderMessage(message, index))}
 								</ul>
 							</div>
-							<form className="chatbox__composer" action="">
+							<form
+								className="chatbox__composer"
+								action=""
+								data-element="messageComposer"
+								ref={this.setRef}
+								style={messageComposerStyle}
+							>
 								<textarea
 									placeholder="Type and press [enter].."
 									className="chatbox__composer__content"
 									name="message"
 									type="text"
-									ref={this.getRef}
+									data-element="messageInput"
+									ref={this.setRef}
 									onKeyDown={this.checkUserTyping}
+									onKeyUp={this.checkUserTyping}
+									style={messageInputStyle}
 								/>
 							</form>
 						</div>

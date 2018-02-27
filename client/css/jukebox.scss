@@ -2416,7 +2416,8 @@ button.button-naucoin {
 				padding: 0.5rem 0.8rem;
 				border-radius: 8px;
 				font-size: 1.3rem;
-				max-width: 75%;
+				word-wrap: break-word;
+				max-width: 215px;
 			}
 
 			&__avatar-wrapper {
@@ -2488,14 +2489,12 @@ button.button-naucoin {
 		}
 
 		&__conversation-content {
-			flex-grow: 15;
 			background-color: $chatbox-background-color;
 		}
 
 		&__composer {
 			border-top: 1px solid #ccc;
 			height: $chatbox-composer-height;
-			flex-grow: 1;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -2514,6 +2513,7 @@ button.button-naucoin {
 				padding: 0.7rem 0;
 				width: 100%;
 				font-size: 1.4rem;
+				overflow: hidden;
 
 				&::placeholder {
 					font-style: italic;
