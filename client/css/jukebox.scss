@@ -2354,8 +2354,13 @@ button.button-naucoin {
 
 //CHAT BOX
 
+.chatbox {
+	display: none;
+}
+
 @media screen and (min-width: 768px) {
 	.chatbox {
+		display: block;
 		position: fixed;
 		bottom: 0;
 		width: $chatbox-width;
@@ -2440,13 +2445,15 @@ button.button-naucoin {
 
 		&__message {
 			&--separator {
-				margin-top: 1.2rem;
+				margin-top: 2.1rem;
 			}
 		}
 
-		&__title {
+		&__tab {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 			padding: 0 1.2rem;
-			color: #fff;
 			background-color: $chatbox-color;
 			margin: 0;
 			cursor: pointer;
@@ -2455,6 +2462,29 @@ button.button-naucoin {
 			&:hover {
 				background-color: darken($chatbox-color, 10);
 			}
+
+			&--no-hover {
+				&.chatbox__tab {
+					&:hover {
+						background-color: $chatbox-color;
+					}
+				}
+			}
+		}
+
+		&__icon-wrapper {
+			padding: 0.8rem;
+		}
+
+		&__title {
+			color: #fff;
+			font-size: 2.1rem;
+			font-weight: 400;
+			margin: 0;
+		}
+
+		&__icon {
+			color: $color-01;
 		}
 
 		&__conversation-content {
@@ -2477,6 +2507,7 @@ button.button-naucoin {
 			}
 
 			&__content {
+				font-family: 'Roboto', sans-serif;
 				resize: none;
 				border: none;
 				min-height: 100%;

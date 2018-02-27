@@ -55,7 +55,7 @@ class AppStore extends ReduceStore {
 			toasterText: '',
 			toasterType: 'success',
 			toggleSearchInput: false,
-			isChatboxOpen: true,
+			isChatboxOpen: false,
 		};
 	}
 

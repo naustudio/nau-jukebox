@@ -82,8 +82,13 @@ class ChatBox extends Component {
 		}
 	};
 
-	openChatbox = () => {
-		toggleChatbox();
+	openChatbox = e => {
+		if (
+			(e.currentTarget.dataset.section === 'chatbox__tab' && !this.state.isChatboxOpen) ||
+			(e.currentTarget.dataset.section === 'chatbox__icon' && this.state.isChatboxOpen)
+		) {
+			toggleChatbox();
+		}
 	};
 
 	renderMessage = (message, index) => {
@@ -119,9 +124,16 @@ class ChatBox extends Component {
 
 		return (
 			<div className="chatbox">
-				<h5 className="chatbox__title" onClick={this.openChatbox}>
-					Chatbox
-				</h5>
+				<div
+					className={`chatbox__tab ${isChatboxOpen ? 'chatbox__tab--no-hover' : ''}`}
+					onClick={this.openChatbox}
+					data-section="chatbox__tab"
+				>
+					<span className="chatbox__title">Chatbox</span>
+					<span className="chatbox__icon-wrapper" onClick={this.openChatbox} data-section="chatbox__icon">
+						<i className={`fa fa-angle-${isChatboxOpen ? 'down' : 'up'} chatbox__icon`} />
+					</span>
+				</div>
 
 				{isChatboxOpen && (
 					<div className="chatbox__conversation-container">
