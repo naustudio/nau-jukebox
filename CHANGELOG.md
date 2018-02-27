@@ -1,5 +1,10 @@
 # Nau Jukebox Changelog
 
+## 2018-02-27
+
+* Attempt to fix Goalify login issues
+* Fix an issue with My Bookings load more
+
 ## 2018-02-24
 
 * NEW: My bookings history tab

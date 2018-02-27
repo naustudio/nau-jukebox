@@ -1,15 +1,15 @@
 {
 	"facebook": {
-		"appId": "1944697045808357",
-		"secret": ""
+		"appId": "please set yours",
+		"secret": "please set yours"
 	},
 	"google": {
-		"clientId": "349578608446-pb173i52g2gavcb50r1pv0trm2poastc.apps.googleusercontent.com",
-		"secret": ""
+		"clientId": "please set yours",
+		"secret": "please set yours"
 	},
 	"goalify": {
-		"clientId": "5a7a851ba09c92497ac0",
-		"secret": "",
+		"clientId": "please set yours",
+		"secret": "please set yours",
 		"redirectUri": "https://jukebox.naustud.io/_oauth/goalify"
 	}
 }
