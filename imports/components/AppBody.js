@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
 import { UserStatus } from 'meteor/mizzao:user-status';
+import PropTypes from 'prop-types';
 
 import TabNav from './TabNav';
 import AppStore from '../events/AppStore';
@@ -20,6 +21,14 @@ import PopUpLyric from './PopUpLyric';
 import ChatBox from './ChatBox';
 
 class AppBody extends Component {
+	static propTypes = {
+		isSignedIn: PropTypes.bool,
+	};
+
+	static defaultProps = {
+		isSignedIn: false,
+	};
+
 	static getStores() {
 		return [AppStore, UserStore];
 	}
@@ -61,7 +70,8 @@ class AppBody extends Component {
 				<TabNav />
 				<PopUpLyric />
 				<div className="app-body__container">{this._renderTabItem()}</div>
-				<ChatBox currentRoom={this.state.currentRoom} />
+
+				{this.props.isSignedIn && <ChatBox currentRoom={this.state.currentRoom} />}
 			</main>
 		);
 	}
@@ -80,5 +90,7 @@ export default withTracker(() => {
 		}
 	}
 
-	return {};
+	return {
+		isSignedIn: !!Meteor.userId(),
+	};
 })(Container.create(AppBody));

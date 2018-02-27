@@ -11,7 +11,7 @@ $header-h: 70px;
 $playlist-h: 55px;
 $dot-w: 24px;
 $chatbox-height: 380px;
-$chatbox-width: 400px;
+$chatbox-width: 320px;
 $chatbox-avatar-spacing: 0.6rem;
 $chatbox-composer-height: 40px;
 $dot-color: white;
@@ -2381,32 +2381,23 @@ button.button-naucoin {
 
 		&__message-list {
 			list-style: none;
-			padding: 1.5rem;
-			overflow-y: scroll;
+			padding: 1.5rem 0.5rem;
+			overflow-y: auto;
 			max-height: $chatbox-height - $chatbox-composer-height;
 		}
 
-		&__message-container {
-			margin: 1.5rem 0;
-			width: auto;
 
-			&::after {
-				content: '';
-				display: block;
-				clear: right;
-			}
-		}
 
-		&__message {
-			&__avatar-wrapper {
-				width: 32px;
-				height: 32px;
-				margin-right: $chatbox-avatar-spacing;
-			}
-
-			&__avatar {
-				width: 100%;
-				border-radius: 50%;
+		&__message-other,
+		&__message-self {
+			&__container {
+				margin: 0 0 0.2rem 0;
+				width: auto;
+				&::after {
+					content: '';
+					display: block;
+					clear: right;
+				}
 			}
 
 			&__content-wrapper {
@@ -2420,27 +2411,36 @@ button.button-naucoin {
 				padding: 0.5rem 0.8rem;
 				border-radius: 8px;
 				font-size: 1.3rem;
+				max-width: 75%;
 			}
 
+			&__avatar-wrapper {
+				width: 32px;
+				height: 32px;
+				margin-right: $chatbox-avatar-spacing;
+			}
 
-			&--self {
+			&__avatar {
+				width: 100%;
+				border-radius: 50%;
+			}
+		}
 
-				.chatbox__message__content-wrapper {
-					float: right;
-				}
+		&__message-self {
+			&__avatar-wrapper {
+				margin-right: 0;
+				margin-left: $chatbox-avatar-spacing;
+			}
 
-				.chatbox__message__avatar-wrapper {
-					margin-right: 0;
-					margin-left: $chatbox-avatar-spacing;
-				}
+			&__content-wrapper {
+				float: right;
+				flex-direction: row-reverse;
+			}
+		}
 
-				.chatbox__message__content-wrapper {
-					flex-direction: row-reverse;
-				}
-
-				&.chatbox__message-container {
-					margin: 0 0 0.4rem 0;
-				}
+		&__message {
+			&--separator {
+				margin-top: 1.2rem;
 			}
 		}
 
@@ -2483,6 +2483,10 @@ button.button-naucoin {
 				padding: 0.7rem 0;
 				width: 100%;
 				font-size: 1.4rem;
+
+				&::placeholder {
+					font-style: italic;
+				}
 
 				&:focus {
 					outline: none;

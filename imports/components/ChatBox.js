@@ -42,7 +42,7 @@ class ChatBox extends Component {
 		this.messageInput = node;
 	};
 
-	getUserFromId = (index, id) => {
+	getUserFromId = (index, id, className) => {
 		const requestUser = this.props.users.filter(user => id === user._id);
 
 		let img = null;
@@ -50,7 +50,7 @@ class ChatBox extends Component {
 		if (index === 0 || this.props.messages[index - 1].createdBy !== id) {
 			img = (
 				<img
-					className="chatbox__message__avatar"
+					className={`${className}__avatar`}
 					src={requestUser[0].profile.picture}
 					alt={`${requestUser[0].profile.name} avatar`}
 				/>
@@ -60,8 +60,12 @@ class ChatBox extends Component {
 		return img;
 	};
 
-	openChatbox = () => {
-		toggleChatbox();
+	checkUserTyping = e => {
+		if (e.keyCode === 13) {
+			this.submitMessage();
+		} else {
+			console.log('asdasd', this.messageInput.clientHeight);
+		}
 	};
 
 	submitMessage = () => {
@@ -78,10 +82,35 @@ class ChatBox extends Component {
 		}
 	};
 
-	checkUserTyping = e => {
-		if (e.keyCode === 13) {
-			this.submitMessage();
+	openChatbox = () => {
+		toggleChatbox();
+	};
+
+	renderMessage = (message, index) => {
+		let messageClass = '';
+		let messageSpacing = '';
+
+		if (message.createdBy === Meteor.userId()) {
+			messageClass = 'chatbox__message-self';
+		} else {
+			messageClass = 'chatbox__message-other';
 		}
+
+		if (index !== 0 && this.props.messages[index - 1].createdBy !== message.createdBy) {
+			messageSpacing = 'chatbox__message--separator';
+		}
+
+		return (
+			<li className={`${messageClass}__container ${messageClass} ${messageSpacing}`} key={message._id}>
+				<div className={`${messageClass}__content-wrapper`}>
+					<div className={`${messageClass}__avatar-wrapper`}>
+						{this.getUserFromId(index, message.createdBy, messageClass)}
+					</div>
+
+					<span className={`${messageClass}__content`}>{message.message}</span>
+				</div>
+			</li>
+		);
 	};
 
 	render() {
@@ -99,28 +128,12 @@ class ChatBox extends Component {
 						<div className="chatbox__conversation-inner">
 							<div className="chatbox__conversation-content">
 								<ul className="chatbox__message-list">
-									{messages &&
-										messages.map((message, index) => (
-											<li
-												className={`chatbox__message-container ${
-													message.createdBy === Meteor.userId() ? 'chatbox__message--self' : ''
-												}`}
-												key={message._id}
-											>
-												<div className="chatbox__message__content-wrapper">
-													<div className="chatbox__message__avatar-wrapper">
-														{this.getUserFromId(index, message.createdBy)}
-													</div>
-
-													<span className="chatbox__message__content">{message.message}</span>
-												</div>
-											</li>
-										))}
+									{messages && messages.map((message, index) => this.renderMessage(message, index))}
 								</ul>
 							</div>
 							<form className="chatbox__composer" action="">
 								<textarea
-									placeholder="Type a message"
+									placeholder="Type and press [enter].."
 									className="chatbox__composer__content"
 									name="message"
 									type="text"
