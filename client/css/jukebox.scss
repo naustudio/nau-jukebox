@@ -2375,6 +2375,29 @@ button.button-naucoin {
 
 		&__message-list {
 			list-style: none;
+			padding: 0 1.5rem;
+		}
+
+		&__message-container {
+			margin: 0;
+			width: auto;
+
+			&::after {
+				content: '';
+				display: block;
+				clear: right;
+			}
+		}
+
+		&__message {
+			&--self {
+
+				.chatbox__message__content {
+					float: right;
+				}
+			}
+
+
 		}
 
 		&__title {
@@ -2404,6 +2427,16 @@ button.button-naucoin {
 			&__content,
 			&__button {
 				margin: 0;
+			}
+
+			&__content {
+				resize: none;
+				border: none;
+
+				&:focus {
+					outline: none;
+					border: none;
+				}
 			}
 
 			&__button {

@@ -12,14 +12,15 @@ import { Container } from 'flux/utils';
 // import { Users } from '../collections';
 import AppStore from '../events/AppStore';
 import { toggleChatbox } from '../events/AppActions';
+import { Messages /* AppStates */ } from '../collections';
 
 class ChatBox extends Component {
 	static propTypes = {
-		users: PropTypes.arrayOf(PropTypes.object),
+		messages: PropTypes.arrayOf(PropTypes.shape()),
 	};
 
 	static defaultProps = {
-		users: [],
+		messages: [],
 	};
 
 	static state = {};
@@ -35,50 +36,33 @@ class ChatBox extends Component {
 		};
 	}
 
+	getRef = node => {
+		this.messageInput = node;
+	};
+
 	openChatbox = () => {
 		toggleChatbox();
 	};
 
-	messages = [
-		{
-			id: 'asdaseqwe1235',
-			name: 'Tu Nguyen',
-			message: 'Hello there!',
-			createdTime: '1519639383',
-			avatar:
-				'https://cdn4.iconfinder.com/data/icons/famous-characters-add-on-vol-1-flat/48/Famous_Character_-_Add_On_1-22-32.png',
-		},
-		{
-			id: 'asdaseqwe1235',
-			name: 'Eric Tran',
-			message: 'Hello there!',
-			createdTime: '151961383',
-			avatar:
-				'https://cdn4.iconfinder.com/data/icons/famous-characters-add-on-vol-1-flat/48/Famous_Character_-_Add_On_1-22-32.png',
-		},
-		{
-			id: 'asdaseqwe1235',
-			name: 'Thanh Tran',
-			message: 'Hello there!',
-			createdTime: '1519631283',
-			avatar:
-				'https://cdn4.iconfinder.com/data/icons/famous-characters-add-on-vol-1-flat/48/Famous_Character_-_Add_On_1-22-32.png',
-		},
-	];
+	submitMessage = e => {
+		e.preventDefault();
 
-	renderMessages = () => {
-		this.messages.forEach(message => (
-			<li className="chatbox__message-container">
-				<img className="chatbox__message__avatar" src={message.avatar} alt={`${message.name} avatar`} />
-				<span className="chatbox__message__content">{message.message}</span>
-			</li>
-		));
+		const message = e.currentTarget.message.value;
+
+		if (message !== '') {
+			Meteor.call('sendMessage', message, Meteor.userId(), this.state.currentRoom._id, err => {
+				if (err) {
+					console.log(err);
+				} else {
+					this.messageInput.value = '';
+				}
+			});
+		}
 	};
 
 	render() {
-		const { currentRoom, isChatboxOpen } = this.state;
-
-		console.log('this', this.messages);
+		const { isChatboxOpen } = this.state;
+		const { messages } = this.props;
 
 		return (
 			<div className="chatbox">
@@ -91,16 +75,28 @@ class ChatBox extends Component {
 						<div className="chatbox__conversation-inner">
 							<div className="chatbox__conversation-content">
 								<ul className="chatbox__message-list">
-									{this.messages.map(message => (
-										<li className="chatbox__message-container">
-											<img className="chatbox__message__avatar" src={message.avatar} alt={`${message.name} avatar`} />
-											<span className="chatbox__message__content">{message.message}</span>
-										</li>
-									))}
+									{messages &&
+										messages.map(message => (
+											<li
+												className={`chatbox__message-container ${
+													message.createdBy === Meteor.userId() ? 'chatbox__message--self' : ''
+												}`}
+												key={message._id}
+											>
+												<span className="chatbox__message__content">{message.message}</span>
+											</li>
+										))}
 								</ul>
 							</div>
-							<form className="chatbox__composer" action="">
-								<input className="chatbox__composer__content" type="text" />
+							<form className="chatbox__composer" action="" onSubmit={this.submitMessage}>
+								<textarea
+									rows="10"
+									col="1"
+									className="chatbox__composer__content"
+									name="message"
+									type="text"
+									ref={this.getRef}
+								/>
 								<button className="chatbox__composer__button" type="submit">
 									Send
 								</button>
@@ -113,6 +109,14 @@ class ChatBox extends Component {
 	}
 }
 
-export default withTracker(() => ({
-	users: [],
+export default withTracker(({ currentRoom }) => ({
+	messages: Messages.find(
+		{
+			roomId: currentRoom && currentRoom._id,
+		},
+		{
+			limit: 10,
+			sort: { timeAdded: -1 },
+		}
+	).fetch(),
 }))(Container.create(ChatBox));

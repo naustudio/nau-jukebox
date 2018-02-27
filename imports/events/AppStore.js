@@ -4,7 +4,7 @@
 import { Meteor } from 'meteor/meteor';
 import { ReduceStore } from 'flux/utils';
 
-import { Songs, AppStates, Rooms } from '../collections';
+import { Songs, AppStates, Rooms, Messages } from '../collections';
 import AppDispatcher from './AppDispatcher';
 import * as AppActions from './AppActions';
 
@@ -12,9 +12,11 @@ if (Meteor.isClient) {
 	Meteor.subscribe('Songs.public');
 	Meteor.subscribe('AppStates.public');
 	Meteor.subscribe('Rooms.public');
+	Meteor.subscribe('Messages.public');
 	window.Songs = Songs;
 	window.AppStates = AppStates;
 	window.Rooms = Rooms;
+	window.Messages = Messages;
 }
 
 /**

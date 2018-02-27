@@ -61,7 +61,7 @@ class AppBody extends Component {
 				<TabNav />
 				<PopUpLyric />
 				<div className="app-body__container">{this._renderTabItem()}</div>
-				<ChatBox />
+				<ChatBox currentRoom={this.state.currentRoom} />
 			</main>
 		);
 	}

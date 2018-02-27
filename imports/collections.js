@@ -173,4 +173,4 @@ AppStates.updatePlayingSongs = function(played, stopped) {
 	AppStates.update(playingSongs._id, { key: 'playingSongs', songs });
 };
 
-export { Songs, AppStates, Users, Rooms };
+export { Songs, AppStates, Users, Rooms, Messages };
