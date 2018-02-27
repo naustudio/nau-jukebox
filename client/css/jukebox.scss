@@ -10,6 +10,10 @@ $playbutton-w: 6px;
 $header-h: 70px;
 $playlist-h: 55px;
 $dot-w: 24px;
+$chatbox-height: 380px;
+$chatbox-width: 400px;
+$chatbox-avatar-spacing: 0.6rem;
+$chatbox-composer-height: 40px;
 $dot-color: white;
 $dot-color__active: #a9c52f;
 
@@ -28,6 +32,7 @@ $color-red: #f00;
 $chatbox-color: #50b748;
 $chatbox-background-color: #fcfcfc;
 $chatbox-border: #ddd;
+
 
 * {
 	box-sizing: border-box;
@@ -2353,7 +2358,7 @@ button.button-naucoin {
 	.chatbox {
 		position: fixed;
 		bottom: 0;
-		width: 316px;
+		width: $chatbox-width;
 		margin-left: 1.2rem;
 
 		&__text {
@@ -2363,8 +2368,9 @@ button.button-naucoin {
 		}
 
 		&__conversation-container {
-			height: 380px;
+			height: $chatbox-height;
 			border: 1px solid $chatbox-border;
+			border-bottom: none;
 		}
 
 		&__conversation-inner {
@@ -2375,11 +2381,13 @@ button.button-naucoin {
 
 		&__message-list {
 			list-style: none;
-			padding: 0 1.5rem;
+			padding: 1.5rem;
+			overflow-y: scroll;
+			max-height: $chatbox-height - $chatbox-composer-height;
 		}
 
 		&__message-container {
-			margin: 0;
+			margin: 1.5rem 0;
 			width: auto;
 
 			&::after {
@@ -2390,14 +2398,50 @@ button.button-naucoin {
 		}
 
 		&__message {
-			&--self {
+			&__avatar-wrapper {
+				width: 32px;
+				height: 32px;
+				margin-right: $chatbox-avatar-spacing;
+			}
 
-				.chatbox__message__content {
-					float: right;
-				}
+			&__avatar {
+				width: 100%;
+				border-radius: 50%;
+			}
+
+			&__content-wrapper {
+				display: flex;
+				align-items: center;
+			}
+
+			&__content {
+				background-color: #50b748;
+				color: white;
+				padding: 0.5rem 0.8rem;
+				border-radius: 8px;
+				font-size: 1.3rem;
 			}
 
 
+			&--self {
+
+				.chatbox__message__content-wrapper {
+					float: right;
+				}
+
+				.chatbox__message__avatar-wrapper {
+					margin-right: 0;
+					margin-left: $chatbox-avatar-spacing;
+				}
+
+				.chatbox__message__content-wrapper {
+					flex-direction: row-reverse;
+				}
+
+				&.chatbox__message-container {
+					margin: 0 0 0.4rem 0;
+				}
+			}
 		}
 
 		&__title {
@@ -2419,10 +2463,13 @@ button.button-naucoin {
 		}
 
 		&__composer {
+			border-top: 1px solid #ccc;
+			height: $chatbox-composer-height;
 			flex-grow: 1;
 			display: flex;
+			align-items: center;
 			justify-content: space-between;
-			padding: 0 1.5rem;
+			padding: 0 0.7rem;
 
 			&__content,
 			&__button {
@@ -2432,6 +2479,10 @@ button.button-naucoin {
 			&__content {
 				resize: none;
 				border: none;
+				min-height: 100%;
+				padding: 0.7rem 0;
+				width: 100%;
+				font-size: 1.4rem;
 
 				&:focus {
 					outline: none;
@@ -2443,7 +2494,7 @@ button.button-naucoin {
 				border: none;
 				background: transparent;
 				color: $chatbox-color;
-				width: 10px;
+				padding: 0 1rem;
 			}
 		}
 	}
