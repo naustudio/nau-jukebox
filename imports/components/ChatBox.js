@@ -14,8 +14,7 @@ import AppStore from '../events/AppStore';
 import { toggleChatbox } from '../events/AppActions';
 import { Messages, Users } from '../collections';
 
-const maximumHeightOfInput = 140;
-const baseHeightOfInput = 40;
+const maximumHeightOfInput = 150;
 
 class ChatBox extends Component {
 	static propTypes = {
@@ -43,7 +42,7 @@ class ChatBox extends Component {
 
 	state = {
 		messageListStyle: {},
-		messageComposerStyle: {},
+		messageFormStyle: {},
 		messageInputStyle: {},
 	};
 
@@ -55,7 +54,8 @@ class ChatBox extends Component {
 		this[`${node.dataset.element}`] = node;
 
 		if (node.dataset.element === 'messageInput') {
-			this.messageInputPrevHeight = this.messageInput.scrollHeight;
+			this.baseMessageInputHeight = node.clientHeight;
+			this.messageInputPrevHeight = node.clientHeight;
 		}
 	};
 
@@ -77,45 +77,52 @@ class ChatBox extends Component {
 		return img;
 	};
 
-	changeHeight(composerHeight) {
-		const numberOfSpace = composerHeight - this.messageInputPrevHeight;
-
-		if (composerHeight < maximumHeightOfInput) {
+	increaseHeight = currentInputHeight => {
+		if (currentInputHeight < maximumHeightOfInput) {
+			this.setState(
+				{
+					messageFormStyle: {
+						height: this.messageForm.clientHeight + (currentInputHeight - this.messageInputPrevHeight),
+					},
+					messageListStyle: {
+						maxHeight: this.messageList.clientHeight - (currentInputHeight - this.messageInputPrevHeight),
+					},
+				},
+				() => {
+					this.messageInputPrevHeight = this.messageInput.scrollHeight;
+				}
+			);
+		} else if (!this.state.messageInputStyle.overflowY) {
 			this.setState({
-				messageListStyle: {
-					maxHeight: this.messageList.clientHeight - numberOfSpace,
-				},
-				messageComposerStyle: {
-					height: composerHeight,
-				},
-				messageInputStyle: {
-					overflowY: composerHeight === baseHeightOfInput && 'hidden',
-				},
-			});
-			this.messageInputPrevHeight = composerHeight;
-		} else {
-			this.setState({
-				messageComposerStyle: {
-					height: this.messageInputPrevHeight,
-				},
 				messageInputStyle: {
 					overflowY: 'scroll',
 				},
 			});
 		}
-	}
+	};
+
+	resetHeight = () => {
+		this.messageInputPrevHeight = this.baseMessageInputHeight;
+		this.setState({
+			messageFormStyle: {},
+			messageInputStyle: {},
+			messageListStyle: {},
+		});
+	};
 
 	checkUserTyping = e => {
 		if (e.keyCode === 13 && !e.shiftKey) {
+			e.preventDefault();
 			this.submitMessage();
-			this.changeHeight(baseHeightOfInput);
-		} else if (this.messageInputPrevHeight !== this.messageInput.scrollHeight) {
-			this.changeHeight(this.messageInput.scrollHeight);
+		} else if (e.keyCode === 8 && this.messageInput.value === '') {
+			this.resetHeight();
+		} else if (this.messageInput.scrollHeight !== this.messageInputPrevHeight) {
+			this.increaseHeight(this.messageInput.scrollHeight);
 		}
 	};
 
 	submitMessage = () => {
-		const message = this.messageInput.value;
+		const message = this.messageInput.value.trim();
 
 		if (message !== '') {
 			Meteor.call('sendMessage', message, Meteor.userId(), this.state.currentRoom._id, err => {
@@ -123,18 +130,13 @@ class ChatBox extends Component {
 					console.log(err);
 				} else {
 					this.messageInput.value = '';
+					this.resetHeight();
 				}
 			});
 		}
 	};
 
-	openChatbox = e => {
-		// if (
-		// 	(e.currentTarget.dataset.section === 'chatbox__tab' && !this.state.isChatboxOpen) ||
-		// 	(e.currentTarget.dataset.section === 'chatbox__icon' && this.state.isChatboxOpen)
-		// ) {
-		// 	toggleChatbox();
-		// }
+	toggleChatbox = () => {
 		toggleChatbox();
 	};
 
@@ -166,14 +168,14 @@ class ChatBox extends Component {
 	};
 
 	render() {
-		const { isChatboxOpen, messageComposerStyle, messageListStyle, messageInputStyle } = this.state;
+		const { isChatboxOpen, messageFormStyle, messageListStyle, messageInputStyle } = this.state;
 		const { messages } = this.props;
 
 		return (
 			<div className="chatbox">
 				{isChatboxOpen ? (
 					<div className="chatbox-container">
-						<div className="chatbox__tab" onClick={this.openChatbox}>
+						<div className="chatbox__tab" onClick={this.toggleChatbox}>
 							<span className="chatbox__title">Chatbox</span>
 						</div>
 
@@ -192,9 +194,9 @@ class ChatBox extends Component {
 								<form
 									className="chatbox__composer"
 									action=""
-									data-element="messageComposer"
+									data-element="messageForm"
 									ref={this.setRef}
-									style={messageComposerStyle}
+									style={messageFormStyle}
 								>
 									<textarea
 										placeholder="Type and press [enter].."
@@ -203,8 +205,8 @@ class ChatBox extends Component {
 										type="text"
 										data-element="messageInput"
 										ref={this.setRef}
-										onKeyDown={this.checkUserTyping}
 										onKeyUp={this.checkUserTyping}
+										onKeyDown={this.checkUserTyping}
 										style={messageInputStyle}
 									/>
 								</form>
@@ -212,7 +214,7 @@ class ChatBox extends Component {
 						</div>
 					</div>
 				) : (
-					<div className="chatbox__icon-opener-container" onClick={this.openChatbox}>
+					<div className="chatbox__icon-opener-container" onClick={this.toggleChatbox}>
 						<i className="fa fa-envelope-o chatbox__icon-opener" aria-hidden="true" />
 					</div>
 				)}
