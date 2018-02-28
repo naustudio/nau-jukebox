@@ -41,7 +41,6 @@ class ChatBox extends Component {
 	}
 
 	state = {
-		messageListStyle: {},
 		messageFormStyle: {},
 		messageInputStyle: {},
 	};
@@ -55,7 +54,7 @@ class ChatBox extends Component {
 
 		if (node.dataset.element === 'messageInput') {
 			this.baseMessageInputHeight = node.clientHeight;
-			this.messageInputPrevHeight = node.clientHeight;
+			document.querySelector('.chatbox__composer__content').addEventListener('resize', this.onResize);
 		}
 	};
 
@@ -77,22 +76,26 @@ class ChatBox extends Component {
 		return img;
 	};
 
-	increaseHeight = currentInputHeight => {
-		if (currentInputHeight < maximumHeightOfInput) {
+	adjustHeight = () => {
+		if (this.messageInput.scrollHeight <= maximumHeightOfInput) {
 			this.setState(
 				{
-					messageFormStyle: {
-						height: this.messageForm.clientHeight + (currentInputHeight - this.messageInputPrevHeight),
-					},
-					messageListStyle: {
-						maxHeight: this.messageList.clientHeight - (currentInputHeight - this.messageInputPrevHeight),
+					messageInputStyle: {
+						height: 1,
 					},
 				},
 				() => {
-					this.messageInputPrevHeight = this.messageInput.scrollHeight;
+					this.setState({
+						messageFormStyle: {
+							minHeight: this.messageInput.scrollHeight,
+						},
+						messageInputStyle: {
+							height: this.messageInput.scrollHeight,
+						},
+					});
 				}
 			);
-		} else if (!this.state.messageInputStyle.overflowY) {
+		} else {
 			this.setState({
 				messageInputStyle: {
 					overflowY: 'scroll',
@@ -102,11 +105,9 @@ class ChatBox extends Component {
 	};
 
 	resetHeight = () => {
-		this.messageInputPrevHeight = this.baseMessageInputHeight;
 		this.setState({
 			messageFormStyle: {},
 			messageInputStyle: {},
-			messageListStyle: {},
 		});
 	};
 
@@ -114,10 +115,6 @@ class ChatBox extends Component {
 		if (e.keyCode === 13 && !e.shiftKey) {
 			e.preventDefault();
 			this.submitMessage();
-		} else if (e.keyCode === 8 && this.messageInput.value === '') {
-			this.resetHeight();
-		} else if (this.messageInput.scrollHeight !== this.messageInputPrevHeight) {
-			this.increaseHeight(this.messageInput.scrollHeight);
 		}
 	};
 
@@ -137,6 +134,12 @@ class ChatBox extends Component {
 	};
 
 	toggleChatbox = () => {
+		if (this.state.isChatboxOpen) {
+			this.content = this.messageInput.value;
+
+			this.resetHeight();
+		}
+
 		toggleChatbox();
 	};
 
@@ -168,7 +171,7 @@ class ChatBox extends Component {
 	};
 
 	render() {
-		const { isChatboxOpen, messageFormStyle, messageListStyle, messageInputStyle } = this.state;
+		const { isChatboxOpen, messageFormStyle, messageInputStyle } = this.state;
 		const { messages } = this.props;
 
 		return (
@@ -182,22 +185,11 @@ class ChatBox extends Component {
 						<div className="chatbox__conversation-container">
 							<div className="chatbox__conversation-inner">
 								<div className="chatbox__conversation-content">
-									<ul
-										className="chatbox__message-list"
-										data-element="messageList"
-										ref={this.setRef}
-										style={messageListStyle}
-									>
+									<ul className="chatbox__message-list" ref={this.setRef}>
 										{messages && messages.map((message, index) => this.renderMessage(message, index))}
 									</ul>
 								</div>
-								<form
-									className="chatbox__composer"
-									action=""
-									data-element="messageForm"
-									ref={this.setRef}
-									style={messageFormStyle}
-								>
+								<form className="chatbox__composer" action="" style={messageFormStyle}>
 									<textarea
 										placeholder="Type and press [enter].."
 										className="chatbox__composer__content"
@@ -205,7 +197,7 @@ class ChatBox extends Component {
 										type="text"
 										data-element="messageInput"
 										ref={this.setRef}
-										onKeyUp={this.checkUserTyping}
+										onChange={this.adjustHeight}
 										onKeyDown={this.checkUserTyping}
 										style={messageInputStyle}
 									/>

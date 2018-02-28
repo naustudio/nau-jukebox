@@ -13,7 +13,7 @@ $dot-w: 24px;
 $chatbox-height: 380px;
 $chatbox-width: 320px;
 $chatbox-avatar-spacing: 0.6rem;
-$chatbox-composer-height: 80px;
+$chatbox-composer-height: 40px;
 $dot-color: white;
 $dot-color__active: #a9c52f;
 
@@ -2418,7 +2418,7 @@ button.button-naucoin {
 			list-style: none;
 			padding: 1.5rem 0.5rem;
 			overflow-y: auto;
-			max-height: $chatbox-height - $chatbox-composer-height;
+			// max-height: $chatbox-height - $chatbox-composer-height;
 		}
 
 
@@ -2441,6 +2441,7 @@ button.button-naucoin {
 			}
 
 			&__content {
+				white-space: pre-wrap;
 				background-color: $chatbox-other;
 				color: white;
 				padding: 0.5rem 0.8rem;
@@ -2529,16 +2530,20 @@ button.button-naucoin {
 		}
 
 		&__conversation-content {
+			overflow-y: auto;
 			background-color: $chatbox-background-color;
+			flex-grow: 10;
 		}
 
 		&__composer {
 			// border-top: 1px solid #ccc;
+			flex-grow: 1;
 			min-height: $chatbox-composer-height;
-			padding: 0.8rem 0 0.4rem 0.8rem;
+			margin: 0 0 1.5rem 0.8rem;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			position: relative;
 
 			&__content,
 			&__button {
@@ -2549,12 +2554,15 @@ button.button-naucoin {
 				font-family: 'Roboto', sans-serif;
 				resize: none;
 				border: none;
-				min-height: 100%;
-				padding: 0 1.4rem 0 0;
+				padding: 1.5rem 1.3rem 0 0;
 				height: 100%;
+				min-height: $chatbox-composer-height;
 				width: 100%;
 				font-size: 1.4rem;
 				overflow: hidden;
+				position: absolute;
+				top: 0;
+				left: 0;
 
 				&::placeholder {
 					font-style: italic;
