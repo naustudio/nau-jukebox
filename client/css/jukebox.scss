@@ -2356,21 +2356,27 @@ button.button-naucoin {
 
 //CHAT BOX
 
-.chatbox-container {
+.chatbox {
 	display: none;
 }
 
 @media screen and (min-width: 768px) {
 
-	.chatbox-container {
-		display: block;
-		position: fixed;
-		bottom: 0;
-		width: $chatbox-width;
-		margin-left: 1.2rem;
-	}
-
 	.chatbox {
+		display: block;
+
+		&--shown {
+			position: fixed;
+			bottom: 0;
+			margin-left: 1.2rem;
+			width: $chatbox-width;
+		}
+
+		&__close-icon {
+			color: $color-01;
+			font-size: 2.2rem;
+		}
+
 		&__icon-opener-container {
 			cursor: pointer;
 			position: fixed;
@@ -2412,6 +2418,7 @@ button.button-naucoin {
 			height: 100%;
 			display: flex;
 			flex-direction: column;
+			background-color: $color-01;
 		}
 
 		&__message-list {
@@ -2533,6 +2540,7 @@ button.button-naucoin {
 			overflow-y: auto;
 			background-color: $chatbox-background-color;
 			flex-grow: 10;
+			border-bottom: 1px solid $chatbox-border;
 		}
 
 		&__composer {

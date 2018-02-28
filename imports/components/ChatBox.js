@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Container } from 'flux/utils';
+import { isToday, isYesterday } from 'date-fns';
 // import ReactGA from 'react-ga';
 // import { Users } from '../collections';
 import AppStore from '../events/AppStore';
@@ -15,6 +16,7 @@ import { toggleChatbox } from '../events/AppActions';
 import { Messages, Users } from '../collections';
 
 const maximumHeightOfInput = 150;
+const daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 class ChatBox extends Component {
 	static propTypes = {
@@ -33,7 +35,7 @@ class ChatBox extends Component {
 		return [AppStore];
 	}
 
-	static calculateState(/*prevState*/) {
+	static calculateState(/* prevState */) {
 		return {
 			currentRoom: AppStore.getState()['currentRoom'],
 			isChatboxOpen: AppStore.getState()['isChatboxOpen'],
@@ -44,6 +46,13 @@ class ChatBox extends Component {
 		messageFormStyle: {},
 		messageInputStyle: {},
 	};
+
+	componentDidUpdate() {
+		const lastMessage = document.querySelector('.chatbox__message--last');
+		if (lastMessage) {
+			lastMessage.scrollIntoView();
+		}
+	}
 
 	setRef = node => {
 		if (!node) {
@@ -58,22 +67,10 @@ class ChatBox extends Component {
 		}
 	};
 
-	getUserFromId = (index, id, className) => {
+	getUserFromId = id => {
 		const requestUser = this.props.users.filter(user => id === user._id);
 
-		let img = null;
-
-		if (index === 0 || this.props.messages[index - 1].createdBy !== id) {
-			img = (
-				<img
-					className={`${className}__avatar`}
-					src={requestUser[0].profile.picture}
-					alt={`${requestUser[0].profile.name} avatar`}
-				/>
-			);
-		}
-
-		return img;
+		return requestUser;
 	};
 
 	adjustHeight = () => {
@@ -146,6 +143,10 @@ class ChatBox extends Component {
 	renderMessage = (message, index) => {
 		let messageClass = '';
 		let messageSpacing = '';
+		const requestUser = this.getUserFromId(message.createdBy);
+		let img = null;
+		let time = '';
+		const messageDate = new Date(message.createdAt);
 
 		if (message.createdBy === Meteor.userId()) {
 			messageClass = 'chatbox__message-self';
@@ -157,14 +158,36 @@ class ChatBox extends Component {
 			messageSpacing = 'chatbox__message--separator';
 		}
 
+		if (index === this.props.messages.length - 1) {
+			messageSpacing += 'chatbox__message--last';
+		}
+
+		if (index === 0 || this.props.messages[index - 1].createdBy !== message.createdBy) {
+			img = (
+				<img
+					className={`${messageClass}__avatar`}
+					src={requestUser[0].profile.picture}
+					alt={`${requestUser[0].profile.name} avatar`}
+					title={requestUser[0].profile.name}
+				/>
+			);
+		}
+
+		if (isToday(messageDate)) {
+			time = `Today ${messageDate.getHours()}:${messageDate.getMinutes()}`;
+		} else if (isYesterday(messageDate)) {
+			time = `Yesterday ${messageDate.getHours()}:${messageDate.getMinutes()}`;
+		} else {
+			time = `${messageDate.getDate} ${messageDate.getMonth} ${messageDate.getHours()}:${messageDate.getMinutes()}`;
+		}
+
 		return (
 			<li className={`${messageClass}__container ${messageClass} ${messageSpacing}`} key={message._id}>
 				<div className={`${messageClass}__content-wrapper`}>
-					<div className={`${messageClass}__avatar-wrapper`}>
-						{this.getUserFromId(index, message.createdBy, messageClass)}
-					</div>
-
-					<span className={`${messageClass}__content`}>{message.message}</span>
+					<div className={`${messageClass}__avatar-wrapper`}>{img}</div>
+					<span className={`${messageClass}__content`} title={time}>
+						{message.message}
+					</span>
 				</div>
 			</li>
 		);
@@ -175,17 +198,18 @@ class ChatBox extends Component {
 		const { messages } = this.props;
 
 		return (
-			<div className="chatbox">
+			<div className={`chatbox ${isChatboxOpen ? 'chatbox--shown' : ''}`}>
 				{isChatboxOpen ? (
 					<div className="chatbox-container">
 						<div className="chatbox__tab" onClick={this.toggleChatbox}>
 							<span className="chatbox__title">Chatbox</span>
+							<i className="fa fa-angle-down chatbox__close-icon" />
 						</div>
 
 						<div className="chatbox__conversation-container">
 							<div className="chatbox__conversation-inner">
 								<div className="chatbox__conversation-content">
-									<ul className="chatbox__message-list" ref={this.setRef}>
+									<ul className="chatbox__message-list" data-element="messageList" ref={this.setRef}>
 										{messages && messages.map((message, index) => this.renderMessage(message, index))}
 									</ul>
 								</div>
@@ -207,7 +231,7 @@ class ChatBox extends Component {
 					</div>
 				) : (
 					<div className="chatbox__icon-opener-container" onClick={this.toggleChatbox}>
-						<i className="fa fa-envelope-o chatbox__icon-opener" aria-hidden="true" />
+						<i className="fa fa-comments chatbox__icon-opener" aria-hidden="true" />
 					</div>
 				)}
 			</div>
