@@ -31,7 +31,7 @@ const getSongInfoNct = songurl => {
 		console.error('Get NCT MP3 URL Error', err);
 	}
 
-	linkRes = linkRes.content ? linkRes.content : '';
+	linkRes = linkRes && linkRes.content ? linkRes.content : '';
 	// console.log('linkRes:', linkRes);
 
 	// run the html against regexp to get XML URL
