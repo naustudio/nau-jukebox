@@ -31,7 +31,7 @@ const getSongInfoZing = songurl => {
 		console.error('Get Zing MP3 URL Error', err);
 	}
 
-	linkRes = linkRes.content ? linkRes.content : '';
+	linkRes = linkRes && linkRes.content ? linkRes.content : '';
 	// console.log('linkRes:', linkRes);
 
 	// run the html against regexp to get JSON URL
@@ -88,7 +88,7 @@ const getSongInfoZing = songurl => {
 			console.log('URL is valid. Adding new song.');
 			let artist = jsonItem.artist ? jsonItem.artist.name : jsonItem.performer;
 			if (jsonItem.artists && jsonItem.artists.length) {
-				artist = jsonItem.artists.map((a) => a.name.trim()).join(', ');
+				artist = jsonItem.artists.map(a => a.name.trim()).join(', ');
 			}
 
 			return {
