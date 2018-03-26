@@ -10,6 +10,10 @@ $playbutton-w: 6px;
 $header-h: 70px;
 $playlist-h: 55px;
 $dot-w: 24px;
+$chatbox-height: 380px;
+$chatbox-width: 320px;
+$chatbox-avatar-spacing: 0.6rem;
+$chatbox-composer-height: 40px;
 $dot-color: white;
 $dot-color__active: #a9c52f;
 
@@ -25,6 +29,12 @@ $color-07: rgba(223, 201, 178, 0.4);
 $color-09: rgba(211, 211, 211, 1);
 $color-nau: #977857;
 $color-red: #f00;
+$chatbox-color: #50b748;
+$chatbox-background-color: #fcfcfc;
+$chatbox-border: #ddd;
+$chatbox-self: #50b748;
+$chatbox-other: #f1f0f0;
+
 
 * {
 	box-sizing: border-box;
@@ -2341,6 +2351,244 @@ button.button-naucoin {
 @media screen and (min-width: 768px) {
 	.toaster {
 		max-width: 600px;
+	}
+}
+
+//CHAT BOX
+
+.chatbox {
+	display: none;
+}
+
+@media screen and (min-width: 768px) {
+
+	.chatbox {
+		display: block;
+
+		&--shown {
+			position: fixed;
+			bottom: 0;
+			margin-left: 1.2rem;
+			width: $chatbox-width;
+		}
+
+		&__close-icon {
+			color: $color-01;
+			font-size: 2.2rem;
+		}
+
+		&__icon-opener-container {
+			cursor: pointer;
+			position: fixed;
+			bottom: 20px;
+			left: 20px;
+			width: 60px;
+			height: 60px;
+			background: $chatbox-color;
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			box-shadow: 0px 1px 4px 1px $chatbox-border;
+			transition: background-color 0.3s;
+
+			&:hover {
+				background: lighten($chatbox-color, 5);
+			}
+		}
+
+		&__icon-opener {
+			color: $color-01;
+			font-size: 2.2rem !important;
+		}
+
+		&__text {
+			&--uppercase {
+				text-transform: uppercase;
+			}
+		}
+
+		&__conversation-container {
+			height: $chatbox-height;
+			border: 1px solid $chatbox-border;
+			border-bottom: none;
+		}
+
+		&__conversation-inner {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			background-color: $color-01;
+		}
+
+		&__message-list {
+			list-style: none;
+			padding: 1.5rem 0.5rem;
+			overflow-y: auto;
+			// max-height: $chatbox-height - $chatbox-composer-height;
+		}
+
+
+
+		&__message-other,
+		&__message-self {
+			&__container {
+				margin: 0 0 0.2rem 0;
+				width: auto;
+				&::after {
+					content: '';
+					display: block;
+					clear: right;
+				}
+			}
+
+			&__content-wrapper {
+				display: flex;
+				align-items: flex-start;
+			}
+
+			&__content {
+				white-space: pre-wrap;
+				background-color: $chatbox-other;
+				color: white;
+				padding: 0.5rem 0.8rem;
+				border-radius: 8px;
+				font-size: 1.3rem;
+				word-wrap: break-word;
+				max-width: 215px;
+			}
+
+			&__avatar-wrapper {
+				width: 32px;
+				height: 32px;
+				margin-right: $chatbox-avatar-spacing;
+			}
+
+			&__avatar {
+				width: 100%;
+				border-radius: 50%;
+			}
+		}
+
+		&__message-self {
+			&__avatar-wrapper {
+				margin-right: 0;
+				margin-left: $chatbox-avatar-spacing;
+			}
+
+			&__content-wrapper {
+				float: right;
+				flex-direction: row-reverse;
+			}
+
+			&__content {
+				background-color: $chatbox-self;
+			}
+		}
+
+		&__message-other {
+			&__content {
+				color: #000;
+			}
+		}
+
+		&__message {
+			&--separator {
+				margin-top: 2.1rem;
+			}
+		}
+
+		&__tab {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 1.2rem;
+			background-color: $chatbox-color;
+			margin: 0;
+			cursor: pointer;
+			transition: all .2s;
+
+			&:hover {
+				background-color: darken($chatbox-color, 10);
+			}
+
+			&--no-hover {
+				&.chatbox__tab {
+					&:hover {
+						background-color: $chatbox-color;
+					}
+				}
+			}
+		}
+
+		&__icon-wrapper {
+			padding: 0.8rem;
+		}
+
+		&__title {
+			color: #fff;
+			font-size: 2.1rem;
+			font-weight: 400;
+			margin: 0;
+		}
+
+		&__icon {
+			color: $color-01;
+		}
+
+		&__conversation-content {
+			overflow-y: auto;
+			background-color: $chatbox-background-color;
+			flex-grow: 10;
+			border-bottom: 1px solid $chatbox-border;
+		}
+
+		&__composer {
+			// border-top: 1px solid #ccc;
+			flex-grow: 1;
+			min-height: $chatbox-composer-height;
+			margin: 0 0 1.5rem 0.8rem;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			position: relative;
+
+			&__content,
+			&__button {
+				margin: 0;
+			}
+
+			&__content {
+				font-family: 'Roboto', sans-serif;
+				resize: none;
+				border: none;
+				padding: 1.5rem 1.3rem 0 0;
+				height: 100%;
+				min-height: $chatbox-composer-height;
+				width: 100%;
+				font-size: 1.4rem;
+				overflow: hidden;
+				position: absolute;
+				top: 0;
+				left: 0;
+
+				&::placeholder {
+					font-style: italic;
+				}
+
+				&:focus {
+					outline: none;
+					border: none;
+				}
+			}
+
+			&__button {
+				border: none;
+				background: transparent;
+				color: $chatbox-color;
+				padding: 0 1rem;
+			}
+		}
 	}
 }
 

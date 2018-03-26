@@ -10,7 +10,7 @@ import PropTypes from 'proptypes';
 import { Songs } from '../collections';
 import SongList from './SongList';
 
-const queryLimit = 10;
+const queryLimit = 20;
 
 class TabHistory extends Component {
 	static propTypes = {
@@ -89,7 +89,7 @@ export default withTracker(({ currentRoom }) => ({
 			roomId: currentRoom ? currentRoom._id : null,
 		},
 		{
-			limit: 10,
+			limit: 20,
 			sort: { timeAdded: -1 },
 		}
 	).fetch(),
