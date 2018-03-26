@@ -16,7 +16,6 @@ import { toggleChatbox } from '../events/AppActions';
 import { Messages, Users } from '../collections';
 
 const maximumHeightOfInput = 150;
-const daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 class ChatBox extends Component {
 	static propTypes = {
