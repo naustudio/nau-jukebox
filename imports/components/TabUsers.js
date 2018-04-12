@@ -192,7 +192,7 @@ class TabUsers extends Component {
 				<div className="container users__container">
 					<h5 className="users__title">
 						Users
-						<span>₦: Naucoin, ₦1.00 = 1000VND</span>
+						<span>₦: Naucoin, ₦1.00 = 1.000VND</span>
 					</h5>
 					{currentRoom && ids.indexOf(currentRoom.hostId) < 0 ? (
 						<em className="users__info">* Host is now in another room *</em>

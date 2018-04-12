@@ -116,7 +116,7 @@ const getSongInfoZing = songurl => {
 	}
 
 	return {
-		error: 'Can\'t parse and get song info from link',
+		error: "Can't parse and get song info from link",
 	};
 };
 

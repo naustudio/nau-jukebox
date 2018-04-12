@@ -7,6 +7,7 @@ import { Container } from 'flux/utils';
 import { withTracker } from 'meteor/react-meteor-data';
 import { UserStatus } from 'meteor/mizzao:user-status';
 import PropTypes from 'prop-types';
+import { Songs } from '../collections';
 
 import TabNav from './TabNav';
 import AppStore from '../events/AppStore';
@@ -19,6 +20,7 @@ import TabHistory from './TabHistory';
 import TabLast7Days from './TabLast7Days';
 import PopUpLyric from './PopUpLyric';
 import ChatBox from './ChatBox';
+import Utils from '../utils';
 
 class AppBody extends Component {
 	static propTypes = {
@@ -39,6 +41,27 @@ class AppBody extends Component {
 			currentRoom: AppStore.getState()['currentRoom'],
 		};
 	}
+
+	componentDidUpdate(prevProps) {
+		this.changeSong(prevProps, this.props);
+	}
+
+	changeSong = (prev, next) => {
+		if (prev.room !== null && prev.songs.length < next.songs.length) {
+			const song = next.songs[next.songs.length - 1];
+
+			const title = `A new song is added`;
+			const options = {
+				body: `${song.name} - ${song.artist}. From: ${song.origin}`,
+				icon: song.thumbURL,
+				image: song.thumbURL,
+			};
+
+			if (Meteor.userId() !== song.author) {
+				Utils(title, options);
+			}
+		}
+	};
 
 	_renderTabItem = () => {
 		const index = this.state.tabIndex;
@@ -77,7 +100,16 @@ class AppBody extends Component {
 	}
 }
 
-export default withTracker(() => {
+export default withTracker(({ room }) => {
+	const today = new Date();
+	// const songHandle = Meteor.subscribe('Songs.public');
+	today.setHours(0, 0, 0, 0);
+
+	// const onlineUsers = Users.find({
+	// 	'status.online': true,
+	// 	playing: { $ne: null },
+	// }).fetch();
+
 	if (Meteor.userId()) {
 		try {
 			UserStatus.startMonitor({
@@ -92,5 +124,15 @@ export default withTracker(() => {
 
 	return {
 		isSignedIn: !!Meteor.userId(),
+		// onlineUsers,
+		songs: Songs.find(
+			{
+				timeAdded: { $gt: today.getTime() },
+				roomId: room ? room._id : null,
+			},
+			{
+				sort: { timeAdded: 1 },
+			}
+		).fetch(),
 	};
 })(Container.create(AppBody));
