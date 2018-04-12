@@ -64,4 +64,15 @@
 		<a href="https://github.com/naustudio/nau-jukebox"><i class="fa fa-github"></i></a>
 		<a href="https://www.facebook.com/nau.creative/"><i class="fa fa-facebook-square"></i></a>
 	</footer>
+
+	<script>
+		(function () {
+			var notify = Notification || window.Notification;
+			if (notify.permission !== 'granted') {
+				notify.requestPermission().then().catch(err => {
+					throw err;
+				});
+			}
+		}());
+	</script>
 </body>
