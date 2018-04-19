@@ -161,7 +161,7 @@ class ChatBox extends Component {
 			messageSpacing += 'chatbox__message--last';
 		}
 
-		if (index === 0 || this.props.messages[index - 1].createdBy !== message.createdBy) {
+		if ((index === 0 || this.props.messages[index - 1].createdBy !== message.createdBy) && requestUser[0]) {
 			img = (
 				<img
 					className={`${messageClass}__avatar`}
