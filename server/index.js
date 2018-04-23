@@ -35,25 +35,33 @@ UserStatus.events.on('connectionLogout', function(fields) {
 
 Meteor.methods({
 	getSongInfo(songUrl, authorId, roomId) {
-		if (cacheLatestSong[roomId] && cacheLatestSong[roomId].songUrl === songUrl) {
+		const regexYouTubeId = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/ ]{11})/i;
+		let songURL;
+		if (regexYouTubeId.test(songUrl)) {
+			const songId = songUrl.match(regexYouTubeId)[1];
+			songURL = `https://www.youtube.com/watch?v=${songId}`;
+		} else {
+			songURL = songUrl;
+		}
+		if (cacheLatestSong[roomId] && cacheLatestSong[roomId].songUrl === songURL) {
 			throw new Meteor.Error(403, 'This song is already booked');
 		}
 
 		// Set up a future for async callback sending to clients
 		let songInfo;
 
-		if (String(songUrl).includes('nhaccuatui')) {
+		if (String(songURL).includes('nhaccuatui')) {
 			console.log('Getting NCT song info');
-			songInfo = getSongInfoNct(songUrl);
-		} else if (String(songUrl).includes('mp3.zing')) {
+			songInfo = getSongInfoNct(songURL);
+		} else if (String(songURL).includes('mp3.zing')) {
 			console.log('Getting Zing song info');
-			songInfo = getSongInfoZing(songUrl);
-		} else if (String(songUrl).includes('soundcloud')) {
+			songInfo = getSongInfoZing(songURL);
+		} else if (String(songURL).includes('soundcloud')) {
 			console.log('Getting Soundclound song info');
-			songInfo = getSongInfoSoundcloud(songUrl);
-		} else if (String(songUrl).includes('youtube')) {
+			songInfo = getSongInfoSoundcloud(songURL);
+		} else if (String(songURL).includes('youtube')) {
 			console.log('Getting YouTube song info');
-			songInfo = getSongInfoYouTube(songUrl);
+			songInfo = getSongInfoYouTube(songURL);
 		}
 
 		if (songInfo && songInfo.streamURL) {
@@ -66,7 +74,7 @@ Meteor.methods({
 					throw new Meteor.Error(403, err);
 				}
 				cacheLatestSong[roomId] = {
-					songUrl,
+					songUrl: songURL,
 					songId: id,
 				};
 			});
