@@ -191,6 +191,7 @@ Meteor.methods({
 					badSong: { $ne: true },
 				},
 				{
+					sort: { timeAdded: -1 }, // show new book first (more likely preferred ones)
 					limit: 100, // just a relative limit to reduce DB access overheads
 					reactive: false,
 				}
@@ -229,7 +230,18 @@ Meteor.publish('userData', function() {
 	if (this.userId) {
 		return Meteor.users.find(
 			{ _id: this.userId },
-			{ fields: { status: 1, balance: 1, playing: 1, roomId: 1, services: 1, profile: 1, isHost: 1, joinedRooms: 1 } }
+			{
+				fields: {
+					status: 1,
+					balance: 1,
+					playing: 1,
+					roomId: 1,
+					services: 1,
+					profile: 1,
+					isHost: 1,
+					joinedRooms: 1,
+				},
+			}
 		);
 	}
 
