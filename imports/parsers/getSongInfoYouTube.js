@@ -30,7 +30,7 @@ const getSongInfoYouTube = songurl => {
 		length = length ? +length[1] : 0;
 		console.log(length);
 
-		if (!html.match(/"allow_embed":"1"/i)) {
+		if (!html.match(/"playableInEmbed":true/i)) {
 			return {
 				error: 'This YouTube video is not allowed to embed',
 			};
