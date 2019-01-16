@@ -28,15 +28,15 @@ const getSongInfoYouTube = songurl => {
 		let length = /"length_seconds":"(\d*)"/.exec(html);
 		const thumbURL = `https://img.youtube.com/vi/${songId}/0.jpg`;
 		length = length ? +length[1] : 0;
-		console.log(length);
+		console.log(title[1], '|', user[1], '|', length);
 
-		if (!html.match(/"playableInEmbed":true/i)) {
+		if (html.match(/\\?"playableInEmbed\\?":false/i)) {
 			return {
 				error: 'This YouTube video is not allowed to embed',
 			};
-		} else if (length > 10 * 60 || length < 10) {
+		} else if (length > 15 * 60 || length < 10) {
 			return {
-				error: 'This YouTube video is too long (>10min) or too short (<10sec) to play',
+				error: 'This YouTube video is too long (>15min) or too short (<10sec) to play',
 			};
 		}
 

@@ -1,5 +1,9 @@
 # Nau Jukebox Changelog
 
+## 2019-01-15
+
+* Update youtube parser for 2019 HTML content
+
 ## 2018-02-27
 
 * Attempt to fix Goalify login issues
